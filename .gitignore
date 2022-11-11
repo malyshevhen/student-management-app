@@ -1,0 +1,36 @@
+## vscode ##
+.vscode
+
+## maven ##
+target/
+
+## gradle ##
+.gradle/
+build/
+
+## spring-boot ##
+spring-boot-starter-actuator/src/main/resources/META-INF/spring.factories
+
+## idea ##
+.idea/
+out/
+*.iml
+*.ipr
+*.iws
+
+## eclipse ##
+.classpath
+.project
+.settings/
+bin/
+tmp/
+.loadpath
+.recommenders
+local.properties
+*.tmp
+*.bak
+*.swp
+*~.nib
+
+## SQLTools ##
+*.session.sql
