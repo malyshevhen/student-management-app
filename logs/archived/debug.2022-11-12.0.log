@@ -1,0 +1,12 @@
+2022-11-12 09:02:58 - StudentMapper.dtoToStudent() - Student: Ivan Ivanenko was created
+2022-11-12 09:02:58 - StudentMapper.dtoToStudent() - Student: Petro Petrenko was created
+2022-11-12 09:02:58 - StudentMapper.dtoToStudent() - Student: null null was created
+2022-11-12 09:04:26 - StudentMapper.dtoToStudent() - NullPointerException: Cannot invoke "ua.com.foxstudent102052.model.StudentDto.getId()" because "studentDto" is null
+2022-11-12 09:04:37 - StudentMapper.studentToDto() - NullPointerException: Cannot invoke "ua.com.foxstudent102052.model.Student.getStudentId()" because "student" is null
+2022-11-12 09:04:37 - StudentMapper.dtoToStudent() - NullPointerException: Cannot invoke "ua.com.foxstudent102052.model.StudentDto.getId()" because "studentDto" is null
+2022-11-12 14:28:08 - null
+2022-11-12 14:28:08 - null
+2022-11-12 14:28:08 - null
+2022-11-12 14:28:25 - null
+2022-11-12 14:28:25 - null
+2022-11-12 14:28:25 - null

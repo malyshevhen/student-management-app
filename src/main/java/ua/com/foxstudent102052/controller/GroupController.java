@@ -6,18 +6,16 @@ import ua.com.foxstudent102052.mapper.StudentMapper;
 import ua.com.foxstudent102052.model.Group;
 import ua.com.foxstudent102052.model.GroupDto;
 import ua.com.foxstudent102052.model.StudentDto;
-import ua.com.foxstudent102052.repository.GroupRepositoryImpl;
 import ua.com.foxstudent102052.service.GroupService;
-import ua.com.foxstudent102052.service.GroupServiceImpl;
 
 import java.util.List;
 
 @Slf4j
 public class GroupController {
-    private final GroupService groupService;
-
-    public GroupController() {
-        this.groupService = new GroupServiceImpl(GroupRepositoryImpl.getInstance());
+    private GroupService groupService;
+    
+    public GroupController(GroupService groupService) {
+        this.groupService = groupService;
     }
 
     public void addGroup(String groupDtoName) {

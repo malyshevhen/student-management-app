@@ -16,7 +16,7 @@ public class GroupServiceImpl implements GroupService {
     @Override
     public void addGroup(Group group) {
 
-        if (groupRepository.getGroupById(group.getGroupId()).getGroupId() == 0) {
+        if (groupRepository.getGroupByName(group.getGroupName()).getGroupId() == 0) {
             groupRepository.addGroup(group);
 
         } else {

@@ -4,25 +4,26 @@ import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import ua.com.foxstudent102052.mapper.CourseMapper;
 import ua.com.foxstudent102052.mapper.StudentMapper;
+import ua.com.foxstudent102052.model.Group;
 import ua.com.foxstudent102052.model.StudentDto;
-import ua.com.foxstudent102052.repository.CourseRepositoryImpl;
-import ua.com.foxstudent102052.repository.GroupRepositoryImpl;
-import ua.com.foxstudent102052.repository.StudentRepositoryImpl;
-import ua.com.foxstudent102052.service.*;
+import ua.com.foxstudent102052.service.CourseService;
+import ua.com.foxstudent102052.service.GroupService;
+import ua.com.foxstudent102052.service.StudentService;
 
 import java.util.List;
 
 @Slf4j
 public class StudentController {
-    private final StudentService studentService;
-    private final GroupService groupService;
-    private final CourseService courseService;
-
-    public StudentController() {
-        this.studentService = new StudentServiceImpl(StudentRepositoryImpl.getInstance());
-        this.groupService = new GroupServiceImpl(GroupRepositoryImpl.getInstance());
-        this.courseService = new CourseServiceImpl(CourseRepositoryImpl.getInstance());
+    private StudentService studentService;
+    private GroupService groupService;
+    private CourseService courseService;
+    
+    public StudentController(StudentService studentService, GroupService groupService, CourseService courseService) {
+        this.studentService = studentService;
+        this.groupService = groupService;
+        this.courseService = courseService;
     }
+
 
     public void addStudent(StudentDto studentDto) {
         try {
@@ -202,18 +203,23 @@ public class StudentController {
     }
 
     private void setStudentsCourse(StudentDto studentDto) {
+        int id = studentDto.getId();
         try {
             studentDto.setCoursesList(
-                studentService.getCoursesByStudentId(studentDto.getId()).stream().map(CourseMapper::courseToDto)
+                studentService.getCoursesByStudentId(id)
+                    .stream()
+                    .map(CourseMapper::courseToDto)
                     .toList());
         } catch (IllegalArgumentException e) {
-            log.info("Student with id: " + studentDto.getId() + " has no courses");
+            log.info("Student with id: " + id + " has no courses");
         }
     }
 
     private void setStudentsGroup(StudentDto studentDto) {
         try {
-            studentDto.setGroup(groupService.getGroupById(studentDto.getGroupId()).getGroupName());
+            int groupId = studentDto.getGroupId();
+            Group groupById = groupService.getGroupById(groupId);
+            studentDto.setGroup(groupById.getGroupName());
         } catch (IllegalArgumentException e) {
             log.info("Student with id: " + studentDto.getId() + " has no group");
         }

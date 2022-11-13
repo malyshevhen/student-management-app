@@ -1,6 +1,10 @@
 package ua.com.foxstudent102052.facade;
 
 import ua.com.foxstudent102052.controller.GroupController;
+import ua.com.foxstudent102052.repository.GroupRepository;
+import ua.com.foxstudent102052.repository.GroupRepositoryImpl;
+import ua.com.foxstudent102052.service.GroupService;
+import ua.com.foxstudent102052.service.GroupServiceImpl;
 
 import static ua.com.foxstudent102052.facade.InputUtils.takeInputIntFromUser;
 import static ua.com.foxstudent102052.facade.InputUtils.takeInputStringFromUser;
@@ -27,8 +31,10 @@ public class GroupFacade {
     static final String ENTER_GROUP_ID = "Enter group id: ";
     static final String ENTER_GROUP_NAME = "Enter group name: ";
     static final String WRONG_INPUT = "Wrong input.";
-
-    private static final GroupController groupController = new GroupController();
+    
+    private static  final GroupRepository groupRepository = GroupRepositoryImpl.getInstance();
+    private static  final GroupService groupService = new GroupServiceImpl(groupRepository);
+    private static final GroupController groupController = new GroupController(groupService);
 
     private GroupFacade() {
         throw new IllegalStateException("Utility class");

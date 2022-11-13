@@ -1,11 +1,11 @@
 package ua.com.foxstudent102052.service;
 
-import java.util.List;
-
 import lombok.AllArgsConstructor;
 import ua.com.foxstudent102052.model.Course;
 import ua.com.foxstudent102052.model.Student;
 import ua.com.foxstudent102052.repository.CourseRepository;
+
+import java.util.List;
 
 @AllArgsConstructor
 public class CourseServiceImpl implements CourseService {
@@ -38,6 +38,18 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
+    public void updateCourse(Course course) {
+        Course courseFromDB = courseRepository.getCourseById(course.getCourseId());
+
+        if (courseFromDB.getCourseId() != 0) {
+            courseRepository.updateCourse(course);
+
+        } else {
+            throw new IllegalArgumentException(String.format(COURSE_ID_DOES_NOT_EXIST, course.getCourseId()));
+        }
+    }
+
+    @Override
     public void updateCourseName(int courseId, String courseName) {
         Course courseFromDB = courseRepository.getCourseById(courseId);
 
@@ -58,18 +70,6 @@ public class CourseServiceImpl implements CourseService {
 
         } else {
             throw new IllegalArgumentException(String.format(COURSE_ID_DOES_NOT_EXIST, courseId));
-        }
-    }
-
-    @Override
-    public void updateCourse(Course course) {
-        Course courseFromDB = courseRepository.getCourseById(course.getCourseId());
-
-        if (courseFromDB.getCourseId() != 0) {
-            courseRepository.updateCourse(course);
-
-        } else {
-            throw new IllegalArgumentException(String.format(COURSE_ID_DOES_NOT_EXIST, course.getCourseId()));
         }
     }
 

@@ -4,6 +4,8 @@ import ua.com.foxstudent102052.controller.CourseController;
 import ua.com.foxstudent102052.controller.GroupController;
 import ua.com.foxstudent102052.controller.StudentController;
 import ua.com.foxstudent102052.model.StudentDto;
+import ua.com.foxstudent102052.repository.*;
+import ua.com.foxstudent102052.service.*;
 
 import static ua.com.foxstudent102052.facade.InputUtils.takeInputIntFromUser;
 import static ua.com.foxstudent102052.facade.InputUtils.takeInputStringFromUser;
@@ -70,9 +72,17 @@ public class StudentFacade {
     private static final String ENTER_OPTION_NUMBER = "Enter option number: ";
     private static final String WRONG_INPUT = "Wrong input.";
 
-    private static final StudentController studentController = new StudentController();
-    private static final GroupController groupController = new GroupController();
-    private static final CourseController courseController = new CourseController();
+    private static final GroupRepository groupRepository = GroupRepositoryImpl.getInstance();
+    private static final GroupService groupService = new GroupServiceImpl(groupRepository);
+    private static final GroupController groupController = new GroupController(groupService);
+    private static final CourseRepository courseRepository = CourseRepositoryImpl.getInstance();
+    private static final CourseService courseService = new CourseServiceImpl(courseRepository);
+    private static final CourseController courseController = new CourseController(courseService);
+    private static final StudentRepository studentRepository = StudentRepositoryImpl.getInstance();
+    private static final StudentService studentService = new StudentServiceImpl(studentRepository);
+    private static final StudentController studentController = new StudentController(
+        studentService, groupService, courseService);
+
 
     private StudentFacade() {
         throw new IllegalStateException("Utility class");

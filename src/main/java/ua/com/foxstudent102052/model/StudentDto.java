@@ -10,6 +10,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class StudentDto {
+
     private int id;
     private int groupId;
     private String group;
@@ -28,5 +29,5 @@ public class StudentDto {
         this.groupId = groupId;
         this.fistName = fistName;
         this.lastName = lastName;
-    }
+    }     
 }

@@ -6,17 +6,17 @@ import ua.com.foxstudent102052.mapper.StudentMapper;
 import ua.com.foxstudent102052.model.Course;
 import ua.com.foxstudent102052.model.CourseDto;
 import ua.com.foxstudent102052.model.StudentDto;
-import ua.com.foxstudent102052.repository.CourseRepository;
-import ua.com.foxstudent102052.repository.CourseRepositoryImpl;
 import ua.com.foxstudent102052.service.CourseService;
-import ua.com.foxstudent102052.service.CourseServiceImpl;
 
 import java.util.List;
 
 @Slf4j
 public class CourseController {
-    private static final CourseRepository courseRepository = CourseRepositoryImpl.getInstance();
-    private static final CourseService courseService = new CourseServiceImpl(courseRepository);
+    private static CourseService courseService;
+    
+    public CourseController(CourseService courseService) {
+        this.courseService = courseService;
+    }
 
     public void addCourse(String courseName, String courseDescription) {
         try {

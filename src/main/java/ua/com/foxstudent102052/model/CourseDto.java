@@ -1,10 +1,10 @@
 package ua.com.foxstudent102052.model;
 
-import java.util.List;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -18,11 +18,13 @@ public class CourseDto {
     public CourseDto(String name, String description) {
         this.name = name;
         this.description = description;
+        this.studentsList = List.of();
     }
 
     public CourseDto(int id, String name, String description) {
         this.id = id;
         this.name = name;
         this.description = description;
+        this.studentsList = List.of();
     }
 }

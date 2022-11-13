@@ -1,6 +1,5 @@
 package ua.com.foxstudent102052.mapper;
 
-import lombok.NonNull;
 import ua.com.foxstudent102052.model.Group;
 import ua.com.foxstudent102052.model.GroupDto;
 
@@ -12,15 +11,25 @@ public class GroupMapper {
         throw new IllegalStateException("Utility class");
     }
 
-    public static GroupDto groupToDto(@NonNull Group group) {
-        return new GroupDto(
+    public static GroupDto groupToDto(Group group) {
+        try{
+            return new GroupDto(
                 group.getGroupId(),
                 group.getGroupName(),
                 List.of());
+            
+        } catch (NullPointerException e) {
+            return new GroupDto();
+        }
     }
 
-    public static Group dtoTGroup(@NonNull GroupDto groupDto) {
-        return new Group(
-                groupDto.getName());
+    public static Group dtoToGroup(GroupDto groupDto) {
+        try{
+            return new Group(groupDto.getId(), groupDto.getName());
+            
+        } catch (NullPointerException e) {
+            return new Group();
+        }
+
     }
 }
