@@ -8,7 +8,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public interface DAOFactory {
+    void setJdbcUrl(String s);
+
+    void setLogin(String postgres);
+
+    void setPassword(String s);
+
     void doPost(String query);
+
     Student getStudent(String query);
 
     List<Student> getStudents(String query);

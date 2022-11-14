@@ -5,6 +5,8 @@ import ua.com.foxstudent102052.controller.CourseController;
 import ua.com.foxstudent102052.model.CourseDto;
 import ua.com.foxstudent102052.repository.CourseRepository;
 import ua.com.foxstudent102052.repository.CourseRepositoryImpl;
+import ua.com.foxstudent102052.repository.DAOFactory;
+import ua.com.foxstudent102052.repository.DAOFactoryImpl;
 import ua.com.foxstudent102052.service.CourseService;
 import ua.com.foxstudent102052.service.CourseServiceImpl;
 
@@ -50,7 +52,8 @@ public class CourseFacade {
     static final String ENTER_COURSE_DESCRIPTION = "Enter course description: ";
     static final String WRONG_INPUT = "Wrong input.";
     
-    private static CourseRepository courseRepository = CourseRepositoryImpl.getInstance();
+    private static DAOFactory daoFactory = new DAOFactoryImpl();
+    private static CourseRepository courseRepository = new CourseRepositoryImpl(daoFactory);
     private static final CourseService courseService = new CourseServiceImpl(courseRepository);
     private static final CourseController courseController = new CourseController(courseService);
 

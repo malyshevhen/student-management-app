@@ -9,27 +9,20 @@ import java.util.List;
 
 @Slf4j
 public class CourseRepositoryImpl implements CourseRepository {
-    DAOFactory daoFactory = DAOFactoryImpl.getInstance();
-    private static CourseRepository instance;
-
-    private CourseRepositoryImpl() {
+    DAOFactory daoFactory;
+    
+    public CourseRepositoryImpl(DAOFactory daoFactory) {
+        this.daoFactory = daoFactory;
     }
-
-    public static CourseRepository getInstance() {
-        if (instance == null) {
-            instance = new CourseRepositoryImpl();
-        }
-        
-        return instance;
-    }
-
+    
     @Override
     public void addCourse(@NonNull Course course) {
         daoFactory.doPost(String.format("""
                 INSERT
-                INTO courses (course_name)
-                VALUES ('%s');""",
-            course.getCourseName()));
+                INTO courses (course_name, course_description)
+                VALUES ('%s', '%s');""",
+            course.getCourseName(),
+            course.getCourseDescription()));
     }
 
     @Override
@@ -65,9 +58,10 @@ public class CourseRepositoryImpl implements CourseRepository {
     public void updateCourse(@NonNull Course course) {
         daoFactory.doPost(String.format("""
                 UPDATE courses
-                SET course_name = '%s'
+                SET (course_name, course_description) = ('%s', '%s')
                 WHERE course_id = %d;""",
             course.getCourseName(),
+            course.getCourseDescription(),
             course.getCourseId()));
     }
 
@@ -107,7 +101,7 @@ public class CourseRepositoryImpl implements CourseRepository {
                 FROM students
                 WHERE student_id IN (
                     SELECT student_id
-                    FROM student_course
+                    FROM students_courses
                     WHERE course_id = %d);""",
             courseId);
 

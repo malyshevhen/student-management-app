@@ -72,13 +72,14 @@ public class StudentFacade {
     private static final String ENTER_OPTION_NUMBER = "Enter option number: ";
     private static final String WRONG_INPUT = "Wrong input.";
 
-    private static final GroupRepository groupRepository = GroupRepositoryImpl.getInstance();
+    private static DAOFactory daoFactory = new DAOFactoryImpl();
+    private static final GroupRepository groupRepository = new GroupRepositoryImpl(daoFactory);
     private static final GroupService groupService = new GroupServiceImpl(groupRepository);
     private static final GroupController groupController = new GroupController(groupService);
-    private static final CourseRepository courseRepository = CourseRepositoryImpl.getInstance();
+    private static final CourseRepository courseRepository = new CourseRepositoryImpl(daoFactory);
     private static final CourseService courseService = new CourseServiceImpl(courseRepository);
     private static final CourseController courseController = new CourseController(courseService);
-    private static final StudentRepository studentRepository = StudentRepositoryImpl.getInstance();
+    private static final StudentRepository studentRepository = new StudentRepositoryImpl(daoFactory);
     private static final StudentService studentService = new StudentServiceImpl(studentRepository);
     private static final StudentController studentController = new StudentController(
         studentService, groupService, courseService);

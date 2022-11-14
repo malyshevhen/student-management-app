@@ -9,18 +9,12 @@ import java.util.List;
 
 @Slf4j
 public class StudentRepositoryImpl implements StudentRepository {
-    DAOFactory daoFactory = DAOFactoryImpl.getInstance();
-    private static StudentRepository instance;
+    DAOFactory daoFactory;
 
-    private StudentRepositoryImpl() {
+    public StudentRepositoryImpl(DAOFactory daoFactory) {
+        this.daoFactory = daoFactory;
     }
 
-    public static StudentRepository getInstance() {
-        if (instance == null) {
-            instance = new StudentRepositoryImpl();
-        }
-        return instance;
-    }
 
     @Override
     public void addStudent(@NonNull Student student) {

@@ -1,6 +1,7 @@
---START--
---DROP DATABASE IF EXISTS students_db;
---CREATE DATABASE students_db;
+drop table if exists students;
+drop table if exists courses;
+drop table if exists groups;
+drop table if exists students_courses;
 CREATE TABLE students (student_id SERIAL, group_id INT NOT NULL, first_name VARCHAR(255) NOT NULL, last_name  VARCHAR(255) NOT NULL, PRIMARY KEY (student_id));
 CREATE TABLE groups (group_id   SERIAL, group_name VARCHAR(255) NOT NULL, PRIMARY KEY (group_id));
 CREATE TABLE courses (course_id SERIAL, course_name VARCHAR(255) NOT NULL, course_description VARCHAR(255) NOT NULL, PRIMARY KEY (course_id) );

@@ -1,6 +1,8 @@
 package ua.com.foxstudent102052.facade;
 
 import ua.com.foxstudent102052.controller.GroupController;
+import ua.com.foxstudent102052.repository.DAOFactory;
+import ua.com.foxstudent102052.repository.DAOFactoryImpl;
 import ua.com.foxstudent102052.repository.GroupRepository;
 import ua.com.foxstudent102052.repository.GroupRepositoryImpl;
 import ua.com.foxstudent102052.service.GroupService;
@@ -32,7 +34,8 @@ public class GroupFacade {
     static final String ENTER_GROUP_NAME = "Enter group name: ";
     static final String WRONG_INPUT = "Wrong input.";
     
-    private static  final GroupRepository groupRepository = GroupRepositoryImpl.getInstance();
+    private static DAOFactory daoFactory = new DAOFactoryImpl();
+    private static  final GroupRepository groupRepository = new GroupRepositoryImpl(daoFactory);
     private static  final GroupService groupService = new GroupServiceImpl(groupRepository);
     private static final GroupController groupController = new GroupController(groupService);
 

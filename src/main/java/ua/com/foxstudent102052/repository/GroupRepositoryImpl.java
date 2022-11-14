@@ -9,19 +9,12 @@ import java.util.List;
 
 @Slf4j
 public class GroupRepositoryImpl implements GroupRepository {
-    private static final DAOFactory daoFactory = DAOFactoryImpl.getInstance();
-    private static GroupRepository instance;
-
-    private GroupRepositoryImpl() {
+    private static DAOFactory daoFactory;
+    
+    public GroupRepositoryImpl(DAOFactory daoFactory) {
+        this.daoFactory = daoFactory;
     }
 
-    public static GroupRepository getInstance() {
-        if (instance == null) {
-            instance = new GroupRepositoryImpl();
-        }
-
-        return instance;
-    }
 
     @Override
     public void addGroup(@NonNull Group group) {
@@ -66,7 +59,7 @@ public class GroupRepositoryImpl implements GroupRepository {
     @Override
     public Group getGroupByName(String groupName) {
         String query = String.format("""
-                SELECT
+                SELECT *
                 FROM groups
                 WHERE group_name = '%s';""",
             groupName);

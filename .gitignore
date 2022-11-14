@@ -34,3 +34,11 @@ local.properties
 
 ## SQLTools ##
 *.session.sql
+
+## LOGS ##
+*.log
+/logs
+
+## H2 ##
+*.mv.db
+db_test

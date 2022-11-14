@@ -29,7 +29,7 @@ class CourseServiceImplTest {
     
     @DisplayName("Method addCourse should pass Course to Repository")    
     @Test
-    void addCourse() {
+    void canAddCourse() {
         doNothing().when(courseRepository).addCourse(new Course());
         when(courseRepository.getCourseByName("Java")).thenReturn(new Course());
         
@@ -40,7 +40,7 @@ class CourseServiceImplTest {
 
     @DisplayName("Method removeCourse should pass Course to Repository")
     @Test
-    void removeCourse() {
+    void canRemoveCourse() {
         var course = new Course(1,"Java", "Java course");
         doNothing().when(courseRepository).removeCourse(course.getCourseId());
         when(courseRepository.getCourseById(course.getCourseId())).thenReturn(course);
@@ -52,7 +52,7 @@ class CourseServiceImplTest {
 
     @DisplayName("Method updateCourse should pass Course to Repository")
     @Test
-    void updateCourse() {
+    void canUpdateCourse() {
         Course course = new Course(1, "Java", "Java course");
         doNothing().when(courseRepository).updateCourse(course);
         when(courseRepository.getCourseById(course.getCourseId())).thenReturn(course);
@@ -64,7 +64,7 @@ class CourseServiceImplTest {
 
     @DisplayName("Method updateCourseName should pass Course to Repository")
     @Test
-    void updateCourseName() {
+    void canUpdateCourseName() {
         var course = new Course(1, "Java", "Java course");
         doNothing().when(courseRepository).updateCourseName(course.getCourseId(), course.getCourseName());
         when(courseRepository.getCourseById(course.getCourseId())).thenReturn(course);
@@ -76,7 +76,7 @@ class CourseServiceImplTest {
     
     @DisplayName("Method updateCourseName should pass Course to Repository")
     @Test
-    void updateCourseDescription() {
+    void canUpdateCourseDescription() {
         var course = new Course(1, "Java", "Java course");
         doNothing().when(courseRepository).updateCourseDescription(course.getCourseId(), course.getCourseDescription());
         when(courseRepository.getCourseById(course.getCourseId())).thenReturn(course);
@@ -88,7 +88,7 @@ class CourseServiceImplTest {
 
     @DisplayName("Method getCourseById should return List of Courses")
     @Test
-    void getAllCourses() {
+    void canGetAllCourses() {
         var expected = List.of(new Course());
         when(courseRepository.getAllCourses()).thenReturn(expected);
         
@@ -99,7 +99,7 @@ class CourseServiceImplTest {
 
     @DisplayName("Method getCourseById should return Course")
     @Test
-    void getCourseById() {
+    void canGetCourseById() {
         var expected = new Course(1, "Java", "Java course");
         when(courseRepository.getCourseById(expected.getCourseId())).thenReturn(expected);
                 
@@ -110,7 +110,7 @@ class CourseServiceImplTest {
 
     @DisplayName("Method getCourseByName should return Course")
     @Test
-    void getCourseByName() {
+    void canGetCourseByName() {
         var expected = new Course(1, "Java", "Java course");
         when(courseRepository.getCourseByName(expected.getCourseName())).thenReturn(expected);
         
@@ -121,7 +121,7 @@ class CourseServiceImplTest {
     
     @DisplayName("Method getStudentsByCourse should return list of Students")
     @Test
-    void getStudentsByCourse() {
+    void canGetStudentsByCourse() {
         int id = 1;
         var expected = List.of(new Student());
         when(courseRepository.getStudentsByCourseId(id)).thenReturn(expected);
