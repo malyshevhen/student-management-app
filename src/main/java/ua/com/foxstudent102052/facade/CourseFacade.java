@@ -69,9 +69,10 @@ public class CourseFacade {
             option = takeInputIntFromUser(COURSE_MENU);
 
             if (option == 1) {
-                String courseName = takeInputStringFromUser(ENTER_COURSE_NAME);
-                String courseDescription = takeInputStringFromUser(ENTER_COURSE_DESCRIPTION);
-                courseController.addCourse(courseName, courseDescription);
+                var courseName = takeInputStringFromUser(ENTER_COURSE_NAME);
+                var courseDescription = takeInputStringFromUser(ENTER_COURSE_DESCRIPTION);
+                var courseDto = new CourseDto(courseName, courseDescription);
+                courseController.addCourse(courseDto);
 
             } else if (option == 2) {
                 System.out.println(createCourseTable(courseController
@@ -114,19 +115,29 @@ public class CourseFacade {
 
             if (option == 1) {
                 int courseId = takeInputIntFromUser(ENTER_COURSE_ID);
-                String courseName = takeInputStringFromUser(ENTER_COURSE_NAME);
-                courseController.updateCourseName(courseId, courseName);
+                var courseName = takeInputStringFromUser(ENTER_COURSE_NAME);
+                var courseDto = new CourseDto();
+                courseDto.setId(courseId);
+                courseDto.setName(courseName);
+                courseController.updateCourseName(courseDto);
 
             } else if (option == 2) {
                 int courseId = takeInputIntFromUser(ENTER_COURSE_ID);
-                String courseDescription = takeInputStringFromUser(ENTER_COURSE_DESCRIPTION);
-                courseController.updateCourseDescription(courseId, courseDescription);
+                var courseDescription = takeInputStringFromUser(ENTER_COURSE_DESCRIPTION);
+                var courseDto = new CourseDto();
+                courseDto.setId(courseId);
+                courseDto.setDescription(courseDescription);
+                courseController.updateCourseDescription(courseDto);
 
             } else if (option == 3) {
                 int courseId = takeInputIntFromUser(ENTER_COURSE_ID);
-                String courseName = takeInputStringFromUser(ENTER_COURSE_NAME);
-                String courseDescription = takeInputStringFromUser(ENTER_COURSE_DESCRIPTION);
-                courseController.updateCourse(new CourseDto(courseId, courseName, courseDescription));
+                var courseName = takeInputStringFromUser(ENTER_COURSE_NAME);
+                var courseDescription = takeInputStringFromUser(ENTER_COURSE_DESCRIPTION);
+                var courseDto = new CourseDto();
+                courseDto.setId(courseId);
+                courseDto.setName(courseName);
+                courseDto.setDescription(courseDescription);
+                courseController.updateCourse(courseDto);
 
             } else if (option == 0) {
                 option = Integer.MAX_VALUE;

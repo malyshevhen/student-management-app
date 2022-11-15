@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import ua.com.foxstudent102052.model.Course;
 import ua.com.foxstudent102052.model.Group;
 import ua.com.foxstudent102052.model.Student;
+import ua.com.foxstudent102052.repository.exception.DAOException;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -43,12 +44,14 @@ class DAOFactoryImpl implements DAOFactory {
 
         try (Connection connection = getConnection(jdbcUrl, login, password);
              Statement statement = connection.createStatement()) {
+            
             log.info(CONNECTION_SUCCESSFUL);
             statement.executeUpdate(query);
             log.info(QUERY_EXEC_SUCCESSFUL, query);
 
         } catch (SQLException e) {
             log.error(ERROR_MESSAGE + query, e);
+            throw new DAOException(e.getMessage());
         }
     }
 
@@ -71,8 +74,9 @@ class DAOFactoryImpl implements DAOFactory {
 
         } catch (SQLException e) {
             log.error(ERROR_MESSAGE + query, e);
+            throw new DAOException(e.getMessage());
         }
-        return new Student();
+        return null;
     }
 
     @Override
@@ -95,9 +99,10 @@ class DAOFactoryImpl implements DAOFactory {
 
         } catch (SQLException e) {
             log.error(ERROR_MESSAGE + query, e);
+            throw new DAOException(e.getMessage());
         }
 
-        return students;
+        return null;
     }
 
     @Override
@@ -109,7 +114,7 @@ class DAOFactoryImpl implements DAOFactory {
             log.info(CONNECTION_SUCCESSFUL);
             log.info(QUERY_EXEC_SUCCESSFUL, query);
 
-            while (resultSet.next()) {
+            if (resultSet.next()) {
                 return new Course(
                     resultSet.getInt(1),
                     resultSet.getString(2),
@@ -118,9 +123,10 @@ class DAOFactoryImpl implements DAOFactory {
 
         } catch (SQLException e) {
             log.error(ERROR_MESSAGE + query, e);
+            throw new DAOException(e.getMessage());
         }
 
-        return new Course();
+        return null;
     }
 
     @Override
@@ -142,9 +148,10 @@ class DAOFactoryImpl implements DAOFactory {
 
         } catch (SQLException e) {
             log.error(ERROR_MESSAGE + query, e);
+            throw new DAOException(e.getMessage());
         }
 
-        return allCoursesList;
+        return null;
     }
 
     @Override
@@ -162,9 +169,10 @@ class DAOFactoryImpl implements DAOFactory {
 
         } catch (SQLException e) {
             log.error(ERROR_MESSAGE + query, e);
+            throw new DAOException(e.getMessage());
         }
 
-        return new Group();
+        return null;
     }
 
     @Override
@@ -182,8 +190,9 @@ class DAOFactoryImpl implements DAOFactory {
 
         } catch (Exception e) {
             log.error(ERROR_MESSAGE + query, e);
+            throw new DAOException(e.getMessage());
         }
 
-        return groups;
+        return null;
     }
 }

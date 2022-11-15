@@ -1,7 +1,9 @@
 package ua.com.foxstudent102052.service;
 
 import lombok.AllArgsConstructor;
+import ua.com.foxstudent102052.mapper.CourseMapper;
 import ua.com.foxstudent102052.model.Course;
+import ua.com.foxstudent102052.model.CourseDto;
 import ua.com.foxstudent102052.model.Student;
 import ua.com.foxstudent102052.repository.CourseRepository;
 
@@ -13,15 +15,15 @@ public class CourseServiceImpl implements CourseService {
     private final CourseRepository courseRepository;
 
     @Override
-    public void addCourse(Course course) {
-        Course courseFromDB = courseRepository.getCourseByName(course.getCourseName());
-
+    public void addCourse(CourseDto course) {
+        Course courseFromDB = courseRepository.getCourseByName(course.getName());
+        
         if (courseFromDB.getCourseId() == 0) {
-            courseRepository.addCourse(course);
+            courseRepository.addCourse(CourseMapper.toCourse(course));
 
         } else {
             throw new IllegalArgumentException(
-                    String.format("Course with name %s already exists", course.getCourseName()));
+                    String.format("Course with name %s already exists", course.getName()));
         }
     }
 
@@ -38,38 +40,42 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public void updateCourse(Course course) {
-        Course courseFromDB = courseRepository.getCourseById(course.getCourseId());
+    public void updateCourse(CourseDto courseDto) {
+        Course courseFromDB = courseRepository.getCourseById(courseDto.getId());
 
         if (courseFromDB.getCourseId() != 0) {
-            courseRepository.updateCourse(course);
+            courseRepository.updateCourse(CourseMapper.toCourse(courseDto));
 
         } else {
-            throw new IllegalArgumentException(String.format(COURSE_ID_DOES_NOT_EXIST, course.getCourseId()));
+            throw new IllegalArgumentException(String.format(COURSE_ID_DOES_NOT_EXIST, courseDto.getId()));
         }
     }
 
     @Override
-    public void updateCourseName(int courseId, String courseName) {
-        Course courseFromDB = courseRepository.getCourseById(courseId);
-
-        if (courseFromDB.getCourseId() != 0) {
-            courseRepository.updateCourseName(courseId, courseName);
+    public void updateCourseName(CourseDto courseDto) {
+        int id = courseDto.getId();
+        Course courseForUpdate = courseRepository.getCourseById(id);
+        
+        if (courseForUpdate.getCourseId() != 0) {
+            courseForUpdate.setCourseName(courseDto.getName());
+            courseRepository.updateCourse(courseForUpdate);
 
         } else {
-            throw new IllegalArgumentException(String.format(COURSE_ID_DOES_NOT_EXIST, courseId));
+            throw new IllegalArgumentException(String.format(COURSE_ID_DOES_NOT_EXIST, id));
         }
     }
 
     @Override
-    public void updateCourseDescription(int courseId, String courseDescription) {
-        Course courseFromDB = courseRepository.getCourseById(courseId);
+    public void updateCourseDescription(CourseDto courseDto) {
+        int id = courseDto.getId();
+        Course courseFromDB = courseRepository.getCourseById(id);
 
         if (courseFromDB.getCourseId() != 0) {
-            courseRepository.updateCourseDescription(courseId, courseDescription);
+            courseFromDB.setCourseDescription(courseFromDB.getCourseDescription());
+            courseRepository.updateCourse(courseFromDB);
 
         } else {
-            throw new IllegalArgumentException(String.format(COURSE_ID_DOES_NOT_EXIST, courseId));
+            throw new IllegalArgumentException(String.format(COURSE_ID_DOES_NOT_EXIST, id));
         }
     }
 

@@ -1,6 +1,7 @@
 package ua.com.foxstudent102052.service;
 
 import ua.com.foxstudent102052.model.Group;
+import ua.com.foxstudent102052.model.GroupDto;
 import ua.com.foxstudent102052.model.Student;
 
 import java.util.List;
@@ -8,7 +9,7 @@ import java.util.List;
 public interface GroupService {
     void addGroup(Group group);
 
-    void updateGroup(Group group);
+    void updateGroup(GroupDto groupDto);
 
     void removeGroup(int groupId);
 

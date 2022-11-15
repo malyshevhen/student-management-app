@@ -14,19 +14,20 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public void addStudent(Student student) {
-
-        if (studentRepository.getStudentById(student.getStudentId()).getStudentId() == 0) {
+        int studentId = student.getStudentId();
+        
+        if (Boolean.FALSE.equals(ifExists(studentId))) {
             studentRepository.addStudent(student);
 
         } else {
-            throw new IllegalArgumentException(String.format("Student with id %d already exist", student.getStudentId()));
+            throw new IllegalArgumentException(String.format("Student with id %d already exist", studentId));
         }
     }
 
     @Override
     public void removeStudent(int studentId) {
 
-        if (studentRepository.getStudentById(studentId).getStudentId() != 0) {
+        if (Boolean.TRUE.equals(ifExists(studentId))) {
             studentRepository.removeStudent(studentId);
 
         } else {
@@ -36,9 +37,11 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public void updateStudentFirstName(int studentId, String firstName) {
-
-        if (studentRepository.getStudentById(studentId).getStudentId() != 0) {
-            studentRepository.updateStudentFirstName(studentId, firstName);
+        Student studentForUpdate = studentRepository.getStudentById(studentId);
+        
+        if (studentForUpdate != null) {
+            studentForUpdate.setFirstName(firstName);
+            studentRepository.updateStudent(studentForUpdate);
 
         } else {
             throw new IllegalArgumentException(String.format(STUDENT_WITH_ID_NOT_EXIST, studentId));
@@ -47,9 +50,11 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public void updateStudentLastName(int studentId, String lastName) {
-
-        if (studentRepository.getStudentById(studentId).getStudentId() != 0) {
-            studentRepository.updateStudentLastName(studentId, lastName);
+        Student studentForUpdate = studentRepository.getStudentById(studentId);
+        
+        if (studentForUpdate != null) {
+            studentForUpdate.setLastName(lastName);
+            studentRepository.updateStudent(studentForUpdate);
 
         } else {
             throw new IllegalArgumentException(String.format(STUDENT_WITH_ID_NOT_EXIST, studentId));
@@ -58,9 +63,11 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public void updateStudentGroup(int studentId, int groupId) {
-
-        if (studentRepository.getStudentById(studentId).getStudentId() != 0) {
-            studentRepository.updateStudentGroup(studentId, groupId);
+        Student studentForUpdate = studentRepository.getStudentById(studentId);
+        
+        if (studentForUpdate != null) {
+            studentForUpdate.setGroupId(groupId);
+            studentRepository.updateStudent(studentForUpdate);
 
         } else {
             throw new IllegalArgumentException(String.format(STUDENT_WITH_ID_NOT_EXIST, studentId));
@@ -92,7 +99,7 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public Student getStudentById(int studentId) {
 
-        if (studentRepository.getStudentById(studentId).getStudentId() != 0) {
+        if (Boolean.TRUE.equals(ifExists(studentId))) {
             return studentRepository.getStudentById(studentId);
 
         } else {
@@ -125,7 +132,7 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public List<Student> getStudentsBySurnameAndName(String firstName, String lastName) {
+    public List<Student> getStudentsByFullName(String firstName, String lastName) {
 
         if (!studentRepository.getStudentsByFullName(firstName, lastName).isEmpty()) {
             return studentRepository.getStudentsByFullName(firstName, lastName);
@@ -168,5 +175,9 @@ public class StudentServiceImpl implements StudentService {
         } else {
             throw new IllegalArgumentException(String.format("Student with id %d doesn't have any courses", studentId));
         }
+    }
+    
+    private Boolean ifExists(int id){
+        return studentRepository.getStudentById(id) != null;
     }
 }

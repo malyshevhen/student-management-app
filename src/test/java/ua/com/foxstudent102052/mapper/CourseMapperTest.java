@@ -54,7 +54,7 @@ class CourseMapperTest {
     @ParameterizedTest
     @MethodSource
     void dtoToCourse(CourseDto courseDto, Course expected) {
-        Course actual = CourseMapper.dtoToCourse(courseDto);
+        Course actual = CourseMapper.toCourse(courseDto);
 
         assertEquals(expected, actual);
     }

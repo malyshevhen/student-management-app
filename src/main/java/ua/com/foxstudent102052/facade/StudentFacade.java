@@ -72,7 +72,7 @@ public class StudentFacade {
     private static final String ENTER_OPTION_NUMBER = "Enter option number: ";
     private static final String WRONG_INPUT = "Wrong input.";
 
-    private static DAOFactory daoFactory = new DAOFactoryImpl();
+    private static final DAOFactory daoFactory = new DAOFactoryImpl();
     private static final GroupRepository groupRepository = new GroupRepositoryImpl(daoFactory);
     private static final GroupService groupService = new GroupServiceImpl(groupRepository);
     private static final GroupController groupController = new GroupController(groupService);
@@ -96,13 +96,18 @@ public class StudentFacade {
             option = takeInputIntFromUser(STUDENT_MENU);
 
             if (option == 1) {
-                String firstName = takeInputStringFromUser(ENTER_STUDENT_NAME);
-                String lastName = takeInputStringFromUser(ENTER_STUDENT_SURNAME);
-                System.out.println("Choose students group from list:");
-                System.out.println(createGroupStudentsTable(groupController
-                    .getAllGroups()));
+                var firstName = takeInputStringFromUser(ENTER_STUDENT_NAME);
+                var lastName = takeInputStringFromUser(ENTER_STUDENT_SURNAME);
+                print("Choose students group from list:");
+                print(createGroupStudentsTable(groupController.getAllGroups()));
                 int groupId = takeInputIntFromUser(ENTER_OPTION_NUMBER);
-                studentController.addStudent(new StudentDto(groupId, firstName, lastName));
+
+                var studentDto = StudentDto.builder()
+                    .fistName(firstName)
+                    .lastName(lastName)
+                    .groupId(groupId)
+                    .build();
+                studentController.addStudent(studentDto);
 
             } else if (option == 2) {
                 int studentId = takeInputIntFromUser(ENTER_STUDENT_ID);
@@ -119,7 +124,7 @@ public class StudentFacade {
                 MainFacade.callUpMainMenu();
 
             } else {
-                System.out.println(WRONG_INPUT);
+                print(WRONG_INPUT);
             }
         }
     }
@@ -130,41 +135,40 @@ public class StudentFacade {
             option = takeInputIntFromUser(FIND_STUDENT_MENU);
 
             if (option == 1) {
-                var allStudents = studentController
-                    .getAllStudents();
-                System.out.println(createStudentTable(allStudents));
+                var allStudents = studentController.getAllStudents();
+                print(createStudentTable(allStudents));
 
             } else if (option == 2) {
                 int studentId = takeInputIntFromUser(ENTER_STUDENT_ID);
-                System.out.println(createStudentTable(studentController
-                    .getStudentById(studentId)));
+                var studentById = studentController.getStudentById(studentId);
+                print(createStudentTable(studentById));
 
             } else if (option == 3) {
-                String studentFirstName = takeInputStringFromUser(ENTER_STUDENT_NAME);
-                System.out.println(createStudentTable(studentController
-                    .getStudentsByName(studentFirstName)));
+                var studentFirstName = takeInputStringFromUser(ENTER_STUDENT_NAME);
+                var studentsByName = studentController.getStudentsByName(studentFirstName);
+                print(createStudentTable(studentsByName));
 
             } else if (option == 4) {
-                String studentLastName = takeInputStringFromUser(ENTER_STUDENT_SURNAME);
-                System.out.println(createStudentTable(studentController
-                    .getStudentsByLastName(studentLastName)));
+                var studentLastName = takeInputStringFromUser(ENTER_STUDENT_SURNAME);
+                var studentsByLastName = studentController.getStudentsByLastName(studentLastName);
+                print(createStudentTable(studentsByLastName));
 
             } else if (option == 5) {
                 int studentGroupId = takeInputIntFromUser(ENTER_GROUP_ID);
-                System.out.println(createStudentTable(studentController
-                    .getStudentsByGroupId(studentGroupId)));
+                var studentsByGroupId = studentController.getStudentsByGroupId(studentGroupId);
+                print(createStudentTable(studentsByGroupId));
 
             } else if (option == 6) {
                 int studentCourseId = takeInputIntFromUser(ENTER_COURSE_ID);
-                System.out.println(createStudentTable(studentController
-                    .getStudentsByCourseId(studentCourseId)));
+                var studentsByCourseId = studentController.getStudentsByCourseId(studentCourseId);
+                print(createStudentTable(studentsByCourseId));
 
             } else if (option == 0) {
                 option = Integer.MAX_VALUE;
                 callStudentManagementMenu();
 
             } else {
-                System.out.println(WRONG_INPUT);
+                print(WRONG_INPUT);
             }
         }
     }
@@ -176,50 +180,60 @@ public class StudentFacade {
 
             if (option == 1) {
                 int studentId = takeInputIntFromUser(ENTER_STUDENT_ID);
-                String studentFirstName = takeInputStringFromUser(ENTER_STUDENT_NAME);
+                var studentFirstName = takeInputStringFromUser(ENTER_STUDENT_NAME);
                 studentController.updateStudentFirstName(studentId, studentFirstName);
 
             } else if (option == 2) {
                 int studentId = takeInputIntFromUser(ENTER_STUDENT_ID);
-                String studentLastName = takeInputStringFromUser(ENTER_STUDENT_SURNAME);
+                var studentLastName = takeInputStringFromUser(ENTER_STUDENT_SURNAME);
                 studentController.updateStudentsLastName(studentId, studentLastName);
 
             } else if (option == 3) {
                 int studentId = takeInputIntFromUser(ENTER_STUDENT_ID);
-                System.out.println(createGroupStudentsTable(groupController
-                    .getAllGroups()));
+                var allGroups = groupController.getAllGroups();
+                print(createGroupStudentsTable(allGroups));
                 int groupId = takeInputIntFromUser(ENTER_GROUP_ID);
-                studentController.updateStudentsGroup(studentId, groupId);
+                studentController.addStudentToGroup(studentId, groupId);
 
             } else if (option == 4) {
                 int studentId = takeInputIntFromUser(ENTER_STUDENT_ID);
-                System.out.println("Choose course to remove:");
-                System.out.println(createCourseTable(courseController
-                    .getAllCourses()));
+                print("Choose course to remove:");
+                var allCourses = courseController.getAllCourses();
+                print(createCourseTable(allCourses));
                 int courseId = takeInputIntFromUser(ENTER_COURSE_ID);
                 studentController.removeStudentFromCourse(studentId, courseId);
 
             } else if (option == 5) {
                 int studentId = takeInputIntFromUser(ENTER_STUDENT_ID);
-                System.out.println(createCourseTable(courseController
-                    .getAllCourses()));
+                var allCourses = courseController.getAllCourses();
+                print(createCourseTable(allCourses));
                 int courseId = takeInputIntFromUser(ENTER_COURSE_ID);
                 studentController.addStudentToCourse(studentId, courseId);
 
             } else if (option == 6) {
-                int studentId = takeInputIntFromUser(ENTER_STUDENT_ID);
-                int groupId = takeInputIntFromUser(ENTER_GROUP_ID);
-                String firstName = takeInputStringFromUser(ENTER_STUDENT_NAME);
-                String lastName = takeInputStringFromUser(ENTER_STUDENT_SURNAME);
-                studentController.updateStudent(new StudentDto(studentId, groupId, firstName, lastName));
+                var id = takeInputIntFromUser(ENTER_STUDENT_ID);
+                var groupId = takeInputIntFromUser(ENTER_GROUP_ID);
+                var fistName = takeInputStringFromUser(ENTER_STUDENT_NAME);
+                var lastName = takeInputStringFromUser(ENTER_STUDENT_SURNAME);
+                var studentDto = StudentDto.builder()
+                    .id(id)
+                    .groupId(groupId)
+                    .fistName(fistName)
+                    .lastName(lastName)
+                    .build();
+                studentController.updateStudent(studentDto);
 
             } else if (option == 0) {
                 option = Integer.MAX_VALUE;
                 callStudentManagementMenu();
 
             } else {
-                System.out.println(WRONG_INPUT);
+                print(WRONG_INPUT);
             }
         }
+    }
+
+    private static void print(String message) {
+        System.out.println(message);
     }
 }

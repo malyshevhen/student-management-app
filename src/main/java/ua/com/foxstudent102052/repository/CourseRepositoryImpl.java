@@ -4,6 +4,7 @@ import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import ua.com.foxstudent102052.model.Course;
 import ua.com.foxstudent102052.model.Student;
+import ua.com.foxstudent102052.repository.exception.DAOException;
 
 import java.util.List;
 
@@ -17,59 +18,59 @@ public class CourseRepositoryImpl implements CourseRepository {
     
     @Override
     public void addCourse(@NonNull Course course) {
-        daoFactory.doPost(String.format("""
-                INSERT
-                INTO courses (course_name, course_description)
-                VALUES ('%s', '%s');""",
-            course.getCourseName(),
-            course.getCourseDescription()));
+        try{
+            daoFactory.doPost(String.format("""
+                    INSERT
+                    INTO courses (course_name, course_description)
+                    VALUES ('%s', '%s');""",
+                course.getCourseName(),
+                course.getCourseDescription()));
+        } catch (DAOException e) {
+            log.error("Error while adding course", e);
+            throw new DAOException(e.getMessage());
+        }
     }
 
     @Override
     public void removeCourse(int id) {
-        daoFactory.doPost(String.format("""
-                DELETE
-                FROM courses
-                WHERE course_id = %d;""",
-            id));
-    }
-
-    @Override
-    public void updateCourseName(int courseId, String courseName) {
-        daoFactory.doPost(String.format("""
-                UPDATE courses
-                SET course_name = '%s'
-                WHERE course_id = %d;""",
-            courseName,
-            courseId));
-    }
-
-    @Override
-    public void updateCourseDescription(int courseId, String courseDescription) {
-        daoFactory.doPost(String.format("""
-                UPDATE courses
-                SET course_description = '%s'
-                WHERE course_id = %d;""",
-            courseDescription,
-            courseId));
+        try{
+            daoFactory.doPost(String.format("""
+                    DELETE
+                    FROM courses
+                    WHERE course_id = %d;""",
+                id));
+        } catch (DAOException e) {
+            log.error("Error while removing course", e);
+            throw new DAOException(e.getMessage());
+        }
     }
 
     @Override
     public void updateCourse(@NonNull Course course) {
-        daoFactory.doPost(String.format("""
-                UPDATE courses
-                SET (course_name, course_description) = ('%s', '%s')
-                WHERE course_id = %d;""",
-            course.getCourseName(),
-            course.getCourseDescription(),
-            course.getCourseId()));
+        try{
+            daoFactory.doPost(String.format("""
+                    UPDATE courses
+                    SET (course_name, course_description) = ('%s', '%s')
+                    WHERE course_id = %d;""",
+                course.getCourseName(),
+                course.getCourseDescription(),
+                course.getCourseId()));
+        } catch (DAOException e) {
+            log.error("Error while updating course", e);
+            throw new DAOException(e.getMessage());
+        }
     }
 
     @Override
     public List<Course> getAllCourses() {
         String query = "SELECT * FROM courses;";
 
-        return daoFactory.getCourses(query);
+        try {
+            return daoFactory.getCourses(query);
+        } catch (DAOException e) {
+            log.error("Error while getting all courses", e);
+            throw new DAOException(e.getMessage());
+        }
     }
 
     @Override
@@ -80,7 +81,12 @@ public class CourseRepositoryImpl implements CourseRepository {
                 WHERE course_id = %d;""",
             courseId);
 
-        return daoFactory.getCourse(query);
+        try {
+            return daoFactory.getCourse(query);
+        } catch (DAOException e) {
+            log.error("Error while getting course by id", e);
+            throw new DAOException(e.getMessage());
+        }
     }
 
     @Override
@@ -90,8 +96,13 @@ public class CourseRepositoryImpl implements CourseRepository {
                 FROM courses
                 WHERE course_name = '%s';""",
             courseName);
-        
-        return daoFactory.getCourse(query);
+
+        try {
+            return daoFactory.getCourse(query);
+        } catch (DAOException e) {
+            log.error("Error while getting course by name", e);
+            throw new DAOException(e.getMessage());
+        }
     }
 
     @Override
@@ -105,6 +116,11 @@ public class CourseRepositoryImpl implements CourseRepository {
                     WHERE course_id = %d);""",
             courseId);
 
-        return daoFactory.getStudents(query);
+        try {
+            return daoFactory.getStudents(query);
+        } catch (DAOException e) {
+            log.error("Error while getting students by course id", e);
+            throw new DAOException(e.getMessage());
+        }
     }
 }

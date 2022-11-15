@@ -1,9 +1,9 @@
 package ua.com.foxstudent102052.service;
 
-import java.util.List;
-
 import ua.com.foxstudent102052.model.Course;
 import ua.com.foxstudent102052.model.Student;
+
+import java.util.List;
 
 public interface StudentService {
 
@@ -32,7 +32,7 @@ public interface StudentService {
 
     List<Student> getStudentsByName(String name);
 
-    List<Student> getStudentsBySurnameAndName(String firstName, String lastName);
+    List<Student> getStudentsByFullName(String firstName, String lastName);
 
     List<Course> getCoursesByStudentId(int studentId);
 }

@@ -1,6 +1,7 @@
 package ua.com.foxstudent102052.facade;
 
 import ua.com.foxstudent102052.controller.GroupController;
+import ua.com.foxstudent102052.model.GroupDto;
 import ua.com.foxstudent102052.repository.DAOFactory;
 import ua.com.foxstudent102052.repository.DAOFactoryImpl;
 import ua.com.foxstudent102052.repository.GroupRepository;
@@ -24,8 +25,9 @@ public class GroupFacade {
             1. Add group;
             2. Remove group;
             3. Update group;
-            4. Find all groups with less or equal number of students;
-            5. Show all groups;
+            4. Find by id;
+            5. Find all groups with less or equal number of students;
+            6. Show all groups;
             0. Back to main menu.
             -----------------------------------------
             Enter option number:""";
@@ -58,17 +60,25 @@ public class GroupFacade {
                 int groupId = takeInputIntFromUser(ENTER_GROUP_ID);
                 groupController.removeGroup(groupId);
 
-            } else if (option == 3) {
+            }else if(option == 3){
+                int groupId = takeInputIntFromUser(ENTER_GROUP_ID);
+                var groupName = takeInputStringFromUser(ENTER_GROUP_NAME);
+                var groupDto = new GroupDto();
+                groupDto.setId(groupId);
+                groupDto.setName(groupName);
+                groupController.updateGroup(groupDto);
+                
+            }else if (option == 4) {
                 int groupId = takeInputIntFromUser(ENTER_GROUP_ID);
                 System.out.println(createGroupTable(groupController
                     .getGroupById(groupId)));
 
-            } else if (option == 4) {
+            } else if (option == 5) {
                 int numberOfStudents = takeInputIntFromUser("Enter minimum number of students: ");
                 System.out.println(createGroupTable(groupController
                     .getGroupsSmallerThen(numberOfStudents)));
 
-            } else if (option == 5) {
+            } else if (option == 6) {
                 System.out.println(createGroupStudentsTable(groupController
                     .getAllGroups()));
 

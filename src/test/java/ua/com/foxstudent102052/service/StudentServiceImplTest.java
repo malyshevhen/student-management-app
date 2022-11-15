@@ -138,7 +138,7 @@ class StudentServiceImplTest {
         
         when(studentRepository.getStudentsByFullName(lastName, firstName)).thenReturn(expected);
         
-        var actual = studentService.getStudentsBySurnameAndName(lastName, firstName);
+        var actual = studentService.getStudentsByFullName(lastName, firstName);
         
         assertEquals(expected, actual);
     }

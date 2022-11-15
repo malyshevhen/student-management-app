@@ -82,32 +82,6 @@ class CourseRepositoryImplTest {
     }
 
     @Test
-    void canUpdateCourseName() {
-        var courseToDb = new Course(1, "Java", "Java expected");
-
-        courseRepository.addCourse(courseToDb);
-        courseRepository.updateCourseName(1, "Java updated");
-
-        var actual = courseRepository.getCourseById(1);
-        var expected = new Course(1, "Java updated", "Java expected");
-
-        assertEquals(expected, actual);
-    }
-
-    @Test
-    void canUpdateCourseDescription() {
-        var courseToDb = new Course(1, "Java", "Java expected");
-
-        courseRepository.addCourse(courseToDb);
-        courseRepository.updateCourseDescription(1, "Java updated");
-
-        var actual = courseRepository.getCourseById(1);
-        var expected = new Course(1, "Java", "Java updated");
-
-        assertEquals(expected, actual);
-    }
-
-    @Test
     void canUpdateCourse() {
         var courseToDb = new Course(1, "Java", "Java expected");
         var expected = new Course(1, "Java updated", "Java updated");

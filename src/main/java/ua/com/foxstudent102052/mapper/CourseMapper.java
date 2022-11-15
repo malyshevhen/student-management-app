@@ -24,7 +24,7 @@ public class CourseMapper {
         }
     }
 
-    public static Course dtoToCourse(CourseDto courseDto) {
+    public static Course toCourse(CourseDto courseDto) {
         try {
             return new Course(
                 courseDto.getId(), 

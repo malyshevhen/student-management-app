@@ -1,7 +1,9 @@
 package ua.com.foxstudent102052.service;
 
 import lombok.AllArgsConstructor;
+import ua.com.foxstudent102052.mapper.GroupMapper;
 import ua.com.foxstudent102052.model.Group;
+import ua.com.foxstudent102052.model.GroupDto;
 import ua.com.foxstudent102052.model.Student;
 import ua.com.foxstudent102052.repository.GroupRepository;
 
@@ -25,13 +27,13 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
-    public void updateGroup(Group group) {
+    public void updateGroup(GroupDto groupDto) {
 
-        if (groupRepository.getGroupById(group.getGroupId()).getGroupId() != 0) {
-            groupRepository.updateGroupById(group);
+        if (groupRepository.getGroupById(groupDto.getId()).getGroupId() != 0) {
+            groupRepository.updateGroupById(GroupMapper.dtoToGroup(groupDto));
 
         } else {
-            throw new IllegalArgumentException(String.format(GROUP_WITH_ID_NOT_EXIST, group.getGroupId()));
+            throw new IllegalArgumentException(String.format(GROUP_WITH_ID_NOT_EXIST, groupDto.getId()));
         }      
     }
 

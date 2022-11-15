@@ -26,17 +26,6 @@ class CourseServiceImplTest {
         courseRepository = mock(CourseRepository.class);
         courseService = new CourseServiceImpl(courseRepository);
     }
-    
-    @DisplayName("Method addCourse should pass Course to Repository")    
-    @Test
-    void canAddCourse() {
-        doNothing().when(courseRepository).addCourse(new Course());
-        when(courseRepository.getCourseByName("Java")).thenReturn(new Course());
-        
-        courseService.addCourse(new Course("Java", "Java course"));
-        
-        verify(courseRepository, times(1)).addCourse(new Course("Java", "Java course"));
-    }
 
     @DisplayName("Method removeCourse should pass Course to Repository")
     @Test
@@ -48,42 +37,6 @@ class CourseServiceImplTest {
         courseService.removeCourse(course.getCourseId());
         
         verify(courseRepository, times(1)).removeCourse(course.getCourseId());
-    }
-
-    @DisplayName("Method updateCourse should pass Course to Repository")
-    @Test
-    void canUpdateCourse() {
-        Course course = new Course(1, "Java", "Java course");
-        doNothing().when(courseRepository).updateCourse(course);
-        when(courseRepository.getCourseById(course.getCourseId())).thenReturn(course);
-        
-        courseService.updateCourse(course);
-        
-        verify(courseRepository, times(1)).updateCourse(course);
-    }
-
-    @DisplayName("Method updateCourseName should pass Course to Repository")
-    @Test
-    void canUpdateCourseName() {
-        var course = new Course(1, "Java", "Java course");
-        doNothing().when(courseRepository).updateCourseName(course.getCourseId(), course.getCourseName());
-        when(courseRepository.getCourseById(course.getCourseId())).thenReturn(course);
-        
-        courseService.updateCourseName(course.getCourseId(), course.getCourseName());
-        
-        verify(courseRepository, times(1)).updateCourseName(course.getCourseId(), course.getCourseName());
-    }
-    
-    @DisplayName("Method updateCourseName should pass Course to Repository")
-    @Test
-    void canUpdateCourseDescription() {
-        var course = new Course(1, "Java", "Java course");
-        doNothing().when(courseRepository).updateCourseDescription(course.getCourseId(), course.getCourseDescription());
-        when(courseRepository.getCourseById(course.getCourseId())).thenReturn(course);
-        
-        courseService.updateCourseDescription(course.getCourseId(), course.getCourseDescription());
-        
-        verify(courseRepository,times(1)).updateCourseDescription(course.getCourseId(), course.getCourseDescription());
     }
 
     @DisplayName("Method getCourseById should return List of Courses")

@@ -99,7 +99,7 @@ class StudentControllerTest {
     void updateStudentsGroup() {
         doNothing().when(studentService).updateStudentGroup(1, 1);
 
-        studentController.updateStudentsGroup(1, 1);
+        studentController.addStudentToGroup(1, 1);
 
         verify(studentService, times(1)).updateStudentGroup(1, 1);
     }
@@ -188,7 +188,7 @@ class StudentControllerTest {
     @Test
     void getStudentsBySurnameAndName() {
         var student = new Student(1, 1, "firstName", "Lastname");
-        when(studentService.getStudentsBySurnameAndName("firstName", "Lastname")).thenReturn(List.of(student));
+        when(studentService.getStudentsByFullName("firstName", "Lastname")).thenReturn(List.of(student));
         when(groupService.getGroupById(1)).thenReturn(new Group(1, ""));
         when(studentService.getCoursesByStudentId(1)).thenReturn(List.of());
 

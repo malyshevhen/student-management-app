@@ -3,10 +3,10 @@ package ua.com.foxstudent102052.controller;
 import lombok.extern.slf4j.Slf4j;
 import ua.com.foxstudent102052.mapper.CourseMapper;
 import ua.com.foxstudent102052.mapper.StudentMapper;
-import ua.com.foxstudent102052.model.Course;
 import ua.com.foxstudent102052.model.CourseDto;
 import ua.com.foxstudent102052.model.StudentDto;
 import ua.com.foxstudent102052.service.CourseService;
+import ua.com.foxstudent102052.service.exception.CourseAlreadyExistException;
 
 import java.util.List;
 
@@ -18,33 +18,33 @@ public class CourseController {
         this.courseService = courseService;
     }
 
-    public void addCourse(String courseName, String courseDescription) {
+    public void addCourse(CourseDto courseDto) {
         try {
-            courseService.addCourse(new Course(courseName, courseDescription));
-        } catch (IllegalArgumentException e) {
+            courseService.addCourse(courseDto);
+        } catch (CourseAlreadyExistException e) {
             log.info(e.getMessage());
         }
     }
 
     public void updateCourse(CourseDto courseDto) {
         try {
-            courseService.updateCourse(CourseMapper.dtoToCourse(courseDto));
+            courseService.updateCourse(courseDto);
         } catch (IllegalArgumentException e) {
             log.info(e.getMessage());
         }
     }
 
-    public void updateCourseName(int courseId, String courseName) {
+    public void updateCourseName(CourseDto  courseDto) {
         try {
-            courseService.updateCourseName(courseId, courseName);
+            courseService.updateCourseName(courseDto);
         } catch (IllegalArgumentException e) {
             log.info(e.getMessage());
         }
     }
 
-    public void updateCourseDescription(int courseId, String courseDescription) {
+    public void updateCourseDescription(CourseDto courseDto) {
         try {
-            courseService.updateCourseDescription(courseId, courseDescription);
+            courseService.updateCourseDescription(courseDto);
         } catch (IllegalArgumentException e) {
             log.info(e.getMessage());
         }

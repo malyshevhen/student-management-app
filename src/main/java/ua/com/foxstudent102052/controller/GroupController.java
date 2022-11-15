@@ -26,9 +26,9 @@ public class GroupController {
         }
     }
 
-    public void updateGroup(int groupId, String groupName) {
+    public void updateGroup(GroupDto groupDto) {
         try {
-            groupService.updateGroup(new Group(groupId, groupName));
+            groupService.updateGroup(groupDto);
         } catch (IllegalArgumentException e) {
             log.info(e.getMessage());
         }

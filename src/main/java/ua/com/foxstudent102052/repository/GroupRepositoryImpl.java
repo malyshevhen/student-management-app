@@ -1,6 +1,5 @@
 package ua.com.foxstudent102052.repository;
 
-import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import ua.com.foxstudent102052.model.Group;
 import ua.com.foxstudent102052.model.Student;
@@ -17,7 +16,7 @@ public class GroupRepositoryImpl implements GroupRepository {
 
 
     @Override
-    public void addGroup(@NonNull Group group) {
+    public void addGroup(Group group) {
         daoFactory.doPost(String.format("""
                 INSERT
                 INTO groups (group_name) values ('%s');""",
@@ -36,7 +35,7 @@ public class GroupRepositoryImpl implements GroupRepository {
     }
 
     @Override
-    public void updateGroupById(@NonNull Group group) {
+    public void updateGroupById(Group group) {
         daoFactory.doPost(String.format("""
                 UPDATE groups
                 SET group_name = '%s'

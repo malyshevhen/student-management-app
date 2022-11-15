@@ -1,16 +1,14 @@
 package ua.com.foxstudent102052.repository;
 
-import java.util.List;
-
 import ua.com.foxstudent102052.model.Course;
 import ua.com.foxstudent102052.model.Student;
+
+import java.util.List;
 
 public interface CourseRepository {
     void addCourse(Course course);
 
     void removeCourse(int id);
-
-    void updateCourseName(int courseId, String courseName);
 
     void updateCourse(Course course);
 
@@ -19,8 +17,6 @@ public interface CourseRepository {
     Course getCourseById(int courseId);
 
     Course getCourseByName(String courseName);
-
-    void updateCourseDescription(int courseId, String courseDescription);
 
     List<Student> getStudentsByCourseId(int course);
 }

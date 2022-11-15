@@ -1,21 +1,15 @@
 package ua.com.foxstudent102052.repository;
 
-import java.util.List;
-
 import ua.com.foxstudent102052.model.Course;
 import ua.com.foxstudent102052.model.Student;
+
+import java.util.List;
 
 public interface StudentRepository {
 
     void addStudent(Student student);
 
     void removeStudent(int id);
-
-    void updateStudentFirstName(int studentId, String firstName);
-
-    void updateStudentLastName(int studentId, String lastName);
-
-    void updateStudentGroup(int studentId, int groupId);
 
     void updateStudent(Student student);
 
