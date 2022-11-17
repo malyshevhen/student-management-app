@@ -5,9 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import ua.com.foxstudent102052.mapper.CourseMapper;
 import ua.com.foxstudent102052.model.CourseDto;
 import ua.com.foxstudent102052.repository.CourseRepository;
-import ua.com.foxstudent102052.repository.exception.DAOException;
-import ua.com.foxstudent102052.service.exception.CourseAlreadyExistException;
-import ua.com.foxstudent102052.service.exception.NoSuchCourseExistsException;
 
 import java.util.List;
 
@@ -23,11 +20,11 @@ public class CourseServiceImpl implements CourseService {
         try {
             courseRepository.addCourse(CourseMapper.toCourse(course));
 
-        } catch (DAOException e) {
+        } catch (IllegalArgumentException e) {
             var msg = String.format("Course with %s already exists", course.getName());
             log.error(msg, e);
 
-            throw new CourseAlreadyExistException(msg);
+            throw e;
         }
     }
 
@@ -39,11 +36,11 @@ public class CourseServiceImpl implements CourseService {
                 .stream()
                 .map(CourseMapper::toDto)
                 .toList();
-        } catch (DAOException e) {
+        } catch (IllegalArgumentException e) {
             var msg = "There are no courses in database";
             log.error(msg, e);
 
-            throw new NoSuchCourseExistsException(msg);
+            throw e;
         }
     }
 
@@ -53,11 +50,11 @@ public class CourseServiceImpl implements CourseService {
         try {
             return CourseMapper.toDto(courseRepository.getCourseById(id));
 
-        } catch (DAOException e) {
+        } catch (IllegalArgumentException e) {
             var msg = String.format(COURSE_ID_DOES_NOT_EXIST, id);
             log.error(msg, e);
 
-            throw new NoSuchCourseExistsException(msg);
+            throw e;
         }
     }
 
@@ -70,11 +67,11 @@ public class CourseServiceImpl implements CourseService {
                 .map(CourseMapper::toDto)
                 .toList();
 
-        } catch (DAOException e) {
+        } catch (IllegalArgumentException e) {
             String msg = String.format("Student with id %d doesn't have any courses", studentId);
             log.error(msg, e);
 
-            throw new NoSuchCourseExistsException(msg);
+            throw e;
         }
     }
 }

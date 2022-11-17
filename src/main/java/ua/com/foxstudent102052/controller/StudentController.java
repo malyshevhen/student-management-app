@@ -5,12 +5,9 @@ import ua.com.foxstudent102052.model.StudentDto;
 import ua.com.foxstudent102052.service.CourseService;
 import ua.com.foxstudent102052.service.GroupService;
 import ua.com.foxstudent102052.service.StudentService;
-import ua.com.foxstudent102052.service.exception.NoSuchCourseExistsException;
-import ua.com.foxstudent102052.service.exception.NoSuchGroupExistsException;
-import ua.com.foxstudent102052.service.exception.NoSuchStudentExistsException;
-import ua.com.foxstudent102052.service.exception.StudentAlreadyExistException;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Slf4j
 public class StudentController {
@@ -25,88 +22,109 @@ public class StudentController {
     }
 
 
-    public void addStudent(StudentDto studentDto) {
+    public void addStudent(StudentDto studentDto) throws IllegalArgumentException{
         try {
             studentService.addStudent(studentDto);
-        } catch (StudentAlreadyExistException e) {
-            log.error(e.getMessage());
+        } catch (IllegalArgumentException e) {
+            log.error(e.getMessage(), e);
+            
+            throw new IllegalArgumentException(e);
         }
     }
 
-    public void removeStudent(int studentId) {
+    public void removeStudent(int studentId) throws NoSuchElementException {
         try {
             studentService.removeStudent(studentId);
-        } catch (NoSuchStudentExistsException e) {
-            log.error(e.getMessage());
+        } catch (NoSuchElementException e) {
+            log.error(e.getMessage(), e);
+            
+            throw new NoSuchElementException(e);
         }
     }
 
-    public void addStudentToCourse(int studentId, int courseId) {
+    public void addStudentToCourse(int studentId, int courseId) throws NoSuchElementException {
         try {
             studentService.addStudentToCourse(studentId, courseId);
-        } catch (NoSuchStudentExistsException e) {
-            log.error(e.getMessage());
+        } catch (NoSuchElementException e) {
+            log.error(e.getMessage(), e);
+            
+            throw new NoSuchElementException(e);
         }
     }
 
-    public void removeStudentFromCourse(int studentId, int courseId) {
+    public void removeStudentFromCourse(int studentId, int courseId) throws NoSuchElementException {
         try {
             studentService.removeStudentFromCourse(studentId, courseId);
-        } catch (NoSuchStudentExistsException e) {
+        } catch (NoSuchElementException e) {
             log.error(e.getMessage());
+            
+            throw new NoSuchElementException(e);
         }
     }
 
-    public List<StudentDto> getAllStudents() {
+    public List<StudentDto> getAllStudents() throws NoSuchElementException {
         try {
             var studentDtoList = studentService.getAllStudents();
 
             return updateStudentsGroupAndCourse(studentDtoList);
-        } catch (NoSuchStudentExistsException e) {
+        } catch (NoSuchElementException e) {
             log.error(e.getMessage());
+            
+            throw new NoSuchElementException(e);
         }
-
-        return List.of();
     }
     
-    public List<StudentDto> getStudentsByCourseNameAndGroupId(String studentName, Integer courseId) {
+    public List<StudentDto> getStudentsByCourseNameAndGroupId(String studentName, Integer courseId) throws NoSuchElementException {
         try {
-            var studentDtoList = studentService.getStudentsByCourseNameAndGroupId(studentName, courseId);
+            var studentDtoList = studentService.getStudentsByNameAndCourse(studentName, courseId);
 
             return updateStudentsGroupAndCourse(studentDtoList);
-        } catch (NoSuchStudentExistsException e) {
+        } catch (NoSuchElementException e) {
             log.error(e.getMessage());
+            
+            throw new NoSuchElementException(e);
         }
-
-        return List.of();
     }
     
-    private List<StudentDto> updateStudentsGroupAndCourse(List<StudentDto> studentDtoList) {
-        studentDtoList.forEach(studentDto -> {
-            setStudentsGroup(studentDto);
-            setStudentsCourse(studentDto);
-        });
+    private List<StudentDto> updateStudentsGroupAndCourse(List<StudentDto> studentDtoList) throws NoSuchElementException {
+        try {
+            studentDtoList.forEach(studentDto -> {
+                setStudentsGroup(studentDto);
+                setStudentsCourse(studentDto);
+            });
 
-        return studentDtoList;
+            return studentDtoList;
+        } catch (NoSuchElementException e) {
+            log.error(e.getMessage());
+            
+            throw new NoSuchElementException(e);
+        }
     }
 
-    private void setStudentsCourse(StudentDto studentDto) {
+    private void setStudentsCourse(StudentDto studentDto) throws NoSuchElementException {
         int id = studentDto.getId();
         try {
             studentDto.setCoursesList(
                 courseService.getCoursesByStudentId(id));
-        } catch (NoSuchCourseExistsException e) {
-            log.error("Student with id: %d has no courses".formatted(id));
+        } catch (NoSuchElementException e) {
+            String msg = "Student with id: %d has no courses".formatted(id);
+            log.error(msg);
+
+
+            throw new NoSuchElementException(e);
         }
     }
 
-    private void setStudentsGroup(StudentDto studentDto) {
+    private void setStudentsGroup(StudentDto studentDto) throws NoSuchElementException {
         try {
             int groupId = studentDto.getGroupId();
             var groupById = groupService.getGroupById(groupId);
             studentDto.setGroup(groupById.getName());
-        } catch (NoSuchGroupExistsException e) {
-            log.error("Student with id: %d has no group".formatted(studentDto.getId()));
+        } catch (NoSuchElementException e) {
+            String msg = "Student with id: %d has no group".formatted(studentDto.getId());
+            log.error(msg);
+            
+            throw new NoSuchElementException(e);
         }
     }
 }

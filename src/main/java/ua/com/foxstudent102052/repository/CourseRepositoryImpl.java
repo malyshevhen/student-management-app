@@ -2,9 +2,10 @@ package ua.com.foxstudent102052.repository;
 
 import lombok.extern.slf4j.Slf4j;
 import ua.com.foxstudent102052.model.Course;
-import ua.com.foxstudent102052.repository.exception.DAOException;
 
+import java.sql.SQLException;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Slf4j
 public class CourseRepositoryImpl implements CourseRepository {
@@ -15,7 +16,7 @@ public class CourseRepositoryImpl implements CourseRepository {
     }
     
     @Override
-    public void addCourse(Course course) {
+    public void addCourse(Course course) throws IllegalArgumentException {
         try{
             daoFactory.doPost(String.format("""
                     INSERT
@@ -23,26 +24,28 @@ public class CourseRepositoryImpl implements CourseRepository {
                     VALUES ('%s', '%s');""",
                 course.getCourseName(),
                 course.getCourseDescription()));
-        } catch (DAOException e) {
+        } catch (SQLException e) {
             log.error("Error while adding course", e);
-            throw new DAOException(e.getMessage());
+            
+            throw new IllegalArgumentException(e);
         }
     }
 
     @Override
-    public List<Course> getAllCourses() {
+    public List<Course> getAllCourses() throws NoSuchElementException {
         String query = "SELECT * FROM courses;";
 
         try {
             return daoFactory.getCourses(query);
-        } catch (DAOException e) {
+        } catch (SQLException e) {
             log.error("Error while getting all courses", e);
-            throw new DAOException(e.getMessage());
+            
+            throw new IllegalArgumentException(e);
         }
     }
 
     @Override
-    public Course getCourseById(int courseId) {
+    public Course getCourseById(int courseId) throws NoSuchElementException {
         String query = String.format("""
                 SELECT *
                 FROM courses
@@ -51,23 +54,30 @@ public class CourseRepositoryImpl implements CourseRepository {
 
         try {
             return daoFactory.getCourse(query);
-        } catch (DAOException e) {
+        } catch (SQLException e) {
             log.error("Error while getting course by id", e);
-            throw new DAOException(e.getMessage());
+            
+            throw new IllegalArgumentException(e);
         }
     }
 
     @Override
-    public List<Course> getCoursesByStudentId(int studentId) {
-        String query = String.format("""
-            SELECT *
-            FROM courses
-            WHERE course_id
-            IN (
-                SELECT course_id
-                FROM students_courses
-                WHERE student_id = %d);""", studentId);
+    public List<Course> getCoursesByStudentId(int studentId) throws NoSuchElementException {
+        try {
+            String query = String.format("""
+                SELECT *
+                FROM courses
+                WHERE course_id
+                IN (
+                    SELECT course_id
+                    FROM students_courses
+                    WHERE student_id = %d);""", studentId);
 
-        return daoFactory.getCourses(query);
+            return daoFactory.getCourses(query);
+        } catch (SQLException e) {
+            log.error("Error while getting courses by student id", e);
+            
+            throw new NoSuchElementException(e);
+        }
     }
 }

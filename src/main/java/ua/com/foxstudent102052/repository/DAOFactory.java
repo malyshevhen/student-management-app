@@ -14,17 +14,17 @@ public interface DAOFactory {
 
     void setPassword(String s);
 
-    void doPost(String query);
+    void doPost(String query) throws DAOException;
 
-    Student getStudent(String query);
+    Student getStudent(String query) throws DAOException;
 
-    List<Student> getStudents(String query);
+    List<Student> getStudents(String query) throws DAOException;
 
-    Course getCourse(String query);
+    Course getCourse(String query) throws DAOException;
 
-    ArrayList<Course> getCourses(String query);
+    ArrayList<Course> getCourses(String query) throws DAOException;
 
-    Group getGroup(String query);
+    Group getGroup(String query) throws DAOException;
 
-    List<Group> getGroups(String query);
+    List<Group> getGroups(String query) throws DAOException;
 }

@@ -7,9 +7,6 @@ import ua.com.foxstudent102052.mapper.StudentMapper;
 import ua.com.foxstudent102052.model.GroupDto;
 import ua.com.foxstudent102052.model.StudentDto;
 import ua.com.foxstudent102052.repository.GroupRepository;
-import ua.com.foxstudent102052.repository.exception.DAOException;
-import ua.com.foxstudent102052.service.exception.GroupAlreadyExistException;
-import ua.com.foxstudent102052.service.exception.NoSuchGroupExistsException;
 
 import java.util.List;
 
@@ -26,11 +23,11 @@ public class GroupServiceImpl implements GroupService {
         try {
             groupRepository.addGroup(GroupMapper.toGroup(groupDto));
 
-        } catch (DAOException e) {
+        } catch (IllegalArgumentException e) {
             String msg = String.format(GROUP_WITH_ID_EXISTS, groupDto.getId());
             log.error(msg, e);
 
-            throw new GroupAlreadyExistException(msg);
+            throw e;
         }
     }
 
@@ -43,11 +40,11 @@ public class GroupServiceImpl implements GroupService {
                 .map(GroupMapper::toDto)
                 .toList();
 
-        } catch (DAOException e) {
+        } catch (IllegalArgumentException e) {
             String msg = "There are no groups in the database";
             log.error(msg, e);
 
-            throw new NoSuchGroupExistsException(msg);
+            throw e;
         }
     }
 
@@ -57,11 +54,11 @@ public class GroupServiceImpl implements GroupService {
         try {
             return GroupMapper.toDto(groupRepository.getGroupById(groupId));
 
-        } catch (DAOException e) {
+        } catch (IllegalArgumentException e) {
             String msg = String.format(GROUP_WITH_ID_NOT_EXIST, groupId);
             log.error(msg, e);
 
-            throw new NoSuchGroupExistsException(msg);
+            throw e;
         }
     }
 
@@ -74,12 +71,12 @@ public class GroupServiceImpl implements GroupService {
                 .map(GroupMapper::toDto)
                 .toList();
 
-        } catch (DAOException e) {
+        } catch (IllegalArgumentException e) {
             String msg = String.format("There are no groups with number of students less then %d",
                 numberOfStudents);
             log.error(msg, e);
 
-            throw new NoSuchGroupExistsException(msg);
+            throw e;
         }
     }
 
@@ -89,11 +86,11 @@ public class GroupServiceImpl implements GroupService {
         try {
             return GroupMapper.toDto(groupRepository.getGroupByName(groupName));
 
-        } catch (DAOException e) {
+        } catch (IllegalArgumentException e) {
             String msg = String.format("Group with name %s doesn't exist", groupName);
             log.error(msg, e);
 
-            throw new NoSuchGroupExistsException(msg);
+            throw e;
         }
     }
 
@@ -106,11 +103,11 @@ public class GroupServiceImpl implements GroupService {
                 .map(StudentMapper::toDto)
                 .toList();
 
-        } catch (DAOException e) {
+        } catch (IllegalArgumentException e) {
             String msg = String.format("There are no students in group with id %d", groupId);
             log.error(msg, e);
 
-            throw new NoSuchGroupExistsException(msg);
+            throw e;
         }
     }
 }

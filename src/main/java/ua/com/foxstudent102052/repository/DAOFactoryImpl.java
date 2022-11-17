@@ -4,13 +4,8 @@ import lombok.extern.slf4j.Slf4j;
 import ua.com.foxstudent102052.model.Course;
 import ua.com.foxstudent102052.model.Group;
 import ua.com.foxstudent102052.model.Student;
-import ua.com.foxstudent102052.repository.exception.DAOException;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,19 +13,19 @@ import static java.sql.DriverManager.getConnection;
 
 @Slf4j
 public class DAOFactoryImpl implements DAOFactory {
-    
+
     private static DAOFactoryImpl instance;
 
     private DAOFactoryImpl() {
     }
-    
+
     public static DAOFactoryImpl getInstance() {
         if (instance == null) {
             instance = new DAOFactoryImpl();
         }
         return instance;
     }
-    
+
     private static final String QUERY_EXEC_SUCCESSFUL = "Query: '{}' executed successfully";
     private static final String CONNECTION_SUCCESSFUL = "Connection to DB successful!";
     private static final String ERROR_MESSAGE = "Error while executing query: {}";
@@ -52,7 +47,7 @@ public class DAOFactoryImpl implements DAOFactory {
     }
 
     @Override
-    public void doPost(String query) {
+    public void doPost(String query) throws DAOException {
 
         try (Connection connection = getConnection(jdbcUrl, login, password);
              Statement statement = connection.createStatement()) {
@@ -63,12 +58,13 @@ public class DAOFactoryImpl implements DAOFactory {
 
         } catch (SQLException e) {
             log.error(ERROR_MESSAGE + query, e);
-            throw new DAOException(e.getMessage());
+
+            throw new DAOException(e);
         }
     }
 
     @Override
-    public Student getStudent(String query) {
+    public Student getStudent(String query) throws DAOException {
         try (Connection connection = getConnection(jdbcUrl, login, password);
              Statement statement = connection.createStatement();
              ResultSet resultStudentSet = statement.executeQuery(query)) {
@@ -83,17 +79,19 @@ public class DAOFactoryImpl implements DAOFactory {
                     .firstName(resultStudentSet.getString(3))
                     .lastName(resultStudentSet.getString(4))
                     .build();
+            } else {
+                throw new DAOException("No student found");
             }
 
         } catch (SQLException e) {
             log.error(ERROR_MESSAGE + query, e);
-            throw new DAOException(e.getMessage());
+
+            throw new DAOException(e);
         }
-        return null;
     }
 
     @Override
-    public List<Student> getStudents(String query) {
+    public List<Student> getStudents(String query) throws DAOException {
         var students = new ArrayList<Student>();
         try (Connection connection = getConnection(jdbcUrl, login, password);
              Statement statement = connection.createStatement();
@@ -111,17 +109,20 @@ public class DAOFactoryImpl implements DAOFactory {
                         .lastName(setStudentsByFullName.getString(4))
                         .build());
             }
-
-            return students;
-
+            if (students.isEmpty()) {
+                throw new DAOException("No students found");
+            } else {
+                return students;
+            }
         } catch (SQLException e) {
             log.error(ERROR_MESSAGE + query, e);
-            throw new DAOException(e.getMessage());
+
+            throw new DAOException(e);
         }
     }
 
     @Override
-    public Course getCourse(String query) {
+    public Course getCourse(String query) throws DAOException {
         try (Connection connection = DriverManager.getConnection(jdbcUrl, login, password);
              Statement statement = connection.createStatement();
              ResultSet resultSet = statement.executeQuery(
@@ -135,18 +136,19 @@ public class DAOFactoryImpl implements DAOFactory {
                     .courseName(resultSet.getString(2))
                     .courseDescription(resultSet.getString(3))
                     .build();
+            } else {
+                throw new DAOException("No such course");
             }
 
         } catch (SQLException e) {
             log.error(ERROR_MESSAGE + query, e);
-            throw new DAOException(e.getMessage());
-        }
 
-        return null;
+            throw new DAOException(e);
+        }
     }
 
     @Override
-    public ArrayList<Course> getCourses(String query) {
+    public ArrayList<Course> getCourses(String query) throws DAOException {
         var allCoursesList = new ArrayList<Course>();
         try (Connection connection = DriverManager.getConnection(jdbcUrl, login, password);
              Statement statement = connection.createStatement();
@@ -162,17 +164,20 @@ public class DAOFactoryImpl implements DAOFactory {
                         .courseDescription(resultSet.getString(3))
                         .build());
             }
-
-            return allCoursesList;
-
+            if (allCoursesList.isEmpty()) {
+                throw new DAOException("No courses");
+            } else {
+                return allCoursesList;
+            }
         } catch (SQLException e) {
             log.error(ERROR_MESSAGE + query, e);
-            throw new DAOException(e.getMessage());
+
+            throw new DAOException(e);
         }
     }
 
     @Override
-    public Group getGroup(String query) {
+    public Group getGroup(String query) throws DAOException {
         try (Connection connection = DriverManager.getConnection(jdbcUrl, login, password);
              Statement statement = connection.createStatement();
              ResultSet groupSet = statement.executeQuery(
@@ -185,18 +190,19 @@ public class DAOFactoryImpl implements DAOFactory {
                     .groupId(groupSet.getInt(1))
                     .groupName(groupSet.getString(2))
                     .build();
+            } else {
+                throw new DAOException("No such group");
             }
 
         } catch (SQLException e) {
             log.error(ERROR_MESSAGE + query, e);
-            throw new DAOException(e.getMessage());
-        }
 
-        return null;
+            throw new DAOException(e);
+        }
     }
 
     @Override
-    public List<Group> getGroups(String query) {
+    public List<Group> getGroups(String query) throws DAOException {
         var groups = new ArrayList<Group>();
         try (Connection connection = DriverManager.getConnection(jdbcUrl, login, password);
              Statement statement = connection.createStatement();
@@ -212,11 +218,15 @@ public class DAOFactoryImpl implements DAOFactory {
                         .build());
             }
 
-            return groups;
-
-        } catch (Exception e) {
+            if (groups.isEmpty()) {
+                throw new DAOException("No groups");
+            } else {
+                return groups;
+            }
+        } catch (SQLException e) {
             log.error(ERROR_MESSAGE + query, e);
-            throw new DAOException(e.getMessage());
+
+            throw new DAOException(e);
         }
     }
 }

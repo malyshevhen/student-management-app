@@ -5,9 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import ua.com.foxstudent102052.mapper.StudentMapper;
 import ua.com.foxstudent102052.model.StudentDto;
 import ua.com.foxstudent102052.repository.StudentRepository;
-import ua.com.foxstudent102052.repository.exception.DAOException;
-import ua.com.foxstudent102052.service.exception.NoSuchStudentExistsException;
-import ua.com.foxstudent102052.service.exception.StudentAlreadyExistException;
 
 import java.util.List;
 
@@ -25,11 +22,11 @@ public class StudentServiceImpl implements StudentService {
             var newStudent = StudentMapper.toStudent(studentDto);
             studentRepository.addStudent(newStudent);
 
-        } catch (DAOException e) {
+        } catch (IllegalArgumentException e) {
             var msg = String.format("Student with id %d already exist", studentId);
             log.error(msg, e);
 
-            throw new StudentAlreadyExistException(msg);
+            throw e;
         }
     }
 
@@ -39,11 +36,11 @@ public class StudentServiceImpl implements StudentService {
         try {
             studentRepository.removeStudent(studentId);
 
-        } catch (DAOException e) {
+        } catch (IllegalArgumentException e) {
             var msg = String.format(STUDENT_WITH_ID_NOT_EXIST, studentId);
             log.error(msg, e);
 
-            throw new NoSuchStudentExistsException(msg);
+            throw e;
         }
     }
 
@@ -56,11 +53,11 @@ public class StudentServiceImpl implements StudentService {
                 .map(StudentMapper::toDto)
                 .toList();
 
-        } catch (DAOException e) {
+        } catch (IllegalArgumentException e) {
             var msg = "There are no students in the database";
             log.error(msg, e);
 
-            throw new NoSuchStudentExistsException(msg);
+            throw e;
         }
     }
 
@@ -70,11 +67,11 @@ public class StudentServiceImpl implements StudentService {
         try {
             studentRepository.addStudentToCourse(studentId, courseId);
 
-        } catch (DAOException e) {
+        } catch (IllegalArgumentException e) {
             var msg = String.format(STUDENT_WITH_ID_NOT_EXIST, studentId);
             log.error(msg, e);
 
-            throw new NoSuchStudentExistsException(msg);
+            throw e;
         }
     }
 
@@ -84,11 +81,11 @@ public class StudentServiceImpl implements StudentService {
         try {
             studentRepository.removeStudentFromCourse(studentId, groupId);
 
-        } catch (DAOException e) {
+        } catch (IllegalArgumentException e) {
             var msg = String.format(STUDENT_WITH_ID_NOT_EXIST, studentId);
             log.error(msg, e);
 
-            throw new NoSuchStudentExistsException(msg);
+            throw e;
         }
 
     }
@@ -102,26 +99,28 @@ public class StudentServiceImpl implements StudentService {
                 .map(StudentMapper::toDto)
                 .toList();
 
-        } catch (DAOException e) {
+        } catch (IllegalArgumentException e) {
             var msg = String.format("There are no students in course with id %d", courseId);
             log.error(msg, e);
-            throw new NoSuchStudentExistsException(msg);
+
+            throw e;
         }
     }
 
     @Override
-    public List<StudentDto> getStudentsByCourseNameAndGroupId(String studentName, Integer courseId) {
+    public List<StudentDto> getStudentsByNameAndCourse(String studentName, Integer courseId) {
 
         try {
-            return studentRepository.getStudentsByCourseNameAndGroupId(studentName, courseId)
+            return studentRepository.getStudentsByNameAndCourse(studentName, courseId)
                 .stream()
                 .map(StudentMapper::toDto)
                 .toList();
 
-        } catch (DAOException e) {
+        } catch (IllegalArgumentException e) {
             var msg = String.format("There are no students in course with id %d", courseId);
             log.error(msg, e);
-            throw new NoSuchStudentExistsException(msg);
+
+            throw e;
         }
     }
 }

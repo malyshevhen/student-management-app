@@ -5,10 +5,8 @@ import ua.com.foxstudent102052.model.GroupDto;
 import ua.com.foxstudent102052.model.StudentDto;
 import ua.com.foxstudent102052.repository.*;
 import ua.com.foxstudent102052.service.*;
-import ua.com.foxstudent102052.service.exception.CourseAlreadyExistException;
-import ua.com.foxstudent102052.service.exception.GroupAlreadyExistException;
-import ua.com.foxstudent102052.service.exception.NoSuchStudentExistsException;
 
+import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
@@ -108,7 +106,11 @@ public class TestDataController {
                 DROP TABLE IF EXISTS groups;
                 DROP TABLE IF EXISTS courses;
                 """;
-        daoFactory.doPost(query);
+        try {
+            daoFactory.doPost(query);
+        } catch (SQLException e) {
+            throw new IllegalArgumentException(e);
+        }
     }
 
     private void createTables() {
@@ -147,7 +149,11 @@ public class TestDataController {
                     FOREIGN KEY (course_id) REFERENCES courses (course_id)
                 );
                 """;
-        daoFactory.doPost(query);
+        try {
+            daoFactory.doPost(query);
+        } catch (SQLException e) {
+            throw new IllegalArgumentException(e);
+        }
     }
 
     private void addCourses() {
@@ -161,7 +167,7 @@ public class TestDataController {
                     .build();
                 courseService.addCourse(courseDto);
 
-            } catch (CourseAlreadyExistException e) {
+            } catch (IllegalArgumentException e) {
                 print(e.getMessage());
             }
         }
@@ -178,7 +184,7 @@ public class TestDataController {
                     .build();
                 groupService.addGroup(groupDto);
 
-            } catch (GroupAlreadyExistException e) {
+            } catch (IllegalArgumentException e) {
                 print(e.getMessage());
             }
         }
@@ -192,13 +198,13 @@ public class TestDataController {
 
                 var random = new Random();
                 var studentDto = StudentDto.builder()
-                    .groupId(random.nextInt(10))
+                    .groupId(random.nextInt(11))
                     .fistName(firstNames[random.nextInt(19)])
                     .lastName(lastNames[random.nextInt(19)])
                     .build();
                 studentService.addStudent(studentDto);
 
-            } catch (NoSuchStudentExistsException e) {
+            } catch (IllegalArgumentException e) {
                 print(e.getMessage());
             }
         }
@@ -209,30 +215,25 @@ public class TestDataController {
         try {
             students = studentService.getAllStudents();
 
-        } catch (NoSuchStudentExistsException e) {
-            print(e.getMessage());
-        }
-        students
-            .forEach(
-                student -> {
-                    var courses = new HashSet<Integer>();
+            students
+                .forEach(
+                    student -> {
+                        var courses = new HashSet<Integer>();
 
-                    for (int i = 1; i <= 3; i++) {
-                        var random = new Random();
-                        int courseId = random.nextInt(11) + 1;
+                        for (int i = 1; i <= 3; i++) {
+                            var random = new Random();
+                            int courseId = random.nextInt(11) + 1;
 
-                        if (Boolean.FALSE.equals(courses.contains(courseId)) && courseId < 11) {
-
-                            try {
+                            if (Boolean.FALSE.equals(courses.contains(courseId)) && courseId < 11) {
                                 studentService.addStudentToCourse(student.getId(), courseId);
-                            } catch (NoSuchStudentExistsException e) {
-                                print(e.getMessage());
+                                courses.add(courseId);
                             }
-                            courses.add(courseId);
                         }
                     }
-                }
-            );
+                );
+        } catch (IllegalArgumentException e) {
+            print(e.getMessage());
+        }
     }
 
     private static void print(String e) {

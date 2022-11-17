@@ -17,5 +17,5 @@ public interface StudentService {
 
     List<StudentDto> getStudentsByCourse(int courseId);
 
-    List<StudentDto> getStudentsByCourseNameAndGroupId(String studentName, Integer courseId);
+    List<StudentDto> getStudentsByNameAndCourse(String studentName, Integer courseId);
 }

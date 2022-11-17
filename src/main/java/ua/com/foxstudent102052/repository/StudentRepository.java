@@ -18,5 +18,5 @@ public interface StudentRepository {
 
     List<Student> getStudentsByCourseId(int course);
 
-    List<Student> getStudentsByCourseNameAndGroupId(String studentName, Integer courseId);
+    List<Student> getStudentsByNameAndCourse(String studentName, Integer courseId);
 }
