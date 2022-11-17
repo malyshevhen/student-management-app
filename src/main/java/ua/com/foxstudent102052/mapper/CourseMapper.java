@@ -11,7 +11,7 @@ public class CourseMapper {
         throw new IllegalStateException("Utility class");
     }
 
-    public static CourseDto courseToDto(Course course) {
+    public static CourseDto toDto(Course course) {
         try {
             return new CourseDto(
                 course.getCourseId(),

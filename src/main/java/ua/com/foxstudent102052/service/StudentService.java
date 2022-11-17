@@ -1,14 +1,11 @@
 package ua.com.foxstudent102052.service;
 
-import ua.com.foxstudent102052.model.Course;
-import ua.com.foxstudent102052.model.Student;
+import ua.com.foxstudent102052.model.StudentDto;
 
 import java.util.List;
 
 public interface StudentService {
-
-
-    void addStudent(Student student);
+    void addStudent(StudentDto studentDto);
 
     void addStudentToCourse(int studentId, int courseId);
 
@@ -16,23 +13,9 @@ public interface StudentService {
 
     void removeStudentFromCourse(int studentId, int groupId);
 
-    void updateStudentFirstName(int studentId, String firstName);
+    List<StudentDto> getAllStudents();
 
-    void updateStudentLastName(int studentId, String lastName);
+    List<StudentDto> getStudentsByCourse(int courseId);
 
-    void updateStudentGroup(int studentId, int groupId);
-
-    void updateStudent(Student student);
-
-    Student getStudentById(int id);
-
-    List<Student> getAllStudents();
-
-    List<Student> getStudentsByLastName(String lastName);
-
-    List<Student> getStudentsByName(String name);
-
-    List<Student> getStudentsByFullName(String firstName, String lastName);
-
-    List<Course> getCoursesByStudentId(int studentId);
+    List<StudentDto> getStudentsByCourseNameAndGroupId(String studentName, Integer courseId);
 }

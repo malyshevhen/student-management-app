@@ -13,7 +13,7 @@ public class StudentMapper {
         throw new IllegalStateException("Utility class");
     }
 
-    public static StudentDto studentToDto(Student student) {
+    public static StudentDto toDto(Student student) {
         try {
             return new StudentDto(
                 student.getStudentId(),
@@ -29,7 +29,7 @@ public class StudentMapper {
         }
     }
 
-    public static Student dtoToStudent(StudentDto studentDto) {
+    public static Student toStudent(StudentDto studentDto) {
         try {
             return new Student(
                 studentDto.getId(),

@@ -1,6 +1,5 @@
 package ua.com.foxstudent102052.facade;
 
-import lombok.NonNull;
 import ua.com.foxstudent102052.model.CourseDto;
 import ua.com.foxstudent102052.model.GroupDto;
 import ua.com.foxstudent102052.model.StudentDto;
@@ -11,7 +10,7 @@ public class TableBuilder {
     private static final String STUDENT_LIST_HEADER =
         """
             +=====+==========+==========+==========+========================================+
-            |ID   |GROUP     |FIRST NAME|LAST NAME |GROUP COURSES                           |
+            |ID   |GROUP     |FIRST NAME|LAST NAME |COURSES                                 |
             +=====+==========+==========+==========+========================================+""";
 
     private static final String STUDENT_LIST_ROW = "|%-5s|%-10s|%-10s|%-10s|%-40s|";
@@ -34,13 +33,17 @@ public class TableBuilder {
 
     private static final String COURSE_LIST_HEADER =
         """
-            +=====+==========+========================================+
-            |ID   |NAME      |DESCRIPTION                             |
-            +=====+==========+========================================+""";
+            +=====+===============+================================================================================+
+            |ID   |NAME           |DESCRIPTION                                                                     |
+            +=====+===============+================================================================================+""";
 
-    private static final String COURSE_LIST_ROW = "|%-5s|%-10s|%-40s|";
+    private static final String COURSE_LIST_ROW = "|%-5s|%-15s|%-80s|";
 
-    private static final String COURSE_LIST_FOOTER = "+=====+==========+========================================+";
+    private static final String COURSE_LIST_FOOTER =
+        "+=====+===============+================================================================================+";
+
+    private static final String COURSE_LIST_SEMI_FOOTER =
+        "+-----+---------------+--------------------------------------------------------------------------------+";
 
     private static final String COURSE_STUDENTS_LIST_HEADER =
         """
@@ -66,7 +69,7 @@ public class TableBuilder {
         throw new IllegalStateException("Utility class");
     }
 
-    public static String createStudentTable(@NonNull List<StudentDto> students) {
+    public static String createStudentTable(List<StudentDto> students) {
 
         if (students.isEmpty()) {
             return "";
@@ -77,7 +80,7 @@ public class TableBuilder {
                 .append(System.lineSeparator());
 
             for (StudentDto student : students) {
-                table.append(buildStudentTableBlock(student));
+                table.append(createStudentTableBlock(student));
             }
             table.append(STUDENT_LIST_FOOTER)
                 .append(System.lineSeparator());
@@ -87,7 +90,7 @@ public class TableBuilder {
 
     }
 
-    public static String createStudentTable(@NonNull StudentDto student) {
+    public static String createStudentTable(StudentDto student) {
 
         if (student.getId() == 0) {
             return "";
@@ -96,7 +99,7 @@ public class TableBuilder {
             StringBuilder table = new StringBuilder();
             table.append(STUDENT_LIST_HEADER)
                 .append(System.lineSeparator())
-                .append(buildStudentTableBlock(student))
+                .append(createStudentTableBlock(student))
                 .append(STUDENT_LIST_FOOTER)
                 .append(System.lineSeparator());
 
@@ -104,7 +107,7 @@ public class TableBuilder {
         }
     }
 
-    private static String buildStudentTableBlock(@NonNull StudentDto student) {
+    private static String createStudentTableBlock(StudentDto student) {
         StringBuilder studentBlockBuilder = new StringBuilder();
         String id = String.valueOf(student.getId());
         String group = student.getGroup();
@@ -135,38 +138,40 @@ public class TableBuilder {
         return studentBlockBuilder.toString();
     }
 
-    public static String createGroupTable(@NonNull GroupDto groupDto) {
+    public static String createGroupTable(GroupDto groupDto) {
         if (groupDto.getId() != 0) {
             StringBuilder groupTableBuilder = new StringBuilder();
             groupTableBuilder.append(GROUP_LIST_HEADER)
                 .append(System.lineSeparator())
-                .append(buidGroupTableBlock(groupDto))
+                .append(createGroupTableBlock(groupDto))
                 .append(GROUP_LIST_FOOTER)
                 .append(System.lineSeparator());
+
             return groupTableBuilder.toString();
         }
 
         return "";
     }
 
-    public static String createGroupTable(@NonNull List<GroupDto> groupsDto) {
+    public static String createGroupTable(List<GroupDto> groupsDto) {
         if (!groupsDto.isEmpty()) {
             StringBuilder groupTableBuilder = new StringBuilder();
             groupTableBuilder.append(GROUP_LIST_HEADER)
                 .append(System.lineSeparator());
-            
+
             for (GroupDto groupDto : groupsDto) {
-                groupTableBuilder.append(buidGroupTableBlock(groupDto));
+                groupTableBuilder.append(createGroupTableBlock(groupDto));
             }
             groupTableBuilder.append(GROUP_LIST_FOOTER)
                 .append(System.lineSeparator());
+
             return groupTableBuilder.toString();
         }
 
         return "";
     }
 
-    private static String buidGroupTableBlock(@NonNull GroupDto groupDto) {
+    private static String createGroupTableBlock(GroupDto groupDto) {
         StringBuilder groupBlockBuilder = new StringBuilder();
         String id = String.valueOf(groupDto.getId());
         String name = groupDto.getName();
@@ -178,7 +183,7 @@ public class TableBuilder {
         return groupBlockBuilder.toString();
     }
 
-    public static String createGroupStudentsTable(@NonNull List<GroupDto> groups) {
+    public static String createGroupStudentsTable(List<GroupDto> groups) {
 
         if (groups.isEmpty()) {
             return "";
@@ -198,7 +203,7 @@ public class TableBuilder {
         }
     }
 
-    public static String createGroupStudentsTable(@NonNull GroupDto group) {
+    public static String createGroupStudentsTable(GroupDto group) {
 
         if (group.getId() == 0) {
             return "";
@@ -215,7 +220,7 @@ public class TableBuilder {
         }
     }
 
-    private static String buildGroupStudentsTableBlock(@NonNull GroupDto group) {
+    private static String buildGroupStudentsTableBlock(GroupDto group) {
         StringBuilder groupTableBlockBuilder = new StringBuilder();
         String id = String.valueOf(group.getId());
         String name = group.getName();
@@ -244,7 +249,7 @@ public class TableBuilder {
         return groupTableBlockBuilder.toString();
     }
 
-    public static String createCourseTable(@NonNull List<CourseDto> courses) {
+    public static String createCourseTable(List<CourseDto> courses) {
 
         if (courses.isEmpty()) {
             return "";
@@ -264,7 +269,7 @@ public class TableBuilder {
         }
     }
 
-    public static String createCourseTable(@NonNull CourseDto course) {
+    public static String createCourseTable(CourseDto course) {
 
         if (course.getId() == 0) {
             return "";
@@ -281,18 +286,29 @@ public class TableBuilder {
         }
     }
 
-    private static String buildCourseTableBlock(@NonNull CourseDto course) {
+    private static String buildCourseTableBlock(CourseDto course) {
         StringBuilder table = new StringBuilder();
         String id = String.valueOf(course.getId());
         String name = course.getName();
-        String description = course.getDescription();
-        table.append(String.format(COURSE_LIST_ROW, id, name, description))
+        String descriptions = course.getDescription();
+        var descriptionLines = descriptions.lines().toArray();
+
+        for (int i = 0; i < descriptionLines.length; i++) {
+            if (i == 0) {
+                table.append(String.format(COURSE_LIST_ROW, id, name, descriptionLines[i]))
+                    .append(System.lineSeparator());
+            } else {
+                table.append(String.format(COURSE_LIST_ROW, " ", " ", descriptionLines[i]))
+                    .append(System.lineSeparator());
+            }
+        }
+        table.append(COURSE_LIST_SEMI_FOOTER)
             .append(System.lineSeparator());
 
         return table.toString();
     }
 
-    public static String createCourseStudentsTable(@NonNull CourseDto course) {
+    public static String createCourseStudentsTable(CourseDto course) {
 
         if (course.getId() == 0) {
             return "";
@@ -304,11 +320,12 @@ public class TableBuilder {
                 .append(buildCourseStudentTableBlock(course))
                 .append(COURSE_STUDENTS_LIST_FOOTER)
                 .append(System.lineSeparator());
+
             return table.toString();
         }
     }
 
-    public static String createCourseStudentsTable(@NonNull List<CourseDto> courses) {
+    public static String createCourseStudentsTable(List<CourseDto> courses) {
 
         if (courses.isEmpty()) {
             return "";
@@ -327,7 +344,7 @@ public class TableBuilder {
         }
     }
 
-    private static String buildCourseStudentTableBlock(@NonNull CourseDto course) {
+    private static String buildCourseStudentTableBlock(CourseDto course) {
         StringBuilder table = new StringBuilder();
         String id = String.valueOf(course.getId());
         String name = course.getName();

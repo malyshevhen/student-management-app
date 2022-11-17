@@ -11,7 +11,7 @@ public class GroupMapper {
         throw new IllegalStateException("Utility class");
     }
 
-    public static GroupDto groupToDto(Group group) {
+    public static GroupDto toDto(Group group) {
         try{
             return new GroupDto(
                 group.getGroupId(),
@@ -23,7 +23,7 @@ public class GroupMapper {
         }
     }
 
-    public static Group dtoToGroup(GroupDto groupDto) {
+    public static Group toGroup(GroupDto groupDto) {
         try{
             return new Group(groupDto.getId(), groupDto.getName());
             

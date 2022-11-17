@@ -1,25 +1,20 @@
 package ua.com.foxstudent102052.service;
 
-import ua.com.foxstudent102052.model.Group;
 import ua.com.foxstudent102052.model.GroupDto;
-import ua.com.foxstudent102052.model.Student;
+import ua.com.foxstudent102052.model.StudentDto;
 
 import java.util.List;
 
 public interface GroupService {
-    void addGroup(Group group);
+    void addGroup(GroupDto groupDto);
 
-    void updateGroup(GroupDto groupDto);
+    GroupDto getGroupById(int groupId);
 
-    void removeGroup(int groupId);
+    List<GroupDto> getAllGroups();
 
-    Group getGroupById(int groupId);
+    List<GroupDto> getGroupsSmallerThen(int numberOfStudents);
 
-    List<Group> getAllGroups();
+    GroupDto getGroupByName(String groupName);
 
-    List<Group> getGroupsSmallerThen(int numberOfStudents);
-
-    Group getGroupByName(String groupName);
-
-    List<Student> getStudentsByGroup(int groupId);
+    List<StudentDto> getStudentsByGroup(int groupId);
 }

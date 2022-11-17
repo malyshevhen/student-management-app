@@ -17,34 +17,46 @@ import java.util.List;
 import static java.sql.DriverManager.getConnection;
 
 @Slf4j
-public
-class DAOFactoryImpl implements DAOFactory {    
+public class DAOFactoryImpl implements DAOFactory {
+    
+    private static DAOFactoryImpl instance;
+
+    private DAOFactoryImpl() {
+    }
+    
+    public static DAOFactoryImpl getInstance() {
+        if (instance == null) {
+            instance = new DAOFactoryImpl();
+        }
+        return instance;
+    }
+    
     private static final String QUERY_EXEC_SUCCESSFUL = "Query: '{}' executed successfully";
     private static final String CONNECTION_SUCCESSFUL = "Connection to DB successful!";
     private static final String ERROR_MESSAGE = "Error while executing query: {}";
 
-    private static String password = "314159";
-    private static String login = "postgres";
-    private static String jdbcUrl = "jdbc:postgresql://localhost:5433/students_db";
-    
+    private String password = "314159";
+    private String login = "postgres";
+    private String jdbcUrl = "jdbc:postgresql://localhost:5433/students_db";
+
     public void setJdbcUrl(String jdbcUrl) {
         this.jdbcUrl = jdbcUrl;
     }
-    
+
     public void setLogin(String login) {
         this.login = login;
     }
-    
+
     public void setPassword(String password) {
         this.password = password;
     }
-    
+
     @Override
     public void doPost(String query) {
 
         try (Connection connection = getConnection(jdbcUrl, login, password);
              Statement statement = connection.createStatement()) {
-            
+
             log.info(CONNECTION_SUCCESSFUL);
             statement.executeUpdate(query);
             log.info(QUERY_EXEC_SUCCESSFUL, query);
@@ -65,11 +77,12 @@ class DAOFactoryImpl implements DAOFactory {
 
             if (resultStudentSet.next()) {
 
-                return new Student(
-                    resultStudentSet.getInt(1),
-                    resultStudentSet.getInt(2),
-                    resultStudentSet.getString(3),
-                    resultStudentSet.getString(4));
+                return Student.builder()
+                    .studentId(resultStudentSet.getInt(1))
+                    .groupId(resultStudentSet.getInt(2))
+                    .firstName(resultStudentSet.getString(3))
+                    .lastName(resultStudentSet.getString(4))
+                    .build();
             }
 
         } catch (SQLException e) {
@@ -90,19 +103,21 @@ class DAOFactoryImpl implements DAOFactory {
             log.info(QUERY_EXEC_SUCCESSFUL, query);
 
             while (setStudentsByFullName.next()) {
-                students.add(new Student(
-                    setStudentsByFullName.getInt(1),
-                    setStudentsByFullName.getInt(2),
-                    setStudentsByFullName.getString(3),
-                    setStudentsByFullName.getString(4)));
+                students.add(
+                    Student.builder()
+                        .studentId(setStudentsByFullName.getInt(1))
+                        .groupId(setStudentsByFullName.getInt(2))
+                        .firstName(setStudentsByFullName.getString(3))
+                        .lastName(setStudentsByFullName.getString(4))
+                        .build());
             }
+
+            return students;
 
         } catch (SQLException e) {
             log.error(ERROR_MESSAGE + query, e);
             throw new DAOException(e.getMessage());
         }
-
-        return null;
     }
 
     @Override
@@ -115,10 +130,11 @@ class DAOFactoryImpl implements DAOFactory {
             log.info(QUERY_EXEC_SUCCESSFUL, query);
 
             if (resultSet.next()) {
-                return new Course(
-                    resultSet.getInt(1),
-                    resultSet.getString(2),
-                    resultSet.getString(3));
+                return Course.builder()
+                    .courseId(resultSet.getInt(1))
+                    .courseName(resultSet.getString(2))
+                    .courseDescription(resultSet.getString(3))
+                    .build();
             }
 
         } catch (SQLException e) {
@@ -140,18 +156,19 @@ class DAOFactoryImpl implements DAOFactory {
 
             while (resultSet.next()) {
                 allCoursesList.add(
-                    new Course(
-                        resultSet.getInt(1),
-                        resultSet.getString(2),
-                        resultSet.getString(3)));
+                    Course.builder()
+                        .courseId(resultSet.getInt(1))
+                        .courseName(resultSet.getString(2))
+                        .courseDescription(resultSet.getString(3))
+                        .build());
             }
+
+            return allCoursesList;
 
         } catch (SQLException e) {
             log.error(ERROR_MESSAGE + query, e);
             throw new DAOException(e.getMessage());
         }
-
-        return null;
     }
 
     @Override
@@ -164,7 +181,10 @@ class DAOFactoryImpl implements DAOFactory {
             log.info(QUERY_EXEC_SUCCESSFUL, query);
 
             if (groupSet.next()) {
-                return new Group(groupSet.getInt(1), groupSet.getString(2));
+                return Group.builder()
+                    .groupId(groupSet.getInt(1))
+                    .groupName(groupSet.getString(2))
+                    .build();
             }
 
         } catch (SQLException e) {
@@ -185,14 +205,18 @@ class DAOFactoryImpl implements DAOFactory {
             log.info(QUERY_EXEC_SUCCESSFUL, query);
 
             while (allGroupsSet.next()) {
-                groups.add(new Group(allGroupsSet.getInt(1), allGroupsSet.getString(2)));
+                groups.add(
+                    Group.builder()
+                        .groupId(allGroupsSet.getInt(1))
+                        .groupName(allGroupsSet.getString(2))
+                        .build());
             }
+
+            return groups;
 
         } catch (Exception e) {
             log.error(ERROR_MESSAGE + query, e);
             throw new DAOException(e.getMessage());
         }
-
-        return null;
     }
 }

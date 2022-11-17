@@ -1,14 +1,17 @@
 package ua.com.foxstudent102052.service;
 
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import ua.com.foxstudent102052.mapper.CourseMapper;
-import ua.com.foxstudent102052.model.Course;
 import ua.com.foxstudent102052.model.CourseDto;
-import ua.com.foxstudent102052.model.Student;
 import ua.com.foxstudent102052.repository.CourseRepository;
+import ua.com.foxstudent102052.repository.exception.DAOException;
+import ua.com.foxstudent102052.service.exception.CourseAlreadyExistException;
+import ua.com.foxstudent102052.service.exception.NoSuchCourseExistsException;
 
 import java.util.List;
 
+@Slf4j
 @AllArgsConstructor
 public class CourseServiceImpl implements CourseService {
     private static final String COURSE_ID_DOES_NOT_EXIST = "Course with id %d doesn't exist";
@@ -16,114 +19,62 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public void addCourse(CourseDto course) {
-        Course courseFromDB = courseRepository.getCourseByName(course.getName());
-        
-        if (courseFromDB.getCourseId() == 0) {
+
+        try {
             courseRepository.addCourse(CourseMapper.toCourse(course));
 
-        } else {
-            throw new IllegalArgumentException(
-                    String.format("Course with name %s already exists", course.getName()));
+        } catch (DAOException e) {
+            var msg = String.format("Course with %s already exists", course.getName());
+            log.error(msg, e);
+
+            throw new CourseAlreadyExistException(msg);
         }
     }
 
     @Override
-    public void removeCourse(int id) {
-        Course courseFromDB = courseRepository.getCourseById(id);
+    public List<CourseDto> getAllCourses() {
 
-        if (courseFromDB.getCourseId() != 0) {
-            courseRepository.removeCourse(id);
+        try {
+            return courseRepository.getAllCourses()
+                .stream()
+                .map(CourseMapper::toDto)
+                .toList();
+        } catch (DAOException e) {
+            var msg = "There are no courses in database";
+            log.error(msg, e);
 
-        } else {
-            throw new IllegalArgumentException(String.format(COURSE_ID_DOES_NOT_EXIST, id));
+            throw new NoSuchCourseExistsException(msg);
         }
     }
 
     @Override
-    public void updateCourse(CourseDto courseDto) {
-        Course courseFromDB = courseRepository.getCourseById(courseDto.getId());
+    public CourseDto getCourseById(int id) {
 
-        if (courseFromDB.getCourseId() != 0) {
-            courseRepository.updateCourse(CourseMapper.toCourse(courseDto));
+        try {
+            return CourseMapper.toDto(courseRepository.getCourseById(id));
 
-        } else {
-            throw new IllegalArgumentException(String.format(COURSE_ID_DOES_NOT_EXIST, courseDto.getId()));
+        } catch (DAOException e) {
+            var msg = String.format(COURSE_ID_DOES_NOT_EXIST, id);
+            log.error(msg, e);
+
+            throw new NoSuchCourseExistsException(msg);
         }
     }
 
     @Override
-    public void updateCourseName(CourseDto courseDto) {
-        int id = courseDto.getId();
-        Course courseForUpdate = courseRepository.getCourseById(id);
-        
-        if (courseForUpdate.getCourseId() != 0) {
-            courseForUpdate.setCourseName(courseDto.getName());
-            courseRepository.updateCourse(courseForUpdate);
+    public List<CourseDto> getCoursesByStudentId(int studentId) {
 
-        } else {
-            throw new IllegalArgumentException(String.format(COURSE_ID_DOES_NOT_EXIST, id));
-        }
-    }
+        try {
+            return courseRepository.getCoursesByStudentId(studentId)
+                .stream()
+                .map(CourseMapper::toDto)
+                .toList();
 
-    @Override
-    public void updateCourseDescription(CourseDto courseDto) {
-        int id = courseDto.getId();
-        Course courseFromDB = courseRepository.getCourseById(id);
+        } catch (DAOException e) {
+            String msg = String.format("Student with id %d doesn't have any courses", studentId);
+            log.error(msg, e);
 
-        if (courseFromDB.getCourseId() != 0) {
-            courseFromDB.setCourseDescription(courseFromDB.getCourseDescription());
-            courseRepository.updateCourse(courseFromDB);
-
-        } else {
-            throw new IllegalArgumentException(String.format(COURSE_ID_DOES_NOT_EXIST, id));
-        }
-    }
-
-    @Override
-    public List<Course> getAllCourses() {
-        var allCourses = courseRepository.getAllCourses();
-
-        if (allCourses.isEmpty()) {
-            throw new IllegalArgumentException("There are no courses in database");
-
-        } else {
-            return allCourses;
-        }
-    }
-
-    @Override
-    public Course getCourseById(int id) {
-        Course courseById = courseRepository.getCourseById(id);
-
-        if (courseById.getCourseId() != 0) {
-            return courseById;
-
-        } else {
-            throw new IllegalArgumentException(String.format(COURSE_ID_DOES_NOT_EXIST, id));
-        }
-    }
-
-    @Override
-    public Course getCourseByName(String name) {
-        Course courseByName = courseRepository.getCourseByName(name);
-
-        if (courseByName.getCourseId() != 0) {
-            return courseByName;
-
-        } else {
-            throw new IllegalArgumentException(String.format("Course with name %s doesn't exist", name));
-        }
-    }
-
-    @Override
-    public List<Student> getStudentsByCourse(int courseId) {
-        var studentsByCourseId = courseRepository.getStudentsByCourseId(courseId);
-
-        if (studentsByCourseId.isEmpty()) {
-            throw new IllegalArgumentException(String.format("There are no students in course with id %d", courseId));
-
-        } else {
-            return studentsByCourseId;
+            throw new NoSuchCourseExistsException(msg);
         }
     }
 }

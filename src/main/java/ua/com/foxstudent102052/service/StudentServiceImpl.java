@@ -1,183 +1,127 @@
 package ua.com.foxstudent102052.service;
 
 import lombok.AllArgsConstructor;
-import ua.com.foxstudent102052.model.Course;
-import ua.com.foxstudent102052.model.Student;
+import lombok.extern.slf4j.Slf4j;
+import ua.com.foxstudent102052.mapper.StudentMapper;
+import ua.com.foxstudent102052.model.StudentDto;
 import ua.com.foxstudent102052.repository.StudentRepository;
+import ua.com.foxstudent102052.repository.exception.DAOException;
+import ua.com.foxstudent102052.service.exception.NoSuchStudentExistsException;
+import ua.com.foxstudent102052.service.exception.StudentAlreadyExistException;
 
 import java.util.List;
 
+@Slf4j
 @AllArgsConstructor
 public class StudentServiceImpl implements StudentService {
     private static final String STUDENT_WITH_ID_NOT_EXIST = "Student with id %d doesn't exist";
     private final StudentRepository studentRepository;
 
     @Override
-    public void addStudent(Student student) {
-        int studentId = student.getStudentId();
-        
-        if (Boolean.FALSE.equals(ifExists(studentId))) {
-            studentRepository.addStudent(student);
+    public void addStudent(StudentDto studentDto) {
+        int studentId = studentDto.getId();
 
-        } else {
-            throw new IllegalArgumentException(String.format("Student with id %d already exist", studentId));
+        try {
+            var newStudent = StudentMapper.toStudent(studentDto);
+            studentRepository.addStudent(newStudent);
+
+        } catch (DAOException e) {
+            var msg = String.format("Student with id %d already exist", studentId);
+            log.error(msg, e);
+
+            throw new StudentAlreadyExistException(msg);
         }
     }
 
     @Override
     public void removeStudent(int studentId) {
 
-        if (Boolean.TRUE.equals(ifExists(studentId))) {
+        try {
             studentRepository.removeStudent(studentId);
 
-        } else {
-            throw new IllegalArgumentException(String.format(STUDENT_WITH_ID_NOT_EXIST, studentId));
+        } catch (DAOException e) {
+            var msg = String.format(STUDENT_WITH_ID_NOT_EXIST, studentId);
+            log.error(msg, e);
+
+            throw new NoSuchStudentExistsException(msg);
         }
     }
 
     @Override
-    public void updateStudentFirstName(int studentId, String firstName) {
-        Student studentForUpdate = studentRepository.getStudentById(studentId);
-        
-        if (studentForUpdate != null) {
-            studentForUpdate.setFirstName(firstName);
-            studentRepository.updateStudent(studentForUpdate);
+    public List<StudentDto> getAllStudents() {
 
-        } else {
-            throw new IllegalArgumentException(String.format(STUDENT_WITH_ID_NOT_EXIST, studentId));
-        }
-    }
+        try {
+            return studentRepository.getAllStudents()
+                .stream()
+                .map(StudentMapper::toDto)
+                .toList();
 
-    @Override
-    public void updateStudentLastName(int studentId, String lastName) {
-        Student studentForUpdate = studentRepository.getStudentById(studentId);
-        
-        if (studentForUpdate != null) {
-            studentForUpdate.setLastName(lastName);
-            studentRepository.updateStudent(studentForUpdate);
+        } catch (DAOException e) {
+            var msg = "There are no students in the database";
+            log.error(msg, e);
 
-        } else {
-            throw new IllegalArgumentException(String.format(STUDENT_WITH_ID_NOT_EXIST, studentId));
-        }
-    }
-
-    @Override
-    public void updateStudentGroup(int studentId, int groupId) {
-        Student studentForUpdate = studentRepository.getStudentById(studentId);
-        
-        if (studentForUpdate != null) {
-            studentForUpdate.setGroupId(groupId);
-            studentRepository.updateStudent(studentForUpdate);
-
-        } else {
-            throw new IllegalArgumentException(String.format(STUDENT_WITH_ID_NOT_EXIST, studentId));
-        }
-    }
-
-    @Override
-    public void updateStudent(Student student) {
-
-        if (studentRepository.getStudentById(student.getStudentId()).getStudentId() != 0) {
-            studentRepository.updateStudent(student);
-
-        } else {
-            throw new IllegalArgumentException(String.format(STUDENT_WITH_ID_NOT_EXIST, student.getStudentId()));
-        }
-    }
-
-    @Override
-    public List<Student> getAllStudents() {
-
-        if (!studentRepository.getAllStudents().isEmpty()) {
-            return studentRepository.getAllStudents();
-
-        } else {
-            throw new IllegalArgumentException("There are no students in the database");
-        }
-    }
-
-    @Override
-    public Student getStudentById(int studentId) {
-
-        if (Boolean.TRUE.equals(ifExists(studentId))) {
-            return studentRepository.getStudentById(studentId);
-
-        } else {
-            throw new IllegalArgumentException(String.format(STUDENT_WITH_ID_NOT_EXIST, studentId));
-        }
-    }
-
-    @Override
-    public List<Student> getStudentsByLastName(String lastName) {
-
-        if (!studentRepository.getStudentsByLastName(lastName).isEmpty()) {
-            return studentRepository.getStudentsByLastName(lastName);
-
-        } else {
-            throw new IllegalArgumentException(String.format(
-                "There are no students with last name %s in the database", lastName));
-        }
-    }
-
-    @Override
-    public List<Student> getStudentsByName(String name) {
-
-        if (!studentRepository.getStudentsByFirstName(name).isEmpty()) {
-            return studentRepository.getStudentsByFirstName(name);
-
-        } else {
-            throw new IllegalArgumentException(String.format(
-                "There are no students with name %s in the database", name));
-        }
-    }
-
-    @Override
-    public List<Student> getStudentsByFullName(String firstName, String lastName) {
-
-        if (!studentRepository.getStudentsByFullName(firstName, lastName).isEmpty()) {
-            return studentRepository.getStudentsByFullName(firstName, lastName);
-
-        } else {
-            throw new IllegalArgumentException(String.format(
-                "There are no students with name %s and last name %s in the database", firstName, lastName));
+            throw new NoSuchStudentExistsException(msg);
         }
     }
 
     @Override
     public void addStudentToCourse(int studentId, int courseId) {
 
-        if (studentRepository.getStudentById(studentId).getStudentId() != 0) {
+        try {
             studentRepository.addStudentToCourse(studentId, courseId);
 
-        } else {
-            throw new IllegalArgumentException(String.format(STUDENT_WITH_ID_NOT_EXIST, studentId));
+        } catch (DAOException e) {
+            var msg = String.format(STUDENT_WITH_ID_NOT_EXIST, studentId);
+            log.error(msg, e);
+
+            throw new NoSuchStudentExistsException(msg);
         }
     }
 
     @Override
     public void removeStudentFromCourse(int studentId, int groupId) {
 
-        if (studentRepository.getStudentById(studentId).getStudentId() != 0) {
+        try {
             studentRepository.removeStudentFromCourse(studentId, groupId);
 
-        } else {
-            throw new IllegalArgumentException(String.format(STUDENT_WITH_ID_NOT_EXIST, studentId));
+        } catch (DAOException e) {
+            var msg = String.format(STUDENT_WITH_ID_NOT_EXIST, studentId);
+            log.error(msg, e);
+
+            throw new NoSuchStudentExistsException(msg);
         }
 
     }
 
     @Override
-    public List<Course> getCoursesByStudentId(int studentId) {
+    public List<StudentDto> getStudentsByCourse(int courseId) {
 
-        if (!studentRepository.getCoursesByStudentId(studentId).isEmpty()) {
-            return studentRepository.getCoursesByStudentId(studentId);
+        try {
+            return studentRepository.getStudentsByCourseId(courseId)
+                .stream()
+                .map(StudentMapper::toDto)
+                .toList();
 
-        } else {
-            throw new IllegalArgumentException(String.format("Student with id %d doesn't have any courses", studentId));
+        } catch (DAOException e) {
+            var msg = String.format("There are no students in course with id %d", courseId);
+            log.error(msg, e);
+            throw new NoSuchStudentExistsException(msg);
         }
     }
-    
-    private Boolean ifExists(int id){
-        return studentRepository.getStudentById(id) != null;
+
+    @Override
+    public List<StudentDto> getStudentsByCourseNameAndGroupId(String studentName, Integer courseId) {
+
+        try {
+            return studentRepository.getStudentsByCourseNameAndGroupId(studentName, courseId)
+                .stream()
+                .map(StudentMapper::toDto)
+                .toList();
+
+        } catch (DAOException e) {
+            var msg = String.format("There are no students in course with id %d", courseId);
+            log.error(msg, e);
+            throw new NoSuchStudentExistsException(msg);
+        }
     }
 }

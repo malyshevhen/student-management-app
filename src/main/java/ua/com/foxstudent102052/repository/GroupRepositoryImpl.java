@@ -8,7 +8,7 @@ import java.util.List;
 
 @Slf4j
 public class GroupRepositoryImpl implements GroupRepository {
-    private static DAOFactory daoFactory;
+    private final DAOFactory daoFactory;
     
     public GroupRepositoryImpl(DAOFactory daoFactory) {
         this.daoFactory = daoFactory;
@@ -22,26 +22,6 @@ public class GroupRepositoryImpl implements GroupRepository {
                 INTO groups (group_name) values ('%s');""",
             group.getGroupName()));
         log.info("Group: '{}' added successfully", group.getGroupName());
-    }
-
-    @Override
-    public void removeGroupById(int groupId) {
-        daoFactory.doPost(String.format("""
-                DELETE
-                FROM groups
-                WHERE group_id = '%d';""",
-            groupId));
-        log.info("Group with id: '{}' removed successfully", groupId);
-    }
-
-    @Override
-    public void updateGroupById(Group group) {
-        daoFactory.doPost(String.format("""
-                UPDATE groups
-                SET group_name = '%s'
-                WHERE group_id = '%d';""",
-            group.getGroupName(), group.getGroupId()));
-        log.info("Group with id: '{}' updated successfully", group.getGroupId());
     }
 
     @Override

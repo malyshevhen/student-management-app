@@ -1,15 +1,14 @@
 package ua.com.foxstudent102052.repository;
 
-import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
-import ua.com.foxstudent102052.model.Course;
 import ua.com.foxstudent102052.model.Student;
+import ua.com.foxstudent102052.repository.exception.DAOException;
 
 import java.util.List;
 
 @Slf4j
 public class StudentRepositoryImpl implements StudentRepository {
-    DAOFactory daoFactory;
+    private final DAOFactory daoFactory;
 
     public StudentRepositoryImpl(DAOFactory daoFactory) {
         this.daoFactory = daoFactory;
@@ -17,7 +16,7 @@ public class StudentRepositoryImpl implements StudentRepository {
 
 
     @Override
-    public void addStudent(@NonNull Student student) {
+    public void addStudent(Student student) {
         daoFactory.doPost(String.format("""
             INSERT INTO students (
                 group_id,
@@ -34,49 +33,6 @@ public class StudentRepositoryImpl implements StudentRepository {
             FROM students
             WHERE student_id = %d;""", studentId));
         log.info(String.format("Student with studentId %d was removed from the database", studentId));
-    }
-
-    @Override
-    public void updateStudentFirstName(int studentId, String firstName) {
-        daoFactory.doPost(String.format("""
-            UPDATE students
-            SET first_name = '%s'
-            WHERE student_id = %d;""", firstName, studentId));
-        log.info(String.format("Student with id %d was updated with first name %s", studentId, firstName));
-    }
-
-    @Override
-    public void updateStudentLastName(int studentId, String lastName) {
-        daoFactory.doPost(String.format("""
-            UPDATE students
-            SET last_name = '%s'
-            WHERE student_id = %d;""", lastName, studentId));
-        log.info(String.format("Student with id %d was updated with last name %s", studentId, lastName));
-    }
-
-    @Override
-    public void updateStudentGroup(int studentId, int groupId) {
-        daoFactory.doPost(String.format("""
-            UPDATE students
-            SET group_id = %d
-            WHERE student_id = %d;""", groupId, studentId));
-        log.info(String.format("Student with id %d was updated with group id %d", studentId, groupId));
-    }
-
-    @Override
-    public void updateStudent(@NonNull Student student) {
-        daoFactory.doPost(String.format("""
-            UPDATE students
-            SET
-                group_id = %d,
-                first_name = '%s',
-                last_name = '%s'
-            WHERE student_id = %d;""", student.getGroupId(), student.getFirstName(), student.getLastName(), student.getStudentId()));
-        log.info(String.format("Student with id %d was updated with group id %d, first name %s and last name %s",
-            student.getStudentId(),
-            student.getGroupId(),
-            student.getFirstName(),
-            student.getLastName()));
     }
 
     @Override
@@ -100,16 +56,6 @@ public class StudentRepositoryImpl implements StudentRepository {
         log.info(String.format("Course with id %d was removed from student with id %d", courseId, studentId));
     }
 
-    @Override
-    public Student getStudentById(int studentId) {
-        String query = String.format("""
-            SELECT *
-            FROM students
-            WHERE student_id = %d;""", studentId);
-
-        return daoFactory.getStudent(query);
-    }
-
 
     @Override
     public List<Student> getAllStudents() {
@@ -119,47 +65,41 @@ public class StudentRepositoryImpl implements StudentRepository {
     }
 
     @Override
-    public List<Student> getStudentsByFirstName(String firstName) {
+    public List<Student> getStudentsByCourseId(int courseId) {
         String query = String.format("""
-            SELECT *
-            FROM students
-            WHERE first_name = '%s';""", firstName);
+                SELECT *
+                FROM students
+                WHERE student_id IN (
+                    SELECT student_id
+                    FROM students_courses
+                    WHERE course_id = %d);""",
+            courseId);
 
-        return daoFactory.getStudents(query);
+        try {
+            return daoFactory.getStudents(query);
+        } catch (DAOException e) {
+            log.error("Error while getting students by course id", e);
+            throw new DAOException(e.getMessage());
+        }
     }
 
     @Override
-    public List<Student> getStudentsByLastName(String lastName) {
+    public List<Student> getStudentsByCourseNameAndGroupId(String studentName, Integer courseId) {
         String query = String.format("""
-            SELECT *
-            FROM students
-            WHERE last_name = '%s';""", lastName);
+                SELECT *
+                FROM students
+                WHERE student_id IN (
+                    SELECT student_id
+                    FROM students_courses
+                    WHERE course_id = %d)
+                AND first_name ='%s';""",
+            courseId, studentName);
 
-        return daoFactory.getStudents(query);
-    }
-
-    @Override
-    public List<Student> getStudentsByFullName(String firstName, String lastName) {
-        String query = String.format("""
-            SELECT *
-            FROM students
-            WHERE first_name = '%s'
-            AND last_name = '%s';""", firstName, lastName);
-
-        return daoFactory.getStudents(query);
-    }
-
-    @Override
-    public List<Course> getCoursesByStudentId(int studentId) {
-        String query = String.format("""
-            SELECT *
-            FROM courses
-            WHERE course_id
-            IN (
-                SELECT course_id
-                FROM students_courses
-                WHERE student_id = %d);""", studentId);
-
-        return daoFactory.getCourses(query);
+        try {
+            return daoFactory.getStudents(query);
+        } catch (DAOException e) {
+            log.error("Error while getting students by course id", e);
+            throw new DAOException(e.getMessage());
+        }
     }
 }

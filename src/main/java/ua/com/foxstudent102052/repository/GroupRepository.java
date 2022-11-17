@@ -8,10 +8,6 @@ import java.util.List;
 public interface GroupRepository {
     void addGroup(Group group);
 
-    void removeGroupById(int groupId);
-
-    void updateGroupById(Group group);
-
     List<Group> getAllGroups();
 
     Group getGroupById(int groupId);

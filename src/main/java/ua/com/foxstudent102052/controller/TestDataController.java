@@ -1,10 +1,20 @@
 package ua.com.foxstudent102052.controller;
 
+import ua.com.foxstudent102052.model.CourseDto;
+import ua.com.foxstudent102052.model.GroupDto;
+import ua.com.foxstudent102052.model.StudentDto;
 import ua.com.foxstudent102052.repository.*;
 import ua.com.foxstudent102052.service.*;
+import ua.com.foxstudent102052.service.exception.CourseAlreadyExistException;
+import ua.com.foxstudent102052.service.exception.GroupAlreadyExistException;
+import ua.com.foxstudent102052.service.exception.NoSuchStudentExistsException;
+
+import java.util.HashSet;
+import java.util.List;
+import java.util.Random;
 
 public class TestDataController {
-    DAOFactory daoFactory = new DAOFactoryImpl();
+    DAOFactory daoFactory = DAOFactoryImpl.getInstance();
 
     StudentRepository studentRepository = new StudentRepositoryImpl(daoFactory);
     CourseRepository courseRepository = new CourseRepositoryImpl(daoFactory);
@@ -72,20 +82,25 @@ public class TestDataController {
             """,
         """
             Art is a diverse range of human activities in creating visual,
-             auditory or performing artifacts (artworks),
-             expressing the author's imaginative or technical skill,
-             intended to be appreciated for their beauty or emotional power.
-            """,
+             auditory or performing artworks,
+             expressing the authors imaginative or technical skill,
+             intended to be appreciated for their beauty or emotional power.""",
         """
             Music is an art form and cultural activity whose medium is sound organized in time.
-             General definitions of music include common elements such as pitch
-             (which governs melody and harmony),
-             rhythm (and its associated concepts tempo, meter, and articulation),
-             dynamics, and the sonic qualities of timbre and texture.
-            """
+             General definitions of music include common elements such as pitch,
+             rhythm, dynamics, and the sonic qualities of timbre and texture."""
     };
 
-    private void clearTables() {
+    public void updateTestDada() {
+        dropTables();
+        createTables();
+        addCourses();
+        addGroups();
+        addStudents();
+        addStudentsToCourses();
+    }
+
+    private void dropTables() {
         String query =
             """
                 DROP TABLE IF EXISTS students_courses;
@@ -133,5 +148,94 @@ public class TestDataController {
                 );
                 """;
         daoFactory.doPost(query);
+    }
+
+    private void addCourses() {
+
+        for (int i = 0; i < 10; i++) {
+
+            try {
+                var courseDto = CourseDto.builder()
+                    .name(courseNames[i])
+                    .description(courseDescriptions[i])
+                    .build();
+                courseService.addCourse(courseDto);
+
+            } catch (CourseAlreadyExistException e) {
+                print(e.getMessage());
+            }
+        }
+    }
+
+    private void addGroups() {
+
+        for (String groupName : groupNames) {
+
+            try {
+
+                var groupDto = GroupDto.builder()
+                    .name(groupName)
+                    .build();
+                groupService.addGroup(groupDto);
+
+            } catch (GroupAlreadyExistException e) {
+                print(e.getMessage());
+            }
+        }
+    }
+
+    public void addStudents() {
+
+        for (int i = 0; i < 200; i++) {
+
+            try {
+
+                var random = new Random();
+                var studentDto = StudentDto.builder()
+                    .groupId(random.nextInt(10))
+                    .fistName(firstNames[random.nextInt(19)])
+                    .lastName(lastNames[random.nextInt(19)])
+                    .build();
+                studentService.addStudent(studentDto);
+
+            } catch (NoSuchStudentExistsException e) {
+                print(e.getMessage());
+            }
+        }
+    }
+
+    public void addStudentsToCourses() {
+        List<StudentDto> students = List.of();
+        try {
+            students = studentService.getAllStudents();
+
+        } catch (NoSuchStudentExistsException e) {
+            print(e.getMessage());
+        }
+        students
+            .forEach(
+                student -> {
+                    var courses = new HashSet<Integer>();
+
+                    for (int i = 1; i <= 3; i++) {
+                        var random = new Random();
+                        int courseId = random.nextInt(11) + 1;
+
+                        if (Boolean.FALSE.equals(courses.contains(courseId)) && courseId < 11) {
+
+                            try {
+                                studentService.addStudentToCourse(student.getId(), courseId);
+                            } catch (NoSuchStudentExistsException e) {
+                                print(e.getMessage());
+                            }
+                            courses.add(courseId);
+                        }
+                    }
+                }
+            );
+    }
+
+    private static void print(String e) {
+        System.out.println(e);
     }
 }
