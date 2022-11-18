@@ -1,14 +1,13 @@
 package ua.com.foxstudent102052.controller;
 
+import java.util.List;
+
 import lombok.extern.slf4j.Slf4j;
 import ua.com.foxstudent102052.model.StudentDto;
 import ua.com.foxstudent102052.service.CourseService;
 import ua.com.foxstudent102052.service.GroupService;
 import ua.com.foxstudent102052.service.ServiceException;
 import ua.com.foxstudent102052.service.StudentService;
-
-import java.util.List;
-import java.util.NoSuchElementException;
 
 @Slf4j
 public class StudentController {
@@ -28,7 +27,7 @@ public class StudentController {
         } catch (ServiceException e) {
             log.error(e.getMessage(), e);
 
-            throw new IllegalArgumentException(e);
+            throw new ControllerException(e);
         }
     }
 
@@ -38,7 +37,7 @@ public class StudentController {
         } catch (ServiceException e) {
             log.error(e.getMessage(), e);
 
-            throw new NoSuchElementException(e);
+            throw new ControllerException(e);
         }
     }
 
@@ -48,7 +47,7 @@ public class StudentController {
         } catch (ServiceException e) {
             log.error(e.getMessage(), e);
 
-            throw new NoSuchElementException(e);
+            throw new ControllerException(e);
         }
     }
 
@@ -58,7 +57,7 @@ public class StudentController {
         } catch (ServiceException e) {
             log.error(e.getMessage());
 
-            throw new NoSuchElementException(e);
+            throw new ControllerException(e);
         }
     }
 
@@ -70,11 +69,11 @@ public class StudentController {
         } catch (ServiceException e) {
             log.error(e.getMessage());
 
-            throw new NoSuchElementException(e);
+            throw new ControllerException(e);
         }
     }
 
-    public List<StudentDto> getStudentsByCourseNameAndCourseId(String studentName, Integer courseId)
+    public List<StudentDto> getStudentsByNameAndCourse(String studentName, Integer courseId)
             throws ControllerException {
         try {
             var studentDtoList = studentService.getStudentsByNameAndCourse(studentName, courseId);
@@ -83,7 +82,7 @@ public class StudentController {
         } catch (ServiceException e) {
             log.error(e.getMessage());
 
-            throw new NoSuchElementException(e);
+            throw new ControllerException(e);
         }
     }
 
@@ -95,8 +94,6 @@ public class StudentController {
                 setStudentsCourse(studentDto);
             } catch (ControllerException e) {
                 log.error(e.getMessage());
-
-                throw new NoSuchElementException(e);
             }
         });
 
@@ -112,7 +109,7 @@ public class StudentController {
             String msg = "Student with id: %d has no courses".formatted(id);
             log.error(msg);
 
-            throw new NoSuchElementException(e);
+            throw new ControllerException(e);
         }
     }
 
@@ -125,7 +122,7 @@ public class StudentController {
             String msg = "Student with id: %d has no group".formatted(studentDto.getId());
             log.error(msg);
 
-            throw new NoSuchElementException(e);
+            throw new ControllerException(e);
         }
     }
 }

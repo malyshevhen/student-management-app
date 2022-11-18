@@ -158,5 +158,4 @@ public class StudentServiceImplTest {
         assertThrows(ServiceException.class, () -> studentService.getStudentsByNameAndCourse("John", 1),
                 "Students doesn't exist");
     }
-
 }

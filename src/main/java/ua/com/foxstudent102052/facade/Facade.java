@@ -141,7 +141,7 @@ public class Facade {
                     print(createCourseTable(courseController.getAllCourses()));
                     var courseId = takeInputIntFromUser(ENTER_GROUP_ID);
                     var studentsByCourseNameAndGroupId = studentController
-                            .getStudentsByCourseNameAndCourseId(studentName, courseId);
+                            .getStudentsByNameAndCourse(studentName, courseId);
                     var studentTable = createStudentTable(studentsByCourseNameAndGroupId);
                     print(studentTable);
                 } catch (ControllerException e) {
