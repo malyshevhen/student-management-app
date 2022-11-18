@@ -34,7 +34,7 @@ public class StudentMapper {
             return new Student(
                     studentDto.getId(),
                     studentDto.getGroupId(),
-                    studentDto.getFistName(),
+                    studentDto.getFirstName(),
                     studentDto.getLastName());
 
         } catch (NullPointerException e) {

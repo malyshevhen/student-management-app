@@ -79,7 +79,7 @@ public class Facade {
                     int groupId = takeInputIntFromUser(ENTER_OPTION_NUMBER);
 
                     var studentDto = StudentDto.builder()
-                            .fistName(firstName)
+                            .firstName(firstName)
                             .lastName(lastName)
                             .groupId(groupId)
                             .build();
@@ -141,7 +141,7 @@ public class Facade {
                     print(createCourseTable(courseController.getAllCourses()));
                     var courseId = takeInputIntFromUser(ENTER_GROUP_ID);
                     var studentsByCourseNameAndGroupId = studentController
-                            .getStudentsByCourseNameAndGroupId(studentName, courseId);
+                            .getStudentsByCourseNameAndCourseId(studentName, courseId);
                     var studentTable = createStudentTable(studentsByCourseNameAndGroupId);
                     print(studentTable);
                 } catch (ControllerException e) {

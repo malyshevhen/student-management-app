@@ -210,7 +210,7 @@ public class TestDataController {
                 var random = new Random();
                 var studentDto = StudentDto.builder()
                         .groupId(random.nextInt(11))
-                        .fistName(firstNames[random.nextInt(19)])
+                        .firstName(firstNames[random.nextInt(19)])
                         .lastName(lastNames[random.nextInt(19)])
                         .build();
                 studentService.addStudent(studentDto);

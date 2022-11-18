@@ -16,7 +16,8 @@ public class StudentRepositoryImpl implements StudentRepository {
     @Override
     public void addStudent(Student student) throws RepositoryException {
         try {
-            daoFactory.doPost(String.format("""
+            daoFactory.doPost(String.format(
+                """
                     INSERT INTO students (
                         group_id,
                         first_name,
@@ -36,10 +37,12 @@ public class StudentRepositoryImpl implements StudentRepository {
     @Override
     public void removeStudent(int studentId) throws RepositoryException {
         try {
-            daoFactory.doPost(String.format("""
-                    DELETE IF EXISTS
+            daoFactory.doPost(String.format(
+                """
+                    DELETE
                     FROM students
-                    WHERE student_id = %d;""", studentId));
+                    WHERE student_id = %d;""",
+                    studentId));
             log.info(String.format("Student with studentId %d was removed from the database", studentId));
         } catch (DAOException e) {
             String msg = String.format("Student with studentId %d was not removed from the database", studentId);
@@ -52,7 +55,8 @@ public class StudentRepositoryImpl implements StudentRepository {
     @Override
     public void addStudentToCourse(int studentId, int courseId) throws RepositoryException {
         try {
-            daoFactory.doPost(String.format("""
+            daoFactory.doPost(String.format(
+                """
                     INSERT INTO students_courses (
                         student_id,
                         course_id)
@@ -70,8 +74,9 @@ public class StudentRepositoryImpl implements StudentRepository {
     @Override
     public void removeStudentFromCourse(int studentId, int courseId) throws RepositoryException {
         try {
-            daoFactory.doPost(String.format("""
-                    DELETE IF EXISTS
+            daoFactory.doPost(String.format(
+                """
+                    DELETE
                     FROM students_courses
                     WHERE student_id = %d
                     AND course_id = %d;""", studentId, courseId));
@@ -101,7 +106,8 @@ public class StudentRepositoryImpl implements StudentRepository {
 
     @Override
     public List<Student> getStudentsByCourseId(int courseId) throws RepositoryException {
-        String query = String.format("""
+        String query = String.format(
+            """
                 SELECT *
                 FROM students
                 WHERE student_id IN (
@@ -122,7 +128,8 @@ public class StudentRepositoryImpl implements StudentRepository {
 
     @Override
     public List<Student> getStudentsByNameAndCourse(String studentName, Integer courseId) throws RepositoryException {
-        String query = String.format("""
+        String query = String.format(
+            """
                 SELECT *
                 FROM students
                 WHERE student_id IN (
@@ -144,7 +151,8 @@ public class StudentRepositoryImpl implements StudentRepository {
 
     @Override
     public Student getStudentById(int id) throws RepositoryException {
-        String query = String.format("""
+        String query = String.format(
+            """
                 SELECT *
                 FROM students
                 WHERE student_id = %d;""",
@@ -154,6 +162,19 @@ public class StudentRepositoryImpl implements StudentRepository {
             return daoFactory.getStudents(query).get(0);
         } catch (DAOException e) {
             String msg = "Error while getting student by id";
+            log.error(msg, e);
+
+            throw new RepositoryException(msg, e);
+        }
+    }
+
+    @Override
+    public Student getLastStudent() throws RepositoryException {
+        String query = "SELECT * FROM students ORDER BY student_id DESC LIMIT 1;";
+        try {
+            return daoFactory.getStudents(query).get(0);
+        } catch (DAOException e) {
+            String msg = "Error while getting last student";
             log.error(msg, e);
 
             throw new RepositoryException(msg, e);

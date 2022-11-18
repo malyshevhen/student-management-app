@@ -250,7 +250,6 @@ public class DAOFactoryImpl implements DAOFactory {
 
     }
 
-    //TODO: Fix this method
     private String readScriptFromFile(String filePath) throws IOException {
         var file = new File(filePath);
         var fileReader = new FileReader(file);

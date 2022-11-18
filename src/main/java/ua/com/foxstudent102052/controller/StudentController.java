@@ -74,7 +74,7 @@ public class StudentController {
         }
     }
 
-    public List<StudentDto> getStudentsByCourseNameAndGroupId(String studentName, Integer courseId)
+    public List<StudentDto> getStudentsByCourseNameAndCourseId(String studentName, Integer courseId)
             throws ControllerException {
         try {
             var studentDtoList = studentService.getStudentsByNameAndCourse(studentName, courseId);

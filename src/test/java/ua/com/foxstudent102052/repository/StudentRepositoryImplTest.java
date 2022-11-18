@@ -7,7 +7,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import java.io.IOException;
 import java.util.List;
 
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -29,15 +28,6 @@ public class StudentRepositoryImplTest {
         daoFactory.setLogin("sa");
         daoFactory.setPassword("sa");
         daoFactory.executeSqlScript("src/test/resources/testDB.sql");
-    }
-
-    @AfterAll
-    public static void tearDown() throws IOException {
-        DAOFactory daoFactory = DAOFactoryImpl.getInstance();
-        daoFactory.setJdbcUrl("jdbc:h2:mem:test;DB_CLOSE_DELAY=-1");
-        daoFactory.setLogin("sa");
-        daoFactory.setPassword("sa");
-        daoFactory.executeSqlScript("src/test/resources/testDBDrop.sql");
     }
 
     @Test
@@ -150,7 +140,7 @@ public class StudentRepositoryImplTest {
     }
 
     @Test
-    void MethodGetStudentsByCourseIdShoudReturnStudentByCourseId() {
+    void MethodGetStudentsByCourseIdShouldReturnStudentByCourseId() {
         try {
             var courseRepository = new CourseRepositoryImpl(daoFactory);
             var expected = List.of(
@@ -254,54 +244,38 @@ public class StudentRepositoryImplTest {
     }
 
     @Test
-    void MethodShouldRemoveStudentIfItInDataBase() {
-        try {
-            List.of(
-                    Student.builder()
-                            .studentId(1)
-                            .firstName("John")
-                            .lastName("Doe")
-                            .groupId(1)
-                            .build(),
-                    Student.builder()
-                            .studentId(2)
-                            .firstName("David")
-                            .lastName("Black")
-                            .groupId(1)
-                            .build())
-                    .forEach(student -> {
+    void MethodShouldRemoveStudentIfItInDataBase() throws RepositoryException {
+        List.of(
+                Student.builder()
+                        .studentId(1)
+                        .firstName("John")
+                        .lastName("Doe")
+                        .groupId(1)
+                        .build(),
+                Student.builder()
+                        .studentId(2)
+                        .firstName("David")
+                        .lastName("Black")
+                        .groupId(1)
+                        .build())
+                .forEach(student -> {
 
-                        try {
-                            studentRepository.addStudent(student);
-                        } catch (RepositoryException e) {
-                            log.error("Error", e);
-                        }
-                    });
+                    try {
+                        studentRepository.addStudent(student);
+                        log.info("Student {} was added to database", student.getStudentId());
+                    } catch (RepositoryException e) {
+                        log.error("Error", e);
+                    }
+                });
 
-            studentRepository.removeStudent(2);
+        studentRepository.removeStudent(1);
 
-            int expected = 1;
+        int expected = 1;
+        int actual = 0;
 
-            int actual = studentRepository.getAllStudents().size();
+        actual = studentRepository.getAllStudents().size();
 
-            assertEquals(expected, actual);
-
-        } catch (RepositoryException e) {
-            log.error("Error", e);
-
-            assertFalse(true);
-        }
-    }
-
-    @Test
-    void MethodRemoveStudentShouldThrowAnExceptionIfStudentIdIsInvalid() {
-
-        RepositoryException thrown = assertThrows(
-                RepositoryException.class,
-                () -> studentRepository.removeStudent(2),
-                "Expected removeStudent() to throw, but it didn't");
-
-        assertEquals("Student with studentId 2 was not removed from the database", thrown.getMessage());
+        assertEquals(expected, actual);
     }
 
     @Test
@@ -357,13 +331,40 @@ public class StudentRepositoryImplTest {
     }
 
     @Test
-    void MethodRemoveStudentFromCourseShouldThrowAnExceptionIfStudentIdIsInvalid() {
+    void MethodGetLastStudentShouldReturnLastAddedStudent() {
+        try {
+            var expected = Student.builder()
+                    .firstName("John")
+                    .lastName("Doe")
+                    .groupId(1)
+                    .build();
 
-        RepositoryException thrown = assertThrows(
-                RepositoryException.class,
-                () -> studentRepository.removeStudentFromCourse(2, 1),
-                "Expected removeStudentFromCourse() to throw, but it didn't");
+            List.of(
+                    Student.builder()
+                            .firstName("David")
+                            .lastName("Black")
+                            .groupId(1)
+                            .build(),
+                    expected)
+                    .forEach(student -> {
 
-        assertEquals("Student with id 2 was not removed from course with id 1", thrown.getMessage());
+                        try {
+                            studentRepository.addStudent(student);
+                        } catch (RepositoryException e) {
+                            log.error("Error", e);
+                        }
+                    });
+
+            studentRepository.addStudent(expected);
+
+            var actual = studentRepository.getLastStudent();
+
+            assertEquals(expected, actual);
+
+        } catch (RepositoryException e) {
+            log.error("Error", e);
+
+            assertFalse(true);
+        }
     }
 }

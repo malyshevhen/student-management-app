@@ -104,7 +104,7 @@ public class TableBuilder {
         StringBuilder studentBlockBuilder = new StringBuilder();
         String id = String.valueOf(student.getId());
         String group = student.getGroup();
-        String firstName = student.getFistName();
+        String firstName = student.getFirstName();
         String lastName = student.getLastName();
         var courses = student.getCoursesList();
 
@@ -228,12 +228,12 @@ public class TableBuilder {
 
                 if (i == 0) {
                     groupTableBlockBuilder.append(String.format(GROUP_STUDENTS_LIST_ROW, id, name,
-                            students.get(i).getFistName() + " " + students.get(i).getLastName()))
+                            students.get(i).getFirstName() + " " + students.get(i).getLastName()))
                             .append(System.lineSeparator());
 
                 } else {
                     groupTableBlockBuilder.append(String.format(GROUP_STUDENTS_LIST_ROW, " ", " ",
-                            students.get(i).getFistName() + " " + students.get(i).getLastName()))
+                            students.get(i).getFirstName() + " " + students.get(i).getLastName()))
                             .append(System.lineSeparator());
                 }
             }
@@ -354,11 +354,11 @@ public class TableBuilder {
 
                 if (i == 0) {
                     table.append(String.format(COURSE_STUDENTS_LIST_ROW, id, name, description,
-                            students.get(i).getFistName() + " " + students.get(i).getLastName()))
+                            students.get(i).getFirstName() + " " + students.get(i).getLastName()))
                             .append(System.lineSeparator());
                 } else {
                     table.append(String.format(COURSE_STUDENTS_LIST_ROW, " ", " ", " ",
-                            students.get(i).getFistName() + " " + students.get(i).getLastName()))
+                            students.get(i).getFirstName() + " " + students.get(i).getLastName()))
                             .append(System.lineSeparator());
                 }
                 table.append(COURSE_STUDENTS_LIST_SEMI_FOOTER)

@@ -1,13 +1,13 @@
 package ua.com.foxstudent102052.service;
 
+import java.util.List;
+
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import ua.com.foxstudent102052.mapper.StudentMapper;
 import ua.com.foxstudent102052.model.StudentDto;
 import ua.com.foxstudent102052.repository.RepositoryException;
 import ua.com.foxstudent102052.repository.StudentRepository;
-
-import java.util.List;
 
 @Slf4j
 @AllArgsConstructor
@@ -22,6 +22,15 @@ public class StudentServiceImpl implements StudentService {
         try {
             var newStudent = StudentMapper.toStudent(studentDto);
             studentRepository.addStudent(newStudent);
+            var lastStudentFromDB = studentRepository.getLastStudent();
+            var lastStudentFromDBDto = StudentMapper.toDto(lastStudentFromDB);
+            if (studentDto.equals(lastStudentFromDBDto)) {
+                log.info("Student with id {} was added", studentId);
+            } else {
+                log.info("Student with id {} wasn't added", studentId);
+
+                throw new ServiceException("Student wasn`t added");
+            }
 
         } catch (RepositoryException e) {
             var msg = String.format("Student with id %d already exist", studentId);
@@ -35,7 +44,22 @@ public class StudentServiceImpl implements StudentService {
     public void removeStudent(int studentId) throws ServiceException {
 
         try {
-            studentRepository.removeStudent(studentId);
+
+            if (Boolean.TRUE.equals(ifExist(studentId))) {
+                studentRepository.removeStudent(studentId);
+
+                if (Boolean.TRUE.equals(ifExist(studentId))) {
+                    log.info("Student with id {} wasn't removed", studentId);
+
+                    throw new ServiceException("Student wasn`t removed");
+                } else {
+                    log.info("Student with id {} was removed", studentId);
+                }
+            } else {
+                log.info(String.format(STUDENT_WITH_ID_NOT_EXIST, studentId));
+
+                throw new ServiceException(String.format(STUDENT_WITH_ID_NOT_EXIST, studentId));
+            }
 
         } catch (RepositoryException e) {
             var msg = String.format(STUDENT_WITH_ID_NOT_EXIST, studentId);
@@ -50,9 +74,9 @@ public class StudentServiceImpl implements StudentService {
 
         try {
             return studentRepository.getAllStudents()
-                .stream()
-                .map(StudentMapper::toDto)
-                .toList();
+                    .stream()
+                    .map(StudentMapper::toDto)
+                    .toList();
 
         } catch (RepositoryException e) {
             var msg = "There are no students in the database";
@@ -96,9 +120,9 @@ public class StudentServiceImpl implements StudentService {
 
         try {
             return studentRepository.getStudentsByCourseId(courseId)
-                .stream()
-                .map(StudentMapper::toDto)
-                .toList();
+                    .stream()
+                    .map(StudentMapper::toDto)
+                    .toList();
 
         } catch (RepositoryException e) {
             var msg = String.format("There are no students in course with id %d", courseId);
@@ -113,12 +137,27 @@ public class StudentServiceImpl implements StudentService {
 
         try {
             return studentRepository.getStudentsByNameAndCourse(studentName, courseId)
-                .stream()
-                .map(StudentMapper::toDto)
-                .toList();
+                    .stream()
+                    .map(StudentMapper::toDto)
+                    .toList();
 
         } catch (RepositoryException e) {
             var msg = String.format("There are no students in course with id %d", courseId);
+            log.error(msg, e);
+
+            throw new ServiceException(msg, e);
+        }
+    }
+
+    @Override
+    public Boolean ifExist(int id) throws ServiceException {
+        try {
+            var studentFromDB = studentRepository.getStudentById(id);
+
+            return studentFromDB != null;
+
+        } catch (RepositoryException e) {
+            var msg = String.format(STUDENT_WITH_ID_NOT_EXIST, id);
             log.error(msg, e);
 
             throw new ServiceException(msg, e);

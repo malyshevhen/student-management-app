@@ -21,4 +21,6 @@ public interface StudentRepository {
     List<Student> getStudentsByNameAndCourse(String studentName, Integer courseId) throws RepositoryException;
 
     Student getStudentById(int i) throws RepositoryException;
+
+    Student getLastStudent() throws RepositoryException;
 }
