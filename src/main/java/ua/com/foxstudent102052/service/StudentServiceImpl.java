@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import ua.com.foxstudent102052.mapper.StudentMapper;
 import ua.com.foxstudent102052.model.StudentDto;
+import ua.com.foxstudent102052.repository.RepositoryException;
 import ua.com.foxstudent102052.repository.StudentRepository;
 
 import java.util.List;
@@ -15,37 +16,37 @@ public class StudentServiceImpl implements StudentService {
     private final StudentRepository studentRepository;
 
     @Override
-    public void addStudent(StudentDto studentDto) {
+    public void addStudent(StudentDto studentDto) throws ServiceException {
         int studentId = studentDto.getId();
 
         try {
             var newStudent = StudentMapper.toStudent(studentDto);
             studentRepository.addStudent(newStudent);
 
-        } catch (IllegalArgumentException e) {
+        } catch (RepositoryException e) {
             var msg = String.format("Student with id %d already exist", studentId);
             log.error(msg, e);
 
-            throw e;
+            throw new ServiceException(msg, e);
         }
     }
 
     @Override
-    public void removeStudent(int studentId) {
+    public void removeStudent(int studentId) throws ServiceException {
 
         try {
             studentRepository.removeStudent(studentId);
 
-        } catch (IllegalArgumentException e) {
+        } catch (RepositoryException e) {
             var msg = String.format(STUDENT_WITH_ID_NOT_EXIST, studentId);
             log.error(msg, e);
 
-            throw e;
+            throw new ServiceException(msg, e);
         }
     }
 
     @Override
-    public List<StudentDto> getAllStudents() {
+    public List<StudentDto> getAllStudents() throws ServiceException {
 
         try {
             return studentRepository.getAllStudents()
@@ -53,45 +54,45 @@ public class StudentServiceImpl implements StudentService {
                 .map(StudentMapper::toDto)
                 .toList();
 
-        } catch (IllegalArgumentException e) {
+        } catch (RepositoryException e) {
             var msg = "There are no students in the database";
             log.error(msg, e);
 
-            throw e;
+            throw new ServiceException(msg, e);
         }
     }
 
     @Override
-    public void addStudentToCourse(int studentId, int courseId) {
+    public void addStudentToCourse(int studentId, int courseId) throws ServiceException {
 
         try {
             studentRepository.addStudentToCourse(studentId, courseId);
 
-        } catch (IllegalArgumentException e) {
+        } catch (RepositoryException e) {
             var msg = String.format(STUDENT_WITH_ID_NOT_EXIST, studentId);
             log.error(msg, e);
 
-            throw e;
+            throw new ServiceException(msg, e);
         }
     }
 
     @Override
-    public void removeStudentFromCourse(int studentId, int groupId) {
+    public void removeStudentFromCourse(int studentId, int groupId) throws ServiceException {
 
         try {
             studentRepository.removeStudentFromCourse(studentId, groupId);
 
-        } catch (IllegalArgumentException e) {
+        } catch (RepositoryException e) {
             var msg = String.format(STUDENT_WITH_ID_NOT_EXIST, studentId);
             log.error(msg, e);
 
-            throw e;
+            throw new ServiceException(msg, e);
         }
 
     }
 
     @Override
-    public List<StudentDto> getStudentsByCourse(int courseId) {
+    public List<StudentDto> getStudentsByCourse(int courseId) throws ServiceException {
 
         try {
             return studentRepository.getStudentsByCourseId(courseId)
@@ -99,16 +100,16 @@ public class StudentServiceImpl implements StudentService {
                 .map(StudentMapper::toDto)
                 .toList();
 
-        } catch (IllegalArgumentException e) {
+        } catch (RepositoryException e) {
             var msg = String.format("There are no students in course with id %d", courseId);
             log.error(msg, e);
 
-            throw e;
+            throw new ServiceException(msg, e);
         }
     }
 
     @Override
-    public List<StudentDto> getStudentsByNameAndCourse(String studentName, Integer courseId) {
+    public List<StudentDto> getStudentsByNameAndCourse(String studentName, Integer courseId) throws ServiceException {
 
         try {
             return studentRepository.getStudentsByNameAndCourse(studentName, courseId)
@@ -116,11 +117,11 @@ public class StudentServiceImpl implements StudentService {
                 .map(StudentMapper::toDto)
                 .toList();
 
-        } catch (IllegalArgumentException e) {
+        } catch (RepositoryException e) {
             var msg = String.format("There are no students in course with id %d", courseId);
             log.error(msg, e);
 
-            throw e;
+            throw new ServiceException(msg, e);
         }
     }
 }

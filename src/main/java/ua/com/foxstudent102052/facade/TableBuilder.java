@@ -7,8 +7,7 @@ import ua.com.foxstudent102052.model.StudentDto;
 import java.util.List;
 
 public class TableBuilder {
-    private static final String STUDENT_LIST_HEADER =
-        """
+    private static final String STUDENT_LIST_HEADER = """
             +=====+==========+==========+==========+========================================+
             |ID   |GROUP     |FIRST NAME|LAST NAME |COURSES                                 |
             +=====+==========+==========+==========+========================================+""";
@@ -19,8 +18,7 @@ public class TableBuilder {
 
     private static final String STUDENT_LIST_SEMI_FOOTER = "+-----+----------+----------+----------+----------------------------------------+";
 
-    private static final String GROUP_STUDENTS_LIST_HEADER =
-        """
+    private static final String GROUP_STUDENTS_LIST_HEADER = """
             +=====+==========+==================================================+
             |ID   |NAME      |STUDENTS                                          |
             +=====+==========+==================================================+""";
@@ -31,22 +29,18 @@ public class TableBuilder {
 
     private static final String GROUP_STUDENTS_LIST_SEMI_FOOTER = "+-----+----------+--------------------------------------------------+";
 
-    private static final String COURSE_LIST_HEADER =
-        """
+    private static final String COURSE_LIST_HEADER = """
             +=====+===============+================================================================================+
             |ID   |NAME           |DESCRIPTION                                                                     |
             +=====+===============+================================================================================+""";
 
     private static final String COURSE_LIST_ROW = "|%-5s|%-15s|%-80s|";
 
-    private static final String COURSE_LIST_FOOTER =
-        "+=====+===============+================================================================================+";
+    private static final String COURSE_LIST_FOOTER = "+=====+===============+================================================================================+";
 
-    private static final String COURSE_LIST_SEMI_FOOTER =
-        "+-----+---------------+--------------------------------------------------------------------------------+";
+    private static final String COURSE_LIST_SEMI_FOOTER = "+-----+---------------+--------------------------------------------------------------------------------+";
 
-    private static final String COURSE_STUDENTS_LIST_HEADER =
-        """
+    private static final String COURSE_STUDENTS_LIST_HEADER = """
             +=====+==========+========================================+====================+
             |ID   |NAME      |DESCRIPTION                             |STUDENTS            |
             +=====+==========+========================================+====================+""";
@@ -56,8 +50,7 @@ public class TableBuilder {
     private static final String COURSE_STUDENTS_LIST_FOOTER = "+=====+==========+========================================+====================+";
 
     private static final String COURSE_STUDENTS_LIST_SEMI_FOOTER = "+-----+----------+----------------------------------------+--------------------+";
-    private static final String GROUP_LIST_HEADER =
-        """
+    private static final String GROUP_LIST_HEADER = """
             +=====+==========+
             |ID   |NAME      |
             +=====+==========+""";
@@ -77,13 +70,13 @@ public class TableBuilder {
         } else {
             StringBuilder table = new StringBuilder();
             table.append(STUDENT_LIST_HEADER)
-                .append(System.lineSeparator());
+                    .append(System.lineSeparator());
 
             for (StudentDto student : students) {
                 table.append(createStudentTableBlock(student));
             }
             table.append(STUDENT_LIST_FOOTER)
-                .append(System.lineSeparator());
+                    .append(System.lineSeparator());
 
             return table.toString();
         }
@@ -98,10 +91,10 @@ public class TableBuilder {
         } else {
             StringBuilder table = new StringBuilder();
             table.append(STUDENT_LIST_HEADER)
-                .append(System.lineSeparator())
-                .append(createStudentTableBlock(student))
-                .append(STUDENT_LIST_FOOTER)
-                .append(System.lineSeparator());
+                    .append(System.lineSeparator())
+                    .append(createStudentTableBlock(student))
+                    .append(STUDENT_LIST_FOOTER)
+                    .append(System.lineSeparator());
 
             return table.toString();
         }
@@ -117,22 +110,23 @@ public class TableBuilder {
 
         if (courses.isEmpty()) {
             studentBlockBuilder.append(String.format(STUDENT_LIST_ROW, id, group, firstName, lastName, "No courses"))
-                .append(System.lineSeparator());
+                    .append(System.lineSeparator());
         } else {
             for (int i = 0; i < courses.size(); i++) {
 
                 if (i == 0) {
                     studentBlockBuilder.append(String.format(STUDENT_LIST_ROW, id, group, firstName, lastName,
                             courses.get(i).getName()))
-                        .append(System.lineSeparator());
+                            .append(System.lineSeparator());
 
                 } else {
-                    studentBlockBuilder.append(String.format(STUDENT_LIST_ROW, " ", " ", " ", " ", courses.get(i).getName()))
-                        .append(System.lineSeparator());
+                    studentBlockBuilder
+                            .append(String.format(STUDENT_LIST_ROW, " ", " ", " ", " ", courses.get(i).getName()))
+                            .append(System.lineSeparator());
                 }
             }
             studentBlockBuilder.append(STUDENT_LIST_SEMI_FOOTER)
-                .append(System.lineSeparator());
+                    .append(System.lineSeparator());
         }
 
         return studentBlockBuilder.toString();
@@ -142,10 +136,10 @@ public class TableBuilder {
         if (groupDto.getId() != 0) {
             StringBuilder groupTableBuilder = new StringBuilder();
             groupTableBuilder.append(GROUP_LIST_HEADER)
-                .append(System.lineSeparator())
-                .append(createGroupTableBlock(groupDto))
-                .append(GROUP_LIST_FOOTER)
-                .append(System.lineSeparator());
+                    .append(System.lineSeparator())
+                    .append(createGroupTableBlock(groupDto))
+                    .append(GROUP_LIST_FOOTER)
+                    .append(System.lineSeparator());
 
             return groupTableBuilder.toString();
         }
@@ -157,13 +151,13 @@ public class TableBuilder {
         if (!groupsDto.isEmpty()) {
             StringBuilder groupTableBuilder = new StringBuilder();
             groupTableBuilder.append(GROUP_LIST_HEADER)
-                .append(System.lineSeparator());
+                    .append(System.lineSeparator());
 
             for (GroupDto groupDto : groupsDto) {
                 groupTableBuilder.append(createGroupTableBlock(groupDto));
             }
             groupTableBuilder.append(GROUP_LIST_FOOTER)
-                .append(System.lineSeparator());
+                    .append(System.lineSeparator());
 
             return groupTableBuilder.toString();
         }
@@ -176,9 +170,9 @@ public class TableBuilder {
         String id = String.valueOf(groupDto.getId());
         String name = groupDto.getName();
         groupBlockBuilder.append(String.format(GROUP_LIST_ROW, id, name))
-            .append(System.lineSeparator())
-            .append(GROUP_LIST_SEMI_FOOTER)
-            .append(System.lineSeparator());
+                .append(System.lineSeparator())
+                .append(GROUP_LIST_SEMI_FOOTER)
+                .append(System.lineSeparator());
 
         return groupBlockBuilder.toString();
     }
@@ -191,13 +185,13 @@ public class TableBuilder {
         } else {
             StringBuilder table = new StringBuilder();
             table.append(GROUP_STUDENTS_LIST_HEADER)
-                .append(System.lineSeparator());
+                    .append(System.lineSeparator());
 
             for (GroupDto group : groups) {
                 table.append(buildGroupStudentsTableBlock(group));
             }
             table.append(GROUP_STUDENT_LIST_FOOTER)
-                .append(System.lineSeparator());
+                    .append(System.lineSeparator());
 
             return table.toString();
         }
@@ -211,10 +205,10 @@ public class TableBuilder {
         } else {
             StringBuilder table = new StringBuilder();
             table.append(GROUP_STUDENTS_LIST_HEADER)
-                .append(System.lineSeparator())
-                .append(buildGroupStudentsTableBlock(group))
-                .append(GROUP_STUDENT_LIST_FOOTER)
-                .append(System.lineSeparator());
+                    .append(System.lineSeparator())
+                    .append(buildGroupStudentsTableBlock(group))
+                    .append(GROUP_STUDENT_LIST_FOOTER)
+                    .append(System.lineSeparator());
 
             return table.toString();
         }
@@ -228,23 +222,23 @@ public class TableBuilder {
 
         if (students.isEmpty()) {
             groupTableBlockBuilder.append(String.format(GROUP_STUDENTS_LIST_ROW, id, name, "No students"))
-                .append(System.lineSeparator());
+                    .append(System.lineSeparator());
         } else {
             for (int i = 0; i < students.size(); i++) {
 
                 if (i == 0) {
                     groupTableBlockBuilder.append(String.format(GROUP_STUDENTS_LIST_ROW, id, name,
                             students.get(i).getFistName() + " " + students.get(i).getLastName()))
-                        .append(System.lineSeparator());
+                            .append(System.lineSeparator());
 
                 } else {
                     groupTableBlockBuilder.append(String.format(GROUP_STUDENTS_LIST_ROW, " ", " ",
                             students.get(i).getFistName() + " " + students.get(i).getLastName()))
-                        .append(System.lineSeparator());
+                            .append(System.lineSeparator());
                 }
             }
             groupTableBlockBuilder.append(GROUP_STUDENTS_LIST_SEMI_FOOTER)
-                .append(System.lineSeparator());
+                    .append(System.lineSeparator());
         }
         return groupTableBlockBuilder.toString();
     }
@@ -257,13 +251,13 @@ public class TableBuilder {
         } else {
             StringBuilder table = new StringBuilder();
             table.append(COURSE_LIST_HEADER)
-                .append(System.lineSeparator());
+                    .append(System.lineSeparator());
 
             for (CourseDto course : courses) {
                 table.append(buildCourseTableBlock(course));
             }
             table.append(COURSE_LIST_FOOTER)
-                .append(System.lineSeparator());
+                    .append(System.lineSeparator());
 
             return table.toString();
         }
@@ -277,10 +271,10 @@ public class TableBuilder {
         } else {
             StringBuilder table = new StringBuilder();
             table.append(COURSE_LIST_HEADER)
-                .append(System.lineSeparator())
-                .append(buildCourseTableBlock(course))
-                .append(COURSE_LIST_FOOTER)
-                .append(System.lineSeparator());
+                    .append(System.lineSeparator())
+                    .append(buildCourseTableBlock(course))
+                    .append(COURSE_LIST_FOOTER)
+                    .append(System.lineSeparator());
 
             return table.toString();
         }
@@ -296,14 +290,14 @@ public class TableBuilder {
         for (int i = 0; i < descriptionLines.length; i++) {
             if (i == 0) {
                 table.append(String.format(COURSE_LIST_ROW, id, name, descriptionLines[i]))
-                    .append(System.lineSeparator());
+                        .append(System.lineSeparator());
             } else {
                 table.append(String.format(COURSE_LIST_ROW, " ", " ", descriptionLines[i]))
-                    .append(System.lineSeparator());
+                        .append(System.lineSeparator());
             }
         }
         table.append(COURSE_LIST_SEMI_FOOTER)
-            .append(System.lineSeparator());
+                .append(System.lineSeparator());
 
         return table.toString();
     }
@@ -316,10 +310,10 @@ public class TableBuilder {
         } else {
             StringBuilder table = new StringBuilder();
             table.append(COURSE_STUDENTS_LIST_HEADER)
-                .append(System.lineSeparator())
-                .append(buildCourseStudentTableBlock(course))
-                .append(COURSE_STUDENTS_LIST_FOOTER)
-                .append(System.lineSeparator());
+                    .append(System.lineSeparator())
+                    .append(buildCourseStudentTableBlock(course))
+                    .append(COURSE_STUDENTS_LIST_FOOTER)
+                    .append(System.lineSeparator());
 
             return table.toString();
         }
@@ -338,7 +332,7 @@ public class TableBuilder {
                 table.append(buildCourseStudentTableBlock(course));
             }
             table.append(COURSE_STUDENTS_LIST_FOOTER)
-                .append(System.lineSeparator());
+                    .append(System.lineSeparator());
 
             return table.toString();
         }
@@ -353,7 +347,7 @@ public class TableBuilder {
 
         if (students.isEmpty()) {
             table.append(String.format(COURSE_STUDENTS_LIST_ROW, id, name, description, "No students"))
-                .append(System.lineSeparator());
+                    .append(System.lineSeparator());
         } else {
 
             for (int i = 0; i < students.size(); i++) {
@@ -361,14 +355,14 @@ public class TableBuilder {
                 if (i == 0) {
                     table.append(String.format(COURSE_STUDENTS_LIST_ROW, id, name, description,
                             students.get(i).getFistName() + " " + students.get(i).getLastName()))
-                        .append(System.lineSeparator());
+                            .append(System.lineSeparator());
                 } else {
                     table.append(String.format(COURSE_STUDENTS_LIST_ROW, " ", " ", " ",
                             students.get(i).getFistName() + " " + students.get(i).getLastName()))
-                        .append(System.lineSeparator());
+                            .append(System.lineSeparator());
                 }
                 table.append(COURSE_STUDENTS_LIST_SEMI_FOOTER)
-                    .append(System.lineSeparator());
+                        .append(System.lineSeparator());
             }
         }
 

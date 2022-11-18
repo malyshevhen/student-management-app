@@ -6,15 +6,15 @@ import ua.com.foxstudent102052.model.Student;
 import java.util.List;
 
 public interface GroupRepository {
-    void addGroup(Group group);
+    void addGroup(Group group) throws RepositoryException;
 
-    List<Group> getAllGroups();
+    List<Group> getAllGroups() throws RepositoryException;
 
-    Group getGroupById(int groupId);
+    Group getGroupById(int groupId) throws RepositoryException;
 
-    List<Group> getGroupsSmallerThen(int numberOfStudents);
+    List<Group> getGroupsSmallerThen(int numberOfStudents) throws RepositoryException;
 
-    Group getGroupByName(String groupName);
+    Group getGroupByName(String groupName) throws RepositoryException;
 
-    List<Student> getStudentsByGroup(int groupId);
+    List<Student> getStudentsByGroup(int groupId) throws RepositoryException;
 }

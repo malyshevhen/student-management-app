@@ -14,11 +14,11 @@ public class CourseMapper {
     public static CourseDto toDto(Course course) {
         try {
             return new CourseDto(
-                course.getCourseId(),
-                course.getCourseName(),
-                course.getCourseDescription(),
-                List.of());
-            
+                    course.getCourseId(),
+                    course.getCourseName(),
+                    course.getCourseDescription(),
+                    List.of());
+
         } catch (NullPointerException e) {
             return new CourseDto();
         }
@@ -27,10 +27,10 @@ public class CourseMapper {
     public static Course toCourse(CourseDto courseDto) {
         try {
             return new Course(
-                courseDto.getId(), 
-                courseDto.getName(),
-                courseDto.getDescription());
-            
+                    courseDto.getId(),
+                    courseDto.getName(),
+                    courseDto.getDescription());
+
         } catch (NullPointerException e) {
             return new Course();
         }

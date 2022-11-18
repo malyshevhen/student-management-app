@@ -12,21 +12,21 @@ public class GroupMapper {
     }
 
     public static GroupDto toDto(Group group) {
-        try{
+        try {
             return new GroupDto(
-                group.getGroupId(),
-                group.getGroupName(),
-                List.of());
-            
+                    group.getGroupId(),
+                    group.getGroupName(),
+                    List.of());
+
         } catch (NullPointerException e) {
             return new GroupDto();
         }
     }
 
     public static Group toGroup(GroupDto groupDto) {
-        try{
+        try {
             return new Group(groupDto.getId(), groupDto.getName());
-            
+
         } catch (NullPointerException e) {
             return new Group();
         }

@@ -1,11 +1,10 @@
 package ua.com.foxstudent102052.repository;
 
+import java.util.List;
+
 import lombok.extern.slf4j.Slf4j;
 import ua.com.foxstudent102052.model.Group;
 import ua.com.foxstudent102052.model.Student;
-
-import java.sql.SQLException;
-import java.util.List;
 
 @Slf4j
 public class GroupRepositoryImpl implements GroupRepository {
@@ -15,75 +14,74 @@ public class GroupRepositoryImpl implements GroupRepository {
         this.daoFactory = daoFactory;
     }
 
-
     @Override
-    public void addGroup(Group group) {
+    public void addGroup(Group group) throws RepositoryException {
         try {
             daoFactory.doPost(String.format("""
                     INSERT
                     INTO groups (group_name) values ('%s');""",
-                group.getGroupName()));
+                    group.getGroupName()));
             log.info("Group: '{}' added successfully", group.getGroupName());
-        } catch (SQLException e) {
+        } catch (DAOException e) {
             var msg = String.format("Error while adding group: '%s'", group.getGroupName());
             log.error(msg, e);
 
-            throw new IllegalArgumentException(msg, e);
+            throw new RepositoryException(msg, e);
         }
     }
 
     @Override
-    public Group getGroupById(int groupId) {
+    public Group getGroupById(int groupId) throws RepositoryException {
         try {
             String query = String.format("""
                     SELECT *
                     FROM groups
                     WHERE group_id = '%d';""",
-                groupId);
+                    groupId);
 
             return daoFactory.getGroup(query);
-        } catch (SQLException e) {
+        } catch (DAOException e) {
             var msg = String.format("Error while getting group by id: '%d'", groupId);
             log.error(msg, e);
 
-            throw new IllegalArgumentException(msg, e);
+            throw new RepositoryException(msg, e);
         }
     }
 
     @Override
-    public Group getGroupByName(String groupName) {
+    public Group getGroupByName(String groupName) throws RepositoryException {
         try {
             String query = String.format("""
                     SELECT *
                     FROM groups
                     WHERE group_name = '%s';""",
-                groupName);
+                    groupName);
 
             return daoFactory.getGroup(query);
-        } catch (SQLException e) {
+        } catch (DAOException e) {
             var msg = String.format("Error while getting group by name: '%s'", groupName);
             log.error(msg, e);
 
-            throw new IllegalArgumentException(msg, e);
+            throw new RepositoryException(msg, e);
         }
     }
 
     @Override
-    public List<Group> getAllGroups() {
+    public List<Group> getAllGroups() throws RepositoryException {
         try {
             String query = "SELECT * FROM groups;";
 
             return daoFactory.getGroups(query);
-        } catch (SQLException e) {
+        } catch (DAOException e) {
             var msg = "Error while getting all groups";
             log.error(msg, e);
 
-            throw new IllegalArgumentException(msg, e);
+            throw new RepositoryException(msg, e);
         }
     }
 
     @Override
-    public List<Group> getGroupsSmallerThen(int numberOfStudents) {
+    public List<Group> getGroupsSmallerThen(int numberOfStudents) throws RepositoryException {
         try {
             String query = String.format("""
                     SELECT *
@@ -101,32 +99,32 @@ public class GroupRepositoryImpl implements GroupRepository {
                         IS NOT NULL
                         GROUP BY group_id
                         HAVING COUNT(group_id) <= %d);""",
-                numberOfStudents);
+                    numberOfStudents);
 
             return daoFactory.getGroups(query);
-        } catch (SQLException e) {
+        } catch (DAOException e) {
             var msg = String.format("Error while getting groups smaller then: '%d'", numberOfStudents);
             log.error(msg, e);
 
-            throw new IllegalArgumentException(msg, e);
+            throw new RepositoryException(msg, e);
         }
     }
 
     @Override
-    public List<Student> getStudentsByGroup(int groupId) {
+    public List<Student> getStudentsByGroup(int groupId) throws RepositoryException {
         try {
             String query = String.format("""
                     SELECT *
                     FROM students
                     WHERE group_id = %d;""",
-                groupId);
+                    groupId);
 
             return daoFactory.getStudents(query);
-        } catch (SQLException e) {
+        } catch (DAOException e) {
             var msg = String.format("Error while getting students by group: '%d'", groupId);
             log.error(msg, e);
 
-            throw new IllegalArgumentException(msg, e);
+            throw new RepositoryException(msg, e);
         }
     }
 }

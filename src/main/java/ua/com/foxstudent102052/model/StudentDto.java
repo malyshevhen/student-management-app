@@ -17,5 +17,5 @@ public class StudentDto {
     private String group;
     private String fistName;
     private String lastName;
-    private List<CourseDto> coursesList;   
+    private List<CourseDto> coursesList;
 }

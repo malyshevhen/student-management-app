@@ -5,11 +5,11 @@ import ua.com.foxstudent102052.model.Course;
 import java.util.List;
 
 public interface CourseRepository {
-    void addCourse(Course course);
+    void addCourse(Course course) throws RepositoryException;
 
-    List<Course> getAllCourses();
+    List<Course> getAllCourses() throws RepositoryException;
 
-    Course getCourseById(int courseId);
+    Course getCourseById(int courseId) throws RepositoryException;
 
-    List<Course> getCoursesByStudentId(int studentId);
+    List<Course> getCoursesByStudentId(int studentId) throws RepositoryException;
 }

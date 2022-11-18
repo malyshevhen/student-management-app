@@ -7,6 +7,7 @@ import ua.com.foxstudent102052.mapper.StudentMapper;
 import ua.com.foxstudent102052.model.GroupDto;
 import ua.com.foxstudent102052.model.StudentDto;
 import ua.com.foxstudent102052.repository.GroupRepository;
+import ua.com.foxstudent102052.repository.RepositoryException;
 
 import java.util.List;
 
@@ -18,21 +19,21 @@ public class GroupServiceImpl implements GroupService {
     private final GroupRepository groupRepository;
 
     @Override
-    public void addGroup(GroupDto groupDto) {
+    public void addGroup(GroupDto groupDto) throws ServiceException {
 
         try {
             groupRepository.addGroup(GroupMapper.toGroup(groupDto));
 
-        } catch (IllegalArgumentException e) {
+        } catch (RepositoryException e) {
             String msg = String.format(GROUP_WITH_ID_EXISTS, groupDto.getId());
             log.error(msg, e);
 
-            throw e;
+            throw new ServiceException(msg, e);
         }
     }
 
     @Override
-    public List<GroupDto> getAllGroups() {
+    public List<GroupDto> getAllGroups() throws ServiceException {
 
         try {
             return groupRepository.getAllGroups()
@@ -40,30 +41,30 @@ public class GroupServiceImpl implements GroupService {
                 .map(GroupMapper::toDto)
                 .toList();
 
-        } catch (IllegalArgumentException e) {
+        } catch (RepositoryException e) {
             String msg = "There are no groups in the database";
             log.error(msg, e);
 
-            throw e;
+            throw new ServiceException(msg, e);
         }
     }
 
     @Override
-    public GroupDto getGroupById(int groupId) {
+    public GroupDto getGroupById(int groupId) throws ServiceException {
 
         try {
             return GroupMapper.toDto(groupRepository.getGroupById(groupId));
 
-        } catch (IllegalArgumentException e) {
+        } catch (RepositoryException e) {
             String msg = String.format(GROUP_WITH_ID_NOT_EXIST, groupId);
             log.error(msg, e);
 
-            throw e;
+            throw new ServiceException(msg, e);
         }
     }
 
     @Override
-    public List<GroupDto> getGroupsSmallerThen(int numberOfStudents) {
+    public List<GroupDto> getGroupsSmallerThen(int numberOfStudents) throws ServiceException {
 
         try {
             return groupRepository.getGroupsSmallerThen(numberOfStudents)
@@ -71,31 +72,31 @@ public class GroupServiceImpl implements GroupService {
                 .map(GroupMapper::toDto)
                 .toList();
 
-        } catch (IllegalArgumentException e) {
+        } catch (RepositoryException e) {
             String msg = String.format("There are no groups with number of students less then %d",
                 numberOfStudents);
             log.error(msg, e);
 
-            throw e;
+            throw new ServiceException(msg, e);
         }
     }
 
     @Override
-    public GroupDto getGroupByName(String groupName) {
+    public GroupDto getGroupByName(String groupName) throws ServiceException {
 
         try {
             return GroupMapper.toDto(groupRepository.getGroupByName(groupName));
 
-        } catch (IllegalArgumentException e) {
+        } catch (RepositoryException e) {
             String msg = String.format("Group with name %s doesn't exist", groupName);
             log.error(msg, e);
 
-            throw e;
+            throw new ServiceException(msg, e);
         }
     }
 
     @Override
-    public List<StudentDto> getStudentsByGroup(int groupId) {
+    public List<StudentDto> getStudentsByGroup(int groupId) throws ServiceException {
 
         try {
             return groupRepository.getStudentsByGroup(groupId)
@@ -103,11 +104,11 @@ public class GroupServiceImpl implements GroupService {
                 .map(StudentMapper::toDto)
                 .toList();
 
-        } catch (IllegalArgumentException e) {
+        } catch (RepositoryException e) {
             String msg = String.format("There are no students in group with id %d", groupId);
             log.error(msg, e);
 
-            throw e;
+            throw new ServiceException(msg, e);
         }
     }
 }

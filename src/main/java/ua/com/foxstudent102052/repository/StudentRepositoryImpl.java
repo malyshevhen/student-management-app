@@ -1,10 +1,9 @@
 package ua.com.foxstudent102052.repository;
 
+import java.util.List;
+
 import lombok.extern.slf4j.Slf4j;
 import ua.com.foxstudent102052.model.Student;
-
-import java.sql.SQLException;
-import java.util.List;
 
 @Slf4j
 public class StudentRepositoryImpl implements StudentRepository {
@@ -14,94 +13,94 @@ public class StudentRepositoryImpl implements StudentRepository {
         this.daoFactory = daoFactory;
     }
 
-
     @Override
-    public void addStudent(Student student){
+    public void addStudent(Student student) throws RepositoryException {
         try {
             daoFactory.doPost(String.format("""
-                INSERT INTO students (
-                    group_id,
-                    first_name,
-                    last_name)
-                VALUES ('%d', '%s', '%s');""", student.getGroupId(), student.getFirstName(), student.getLastName()));
+                    INSERT INTO students (
+                        group_id,
+                        first_name,
+                        last_name)
+                    VALUES ('%d', '%s', '%s');""", student.getGroupId(), student.getFirstName(),
+                    student.getLastName()));
             log.info(String.format("Student %s %s was added to the database",
-                student.getFirstName(), student.getLastName()));
-        } catch (SQLException e) {
+                    student.getFirstName(), student.getLastName()));
+        } catch (DAOException e) {
             String msg = "Error while adding student to the database";
             log.error(msg, e);
 
-            throw new IllegalArgumentException(msg, e);
+            throw new RepositoryException(msg, e);
         }
     }
 
     @Override
-    public void removeStudent(int studentId) {
+    public void removeStudent(int studentId) throws RepositoryException {
         try {
             daoFactory.doPost(String.format("""
-                DELETE
-                FROM students
-                WHERE student_id = %d;""", studentId));
+                    DELETE IF EXISTS
+                    FROM students
+                    WHERE student_id = %d;""", studentId));
             log.info(String.format("Student with studentId %d was removed from the database", studentId));
-        } catch (SQLException e) {
+        } catch (DAOException e) {
             String msg = String.format("Student with studentId %d was not removed from the database", studentId);
             log.error(msg);
 
-            throw new IllegalArgumentException(msg, e);
+            throw new RepositoryException(msg, e);
         }
     }
 
     @Override
-    public void addStudentToCourse(int studentId, int courseId) {
+    public void addStudentToCourse(int studentId, int courseId) throws RepositoryException {
         try {
             daoFactory.doPost(String.format("""
-                INSERT INTO students_courses (
-                    student_id,
-                    course_id)
-                VALUES (%d, %d);""", studentId, courseId));
+                    INSERT INTO students_courses (
+                        student_id,
+                        course_id)
+                    VALUES (%d, %d);""", studentId, courseId));
             log.info(String.format("Course with id %d was added to student with id %d", courseId, studentId));
-        } catch (SQLException e) {
+        } catch (DAOException e) {
             String msg = String.format("Student with id %d was not added to Course with id %d", studentId, courseId);
             log.error(msg);
 
-            throw new IllegalArgumentException(msg, e);
+            throw new RepositoryException(msg, e);
         }
 
     }
 
     @Override
-    public void removeStudentFromCourse(int studentId, int courseId){
+    public void removeStudentFromCourse(int studentId, int courseId) throws RepositoryException {
         try {
             daoFactory.doPost(String.format("""
-                DELETE
-                FROM students_courses
-                WHERE student_id = %d
-                AND course_id = %d;""", studentId, courseId));
+                    DELETE IF EXISTS
+                    FROM students_courses
+                    WHERE student_id = %d
+                    AND course_id = %d;""", studentId, courseId));
             log.info(String.format("Course with id %d was removed from student with id %d", courseId, studentId));
-        } catch (SQLException e) {
-            String msg = String.format("Student with id %d was not removed from course with id %d", studentId, courseId);
+        } catch (DAOException e) {
+            String msg = String.format("Student with id %d was not removed from course with id %d", studentId,
+                    courseId);
             log.error(msg);
 
-            throw new IllegalArgumentException(msg, e);
+            throw new RepositoryException(msg, e);
         }
     }
 
-
     @Override
-    public List<Student> getAllStudents() {
+    public List<Student> getAllStudents() throws RepositoryException {
         String query = "SELECT * FROM students;";
         try {
             return daoFactory.getStudents(query);
-        } catch (SQLException e) {
+        } catch (DAOException e) {
             String msg = "There are no students in the database";
             log.error(msg, e);
-            
-            throw new IllegalArgumentException(msg, e);
+
+            throw new RepositoryException(msg, e);
         }
 
     }
 
     @Override
-    public List<Student> getStudentsByCourseId(int courseId) {
+    public List<Student> getStudentsByCourseId(int courseId) throws RepositoryException {
         String query = String.format("""
                 SELECT *
                 FROM students
@@ -109,20 +108,20 @@ public class StudentRepositoryImpl implements StudentRepository {
                     SELECT student_id
                     FROM students_courses
                     WHERE course_id = %d);""",
-            courseId);
+                courseId);
 
         try {
             return daoFactory.getStudents(query);
-        } catch (SQLException e) {
+        } catch (DAOException e) {
             String msg = "Error while getting students by course id";
             log.error(msg, e);
-            
-            throw new IllegalArgumentException(msg, e);
+
+            throw new RepositoryException(msg, e);
         }
     }
 
     @Override
-    public List<Student> getStudentsByNameAndCourse(String studentName, Integer courseId) {
+    public List<Student> getStudentsByNameAndCourse(String studentName, Integer courseId) throws RepositoryException {
         String query = String.format("""
                 SELECT *
                 FROM students
@@ -131,15 +130,34 @@ public class StudentRepositoryImpl implements StudentRepository {
                     FROM students_courses
                     WHERE course_id = %d)
                 AND first_name ='%s';""",
-            courseId, studentName);
+                courseId, studentName);
 
         try {
             return daoFactory.getStudents(query);
-        } catch (SQLException e) {
+        } catch (DAOException e) {
             String msg = "Error while getting students by name and course";
             log.error(msg, e);
-            
-            throw new IllegalArgumentException(msg, e);
+
+            throw new RepositoryException(msg, e);
         }
     }
+
+    @Override
+    public Student getStudentById(int id) throws RepositoryException {
+        String query = String.format("""
+                SELECT *
+                FROM students
+                WHERE student_id = %d;""",
+                id);
+
+        try {
+            return daoFactory.getStudents(query).get(0);
+        } catch (DAOException e) {
+            String msg = "Error while getting student by id";
+            log.error(msg, e);
+
+            throw new RepositoryException(msg, e);
+        }
+    }
+
 }

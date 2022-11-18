@@ -6,15 +6,15 @@ import ua.com.foxstudent102052.model.StudentDto;
 import java.util.List;
 
 public interface GroupService {
-    void addGroup(GroupDto groupDto);
+    void addGroup(GroupDto groupDto) throws ServiceException;
 
-    GroupDto getGroupById(int groupId);
+    GroupDto getGroupById(int groupId) throws ServiceException;
 
-    List<GroupDto> getAllGroups();
+    List<GroupDto> getAllGroups() throws ServiceException;
 
-    List<GroupDto> getGroupsSmallerThen(int numberOfStudents);
+    List<GroupDto> getGroupsSmallerThen(int numberOfStudents) throws ServiceException;
 
-    GroupDto getGroupByName(String groupName);
+    GroupDto getGroupByName(String groupName) throws ServiceException;
 
-    List<StudentDto> getStudentsByGroup(int groupId);
+    List<StudentDto> getStudentsByGroup(int groupId) throws ServiceException;
 }

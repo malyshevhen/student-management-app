@@ -16,13 +16,13 @@ public class StudentMapper {
     public static StudentDto toDto(Student student) {
         try {
             return new StudentDto(
-                student.getStudentId(),
-                student.getGroupId(),
-                "",
-                student.getFirstName(),
-                student.getLastName(),
-                List.of());
-            
+                    student.getStudentId(),
+                    student.getGroupId(),
+                    "",
+                    student.getFirstName(),
+                    student.getLastName(),
+                    List.of());
+
         } catch (NullPointerException e) {
             log.error("StudentMapper.studentToDto() - NullPointerException: " + e.getMessage());
             return new StudentDto();
@@ -32,11 +32,11 @@ public class StudentMapper {
     public static Student toStudent(StudentDto studentDto) {
         try {
             return new Student(
-                studentDto.getId(),
-                studentDto.getGroupId(),
-                studentDto.getFistName(),
-                studentDto.getLastName());
-            
+                    studentDto.getId(),
+                    studentDto.getGroupId(),
+                    studentDto.getFistName(),
+                    studentDto.getLastName());
+
         } catch (NullPointerException e) {
             log.error("StudentMapper.dtoToStudent() - NullPointerException: " + e.getMessage());
             return new Student();

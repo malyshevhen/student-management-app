@@ -4,6 +4,7 @@ import ua.com.foxstudent102052.model.Course;
 import ua.com.foxstudent102052.model.Group;
 import ua.com.foxstudent102052.model.Student;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,4 +28,6 @@ public interface DAOFactory {
     Group getGroup(String query) throws DAOException;
 
     List<Group> getGroups(String query) throws DAOException;
+
+    void executeSqlScript(String string) throws IOException;
 }

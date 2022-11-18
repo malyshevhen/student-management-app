@@ -5,11 +5,11 @@ import ua.com.foxstudent102052.model.CourseDto;
 import java.util.List;
 
 public interface CourseService {
-    void addCourse(CourseDto courseDto);
+    void addCourse(CourseDto courseDto) throws ServiceException;
 
-    CourseDto getCourseById(int id);
+    CourseDto getCourseById(int id) throws ServiceException;
 
-    List<CourseDto> getAllCourses();
+    List<CourseDto> getAllCourses() throws ServiceException;
 
-    List<CourseDto> getCoursesByStudentId(int studentId);
+    List<CourseDto> getCoursesByStudentId(int studentId) throws ServiceException;
 }

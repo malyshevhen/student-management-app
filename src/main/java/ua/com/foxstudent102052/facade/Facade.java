@@ -1,5 +1,6 @@
 package ua.com.foxstudent102052.facade;
 
+import ua.com.foxstudent102052.controller.ControllerException;
 import ua.com.foxstudent102052.controller.CourseController;
 import ua.com.foxstudent102052.controller.GroupController;
 import ua.com.foxstudent102052.controller.StudentController;
@@ -21,8 +22,7 @@ public class Facade {
         throw new IllegalStateException("Utility class");
     }
 
-    private static final String STUDENT_MENU =
-        """
+    private static final String STUDENT_MENU = """
             +----------------------------------------------------------------+
             |********************* STUDENTS MANAGEMENT **********************|
             +----------------------------------------------------------------+
@@ -55,7 +55,7 @@ public class Facade {
     private static final GroupController groupController = new GroupController(groupService);
     private static final CourseController courseController = new CourseController(courseService, studentService);
     private static final StudentController studentController = new StudentController(
-        studentService, groupService, courseService);
+            studentService, groupService, courseService);
 
     private static int option = Integer.MAX_VALUE;
 
@@ -68,51 +68,93 @@ public class Facade {
                     var firstName = takeInputStringFromUser(ENTER_STUDENT_NAME);
                     var lastName = takeInputStringFromUser(ENTER_STUDENT_SURNAME);
                     print("Choose students group from list:");
-                    var allGroups = groupController.getAllGroups();
-                    print(createGroupTable(allGroups));
+
+                    try {
+                        var allGroups = groupController.getAllGroups();
+                        print(createGroupTable(allGroups));
+                    } catch (ControllerException e) {
+                        print(e.getMessage());
+                    }
+
                     int groupId = takeInputIntFromUser(ENTER_OPTION_NUMBER);
 
                     var studentDto = StudentDto.builder()
-                        .fistName(firstName)
-                        .lastName(lastName)
-                        .groupId(groupId)
-                        .build();
-                    studentController.addStudent(studentDto);
-                    print("Student added successfully");
+                            .fistName(firstName)
+                            .lastName(lastName)
+                            .groupId(groupId)
+                            .build();
+                    try {
+                        studentController.addStudent(studentDto);
+                        print("Student added successfully");
+                    } catch (ControllerException e) {
+                        print(e.getMessage());
+                    }
+
                 } else if (option == 2) {
                     int studentId = takeInputIntFromUser(ENTER_STUDENT_ID);
-                    studentController.removeStudent(studentId);
-                    print("Student removed successfully");
+
+                    try {
+                        studentController.removeStudent(studentId);
+                        print("Student removed successfully");
+                    } catch (ControllerException e) {
+                        print(e.getMessage());
+                    }
+
                 } else if (option == 3) {
                     int studentId = takeInputIntFromUser(ENTER_STUDENT_ID);
-                    var allCourses = courseController.getAllCourses();
-                    print(createCourseTable(allCourses));
-                    int courseId = takeInputIntFromUser(ENTER_COURSE_ID);
-                    studentController.addStudentToCourse(studentId, courseId);
-                    print("Student added to course successfully");
+
+                    try {
+                        var allCourses = courseController.getAllCourses();
+                        print(createCourseTable(allCourses));
+                        int courseId = takeInputIntFromUser(ENTER_COURSE_ID);
+                        studentController.addStudentToCourse(studentId, courseId);
+                        print("Student added to course successfully");
+                    } catch (ControllerException e) {
+                        print(e.getMessage());
+                    }
+
                 } else if (option == 4) {
                     int studentId = takeInputIntFromUser(ENTER_STUDENT_ID);
                     print("Choose course to remove from:");
-                    var allCourses = courseController.getAllCourses();
-                    print(createCourseTable(allCourses));
-                    int courseId = takeInputIntFromUser(ENTER_COURSE_ID);
-                    studentController.removeStudentFromCourse(studentId, courseId);
-                    print("Student removed from course successfully");
+
+                    try {
+                        var allCourses = courseController.getAllCourses();
+                        print(createCourseTable(allCourses));
+                        int courseId = takeInputIntFromUser(ENTER_COURSE_ID);
+                        studentController.removeStudentFromCourse(studentId, courseId);
+                        print("Student removed from course successfully");
+                    } catch (ControllerException e) {
+                        print(e.getMessage());
+                    }
                 } else if (option == 5) {
                     int numberOfStudents = takeInputIntFromUser("Enter minimum number of students: ");
-                    var groupTable = createGroupStudentsTable(groupController.getGroupsSmallerThen(numberOfStudents));
-                    print(groupTable);
+                    try {
+                        var groupTable = createGroupStudentsTable(groupController.getGroupsSmallerThen(numberOfStudents));
+                        print(groupTable);
+                    } catch (ControllerException e) {
+                        print(e.getMessage());
+                    }
+
                 } else if (option == 6) {
-                    var studentName = takeInputStringFromUser(ENTER_STUDENT_NAME);
+                    try {
+                        var studentName = takeInputStringFromUser(ENTER_STUDENT_NAME);
                     print(createCourseTable(courseController.getAllCourses()));
                     var courseId = takeInputIntFromUser(ENTER_GROUP_ID);
-                    var studentsByCourseNameAndGroupId =
-                        studentController.getStudentsByCourseNameAndGroupId(studentName, courseId);
+                    var studentsByCourseNameAndGroupId = studentController
+                            .getStudentsByCourseNameAndGroupId(studentName, courseId);
                     var studentTable = createStudentTable(studentsByCourseNameAndGroupId);
                     print(studentTable);
+                } catch (ControllerException e) {
+                    print(e.getMessage());
+                }
                 } else if (option == 7) {
-                    var allStudents = studentController.getAllStudents();
-                    print(createStudentTable(allStudents));
+                    try {
+                       var allStudents = studentController.getAllStudents();
+                       print(createStudentTable(allStudents));
+                    } catch (ControllerException e) {
+                        print(e.getMessage());
+                    }
+
                 } else if (option == 0) {
                     break;
                 } else {

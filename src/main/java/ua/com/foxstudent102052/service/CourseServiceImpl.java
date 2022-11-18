@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import ua.com.foxstudent102052.mapper.CourseMapper;
 import ua.com.foxstudent102052.model.CourseDto;
 import ua.com.foxstudent102052.repository.CourseRepository;
+import ua.com.foxstudent102052.repository.RepositoryException;
 
 import java.util.List;
 
@@ -15,51 +16,51 @@ public class CourseServiceImpl implements CourseService {
     private final CourseRepository courseRepository;
 
     @Override
-    public void addCourse(CourseDto course) {
+    public void addCourse(CourseDto course) throws ServiceException {
 
         try {
             courseRepository.addCourse(CourseMapper.toCourse(course));
 
-        } catch (IllegalArgumentException e) {
+        } catch (RepositoryException e) {
             var msg = String.format("Course with %s already exists", course.getName());
             log.error(msg, e);
 
-            throw e;
+            throw new ServiceException(msg, e);
         }
     }
 
     @Override
-    public List<CourseDto> getAllCourses() {
+    public List<CourseDto> getAllCourses() throws ServiceException {
 
         try {
             return courseRepository.getAllCourses()
                 .stream()
                 .map(CourseMapper::toDto)
                 .toList();
-        } catch (IllegalArgumentException e) {
+        } catch (RepositoryException e) {
             var msg = "There are no courses in database";
             log.error(msg, e);
 
-            throw e;
+            throw new ServiceException(msg, e);
         }
     }
 
     @Override
-    public CourseDto getCourseById(int id) {
+    public CourseDto getCourseById(int id) throws ServiceException {
 
         try {
             return CourseMapper.toDto(courseRepository.getCourseById(id));
 
-        } catch (IllegalArgumentException e) {
+        } catch (RepositoryException e) {
             var msg = String.format(COURSE_ID_DOES_NOT_EXIST, id);
             log.error(msg, e);
 
-            throw e;
+            throw new ServiceException(msg, e);
         }
     }
 
     @Override
-    public List<CourseDto> getCoursesByStudentId(int studentId) {
+    public List<CourseDto> getCoursesByStudentId(int studentId) throws ServiceException {
 
         try {
             return courseRepository.getCoursesByStudentId(studentId)
@@ -67,11 +68,11 @@ public class CourseServiceImpl implements CourseService {
                 .map(CourseMapper::toDto)
                 .toList();
 
-        } catch (IllegalArgumentException e) {
+        } catch (RepositoryException e) {
             String msg = String.format("Student with id %d doesn't have any courses", studentId);
             log.error(msg, e);
 
-            throw e;
+            throw new ServiceException(msg, e);
         }
     }
 }
