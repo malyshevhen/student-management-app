@@ -20,9 +20,17 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     public void addGroup(GroupDto groupDto) throws ServiceException {
+        var newGroup = GroupMapper.toGroup(groupDto);
 
         try {
-            groupRepository.addGroup(GroupMapper.toGroup(groupDto));
+            groupRepository.addGroup(newGroup);
+            var lastGroupFromDB = groupRepository.getLastGroup();
+
+            if (newGroup.equals(lastGroupFromDB)) {
+                log.info("Group with id {} was added", lastGroupFromDB.getGroupId());
+            } else {
+                log.info("Group with id {} was added", lastGroupFromDB.getGroupId());
+            }
 
         } catch (RepositoryException e) {
             String msg = String.format(GROUP_WITH_ID_EXISTS, groupDto.getId());

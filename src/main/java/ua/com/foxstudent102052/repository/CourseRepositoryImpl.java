@@ -7,6 +7,8 @@ import ua.com.foxstudent102052.model.Course;
 
 @Slf4j
 public class CourseRepositoryImpl implements CourseRepository {
+    private static final String QUERY_EXECUTED_SUCCESSFULLY = "Query executed successfully";
+
     private final DAOFactory daoFactory;
 
     public CourseRepositoryImpl(DAOFactory daoFactory) {
@@ -15,13 +17,17 @@ public class CourseRepositoryImpl implements CourseRepository {
 
     @Override
     public void addCourse(Course course) throws RepositoryException {
+        var query = String.format("""
+            INSERT
+            INTO courses (course_name, course_description)
+            VALUES ('%s', '%s');""",
+            course.getCourseName(),
+            course.getCourseDescription());
+
         try {
-            daoFactory.doPost(String.format("""
-                    INSERT
-                    INTO courses (course_name, course_description)
-                    VALUES ('%s', '%s');""",
-                    course.getCourseName(),
-                    course.getCourseDescription()));
+            daoFactory.doPost(query);
+            log.info(QUERY_EXECUTED_SUCCESSFULLY);
+
         } catch (DAOException e) {
             log.error("Error while adding course", e);
 
@@ -31,10 +37,14 @@ public class CourseRepositoryImpl implements CourseRepository {
 
     @Override
     public List<Course> getAllCourses() throws RepositoryException {
-        String query = "SELECT * FROM courses;";
+        var query = "SELECT * FROM courses;";
 
         try {
-            return daoFactory.getCourses(query);
+            var courses = daoFactory.getCourses(query);
+            log.info(QUERY_EXECUTED_SUCCESSFULLY);
+
+            return courses;
+
         } catch (DAOException e) {
             log.error("Error while getting all courses", e);
 
@@ -44,14 +54,18 @@ public class CourseRepositoryImpl implements CourseRepository {
 
     @Override
     public Course getCourseById(int courseId) throws RepositoryException {
-        String query = String.format("""
+        var query = String.format("""
                 SELECT *
                 FROM courses
                 WHERE course_id = %d;""",
                 courseId);
 
         try {
-            return daoFactory.getCourse(query);
+            var course = daoFactory.getCourse(query);
+            log.info(QUERY_EXECUTED_SUCCESSFULLY);
+
+            return course;
+
         } catch (DAOException e) {
             log.error("Error while getting course by id", e);
 
@@ -61,17 +75,21 @@ public class CourseRepositoryImpl implements CourseRepository {
 
     @Override
     public List<Course> getCoursesByStudentId(int studentId) throws RepositoryException {
-        try {
-            String query = String.format("""
-                    SELECT *
-                    FROM courses
-                    WHERE course_id
-                    IN (
-                        SELECT course_id
-                        FROM students_courses
-                        WHERE student_id = %d);""", studentId);
+        var query = String.format("""
+            SELECT *
+            FROM courses
+            WHERE course_id
+            IN (
+                SELECT course_id
+                FROM students_courses
+                WHERE student_id = %d);""", studentId);
 
-            return daoFactory.getCourses(query);
+        try {
+            var courses = daoFactory.getCourses(query);
+            log.info(QUERY_EXECUTED_SUCCESSFULLY);
+
+            return courses;
+
         } catch (DAOException e) {
             log.error("Error while getting courses by student id", e);
 
@@ -81,14 +99,18 @@ public class CourseRepositoryImpl implements CourseRepository {
 
     @Override
     public Course getLastCourse() throws RepositoryException {
+        var query = """
+            SELECT *
+            FROM courses
+            WHERE course_id = (
+                SELECT MAX(course_id)
+                FROM courses);""";
+
         try {
-            return daoFactory.getCourse(
-                    """
-                            SELECT *
-                            FROM courses
-                            WHERE course_id = (
-                                SELECT MAX(course_id)
-                                FROM courses);""");
+            var course = daoFactory.getCourse(query);
+            log.info(QUERY_EXECUTED_SUCCESSFULLY);
+
+            return course;
 
         } catch (DAOException e) {
             log.error("Error while getting last course", e);

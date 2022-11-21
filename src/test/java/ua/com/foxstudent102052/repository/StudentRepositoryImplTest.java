@@ -384,8 +384,7 @@ class StudentRepositoryImplTest {
         doThrow(DAOException.class).when(daoFactory).doPost(anyString());
 
         // then
-        RepositoryException thrown = assertThrows(
-                RepositoryException.class,
+        assertThrows(RepositoryException.class,
                 () -> studentRepository.removeStudentFromCourse(1, 1),
                 "Expected removeStudentFromCourse() to throw, but it didn't");
     }

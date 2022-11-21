@@ -7,6 +7,8 @@ import ua.com.foxstudent102052.model.Student;
 
 @Slf4j
 public class StudentRepositoryImpl implements StudentRepository {
+    private static final String QUERY_EXECUTED_SUCCESSFULLY = "Query executed successfully";
+
     private final DAOFactory daoFactory;
 
     public StudentRepositoryImpl(DAOFactory daoFactory) {
@@ -15,19 +17,21 @@ public class StudentRepositoryImpl implements StudentRepository {
 
     @Override
     public void addStudent(Student student) throws RepositoryException {
+        var query = String.format(
+                """
+                        INSERT INTO students (
+                            group_id,
+                            first_name,
+                            last_name)
+                        VALUES ('%d', '%s', '%s');""",
+                student.getGroupId(), student.getFirstName(), student.getLastName());
+
         try {
-            daoFactory.doPost(String.format(
-                    """
-                            INSERT INTO students (
-                                group_id,
-                                first_name,
-                                last_name)
-                            VALUES ('%d', '%s', '%s');""", student.getGroupId(), student.getFirstName(),
-                    student.getLastName()));
-            log.info(String.format("Student %s %s was added to the database",
-                    student.getFirstName(), student.getLastName()));
+            daoFactory.doPost(query);
+            log.info(QUERY_EXECUTED_SUCCESSFULLY);
+
         } catch (DAOException e) {
-            String msg = "Error while adding student to the database";
+            var msg = "Error while adding student to the database";
             log.error(msg, e);
 
             throw new RepositoryException(msg, e);
@@ -36,16 +40,19 @@ public class StudentRepositoryImpl implements StudentRepository {
 
     @Override
     public void removeStudent(int studentId) throws RepositoryException {
+        var query = String.format(
+                """
+                        DELETE
+                        FROM students
+                        WHERE student_id = %d;""",
+                studentId);
+
         try {
-            daoFactory.doPost(String.format(
-                    """
-                            DELETE
-                            FROM students
-                            WHERE student_id = %d;""",
-                    studentId));
-            log.info(String.format("Student with studentId %d was removed from the database", studentId));
+            daoFactory.doPost(query);
+            log.info(QUERY_EXECUTED_SUCCESSFULLY);
+
         } catch (DAOException e) {
-            String msg = String.format("Student with studentId %d was not removed from the database", studentId);
+            var msg = String.format("Student with studentId %d was not removed from the database", studentId);
             log.error(msg);
 
             throw new RepositoryException(msg, e);
@@ -54,35 +61,40 @@ public class StudentRepositoryImpl implements StudentRepository {
 
     @Override
     public void addStudentToCourse(int studentId, int courseId) throws RepositoryException {
+        var query = String.format(
+                """
+                        INSERT INTO students_courses (
+                            student_id,
+                            course_id)
+                        VALUES (%d, %d);""", studentId, courseId);
+
         try {
-            daoFactory.doPost(String.format(
-                    """
-                            INSERT INTO students_courses (
-                                student_id,
-                                course_id)
-                            VALUES (%d, %d);""", studentId, courseId));
-            log.info(String.format("Course with id %d was added to student with id %d", courseId, studentId));
+            daoFactory.doPost(query);
+            log.info(QUERY_EXECUTED_SUCCESSFULLY);
+
         } catch (DAOException e) {
-            String msg = String.format("Student with id %d was not added to Course with id %d", studentId, courseId);
+            var msg = String.format("Student with id %d was not added to Course with id %d", studentId, courseId);
             log.error(msg);
 
             throw new RepositoryException(msg, e);
         }
-
     }
 
     @Override
     public void removeStudentFromCourse(int studentId, int courseId) throws RepositoryException {
+        var query = String.format(
+                """
+                        DELETE
+                        FROM students_courses
+                        WHERE student_id = %d
+                        AND course_id = %d;""", studentId, courseId);
+
         try {
-            daoFactory.doPost(String.format(
-                    """
-                            DELETE
-                            FROM students_courses
-                            WHERE student_id = %d
-                            AND course_id = %d;""", studentId, courseId));
-            log.info(String.format("Course with id %d was removed from student with id %d", courseId, studentId));
+            daoFactory.doPost(query);
+            log.info(QUERY_EXECUTED_SUCCESSFULLY);
+
         } catch (DAOException e) {
-            String msg = String.format("Student with id %d was not removed from course with id %d", studentId,
+            var msg = String.format("Student with id %d was not removed from course with id %d", studentId,
                     courseId);
             log.error(msg);
 
@@ -92,21 +104,25 @@ public class StudentRepositoryImpl implements StudentRepository {
 
     @Override
     public List<Student> getAllStudents() throws RepositoryException {
-        String query = "SELECT * FROM students;";
+        var query = "SELECT * FROM students;";
+
         try {
-            return daoFactory.getStudents(query);
+            var students = daoFactory.getStudents(query);
+            log.info(QUERY_EXECUTED_SUCCESSFULLY);
+
+            return students;
+
         } catch (DAOException e) {
             String msg = "There are no students in the database";
             log.error(msg, e);
 
             throw new RepositoryException(msg, e);
         }
-
     }
 
     @Override
     public List<Student> getStudentsByCourseId(int courseId) throws RepositoryException {
-        String query = String.format(
+        var query = String.format(
                 """
                         SELECT *
                         FROM students
@@ -117,9 +133,13 @@ public class StudentRepositoryImpl implements StudentRepository {
                 courseId);
 
         try {
-            return daoFactory.getStudents(query);
+            var students = daoFactory.getStudents(query);
+            log.info(QUERY_EXECUTED_SUCCESSFULLY);
+
+            return students;
+
         } catch (DAOException e) {
-            String msg = "Error while getting students by course id";
+            var msg = "Error while getting students by course id";
             log.error(msg, e);
 
             throw new RepositoryException(msg, e);
@@ -128,7 +148,7 @@ public class StudentRepositoryImpl implements StudentRepository {
 
     @Override
     public List<Student> getStudentsByNameAndCourse(String studentName, Integer courseId) throws RepositoryException {
-        String query = String.format(
+        var query = String.format(
                 """
                         SELECT *
                         FROM students
@@ -140,9 +160,13 @@ public class StudentRepositoryImpl implements StudentRepository {
                 courseId, studentName);
 
         try {
-            return daoFactory.getStudents(query);
+            var students = daoFactory.getStudents(query);
+            log.info(QUERY_EXECUTED_SUCCESSFULLY);
+
+            return students;
+
         } catch (DAOException e) {
-            String msg = "Error while getting students by name and course";
+            var msg = "Error while getting students by name and course";
             log.error(msg, e);
 
             throw new RepositoryException(msg, e);
@@ -151,7 +175,7 @@ public class StudentRepositoryImpl implements StudentRepository {
 
     @Override
     public Student getStudentById(int id) throws RepositoryException {
-        String query = String.format(
+        var query = String.format(
                 """
                         SELECT *
                         FROM students
@@ -159,9 +183,13 @@ public class StudentRepositoryImpl implements StudentRepository {
                 id);
 
         try {
-            return daoFactory.getStudents(query).get(0);
+            var student = daoFactory.getStudents(query).get(0);
+            log.info(QUERY_EXECUTED_SUCCESSFULLY);
+
+            return student;
+
         } catch (DAOException e) {
-            String msg = "Error while getting student by id";
+            var msg = "Error while getting student by id";
             log.error(msg, e);
 
             throw new RepositoryException(msg, e);
@@ -171,7 +199,7 @@ public class StudentRepositoryImpl implements StudentRepository {
     // get Student with max Id
     @Override
     public Student getLastStudent() throws RepositoryException {
-        String query = """
+        var query = """
                 SELECT *
                 FROM students
                 WHERE student_id =
@@ -179,9 +207,13 @@ public class StudentRepositoryImpl implements StudentRepository {
                     FROM students);""";
 
         try {
-            return daoFactory.getStudents(query).get(0);
+            var student = daoFactory.getStudents(query).get(0);
+            log.info(QUERY_EXECUTED_SUCCESSFULLY);
+
+            return student;
+
         } catch (DAOException e) {
-            String msg = "Error while getting last student";
+            var msg = "Error while getting last student";
             log.error(msg, e);
 
             throw new RepositoryException(msg, e);
