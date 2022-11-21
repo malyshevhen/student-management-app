@@ -346,7 +346,7 @@ class StudentRepositoryImplTest {
     }
 
     @Test
-    void MethodGetStudentByIdShouldThrowExceptionWhenStudentDoseNotExist() throws RepositoryException {
+    void MethodGetStudentByIdShouldThrowExceptionWhenStudentDoseNotExist() {
         List.of(
                 Student.builder()
                         .studentId(1)

@@ -1,9 +1,6 @@
 package ua.com.foxstudent102052.repository;
 
 public class RepositoryException extends Exception {
-    public RepositoryException() {
-    }
-
     public RepositoryException(String message) {
         super(message);
     }
