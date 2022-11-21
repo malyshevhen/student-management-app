@@ -28,11 +28,23 @@ public class StudentServiceImplTest {
 
     @Test
     void MethodAddStudentShouldPassNewStudentToRepository() throws ServiceException, RepositoryException {
+        // given
+        var studentDto = StudentDto.builder()
+                .firstName("firstName")
+                .lastName("lastName")
+                .build();
+        var student = Student.builder()
+                .studentId(1)
+                .firstName("firstName")
+                .lastName("lastName")
+                .build();
+
         // when
-        studentService.addStudent(StudentDto.builder().firstName("Leia").lastName("Organa").build());
+        when(studentRepository.getLastStudent()).thenReturn(student);
 
         // then
-        verify(studentRepository).addStudent(Student.builder().firstName("Leia").lastName("Organa").build());
+        studentService.addStudent(studentDto);
+        verify(studentRepository).addStudent(student);
     }
 
     @Test
@@ -65,7 +77,8 @@ public class StudentServiceImplTest {
     }
 
     @Test
-    void MethodAddStudentToCourseShouldAddExistingStudentToExistingCourse() throws ServiceException, RepositoryException {
+    void MethodAddStudentToCourseShouldAddExistingStudentToExistingCourse()
+            throws ServiceException, RepositoryException {
         // when
         studentService.addStudentToCourse(1, 1);
 
@@ -76,7 +89,8 @@ public class StudentServiceImplTest {
     @Test
     void MethodAddStudentToCourseShouldThrowAnExceptionWhenStudentDoesNotExist() throws RepositoryException {
         // when
-        doThrow(new RepositoryException("Student with id 1 doesn't exist")).when(studentRepository).addStudentToCourse(1, 1);
+        doThrow(new RepositoryException("Student with id 1 doesn't exist")).when(studentRepository)
+                .addStudentToCourse(1, 1);
 
         // then
         assertThrows(ServiceException.class, () -> studentService.addStudentToCourse(1, 1),
@@ -84,7 +98,8 @@ public class StudentServiceImplTest {
     }
 
     @Test
-    void MethodRemoveStudentFromCourseShouldRemoveExistingStudentFromExistingCourse() throws ServiceException, RepositoryException {
+    void MethodRemoveStudentFromCourseShouldRemoveExistingStudentFromExistingCourse()
+            throws ServiceException, RepositoryException {
         // when
         studentService.removeStudentFromCourse(1, 1);
 
@@ -95,7 +110,8 @@ public class StudentServiceImplTest {
     @Test
     void MethodRemoveStudentFromCourseShouldThrowAnExceptionWhenStudentDoesNotExist() throws RepositoryException {
         // when
-        doThrow(new RepositoryException("Student with id 1 doesn't exist")).when(studentRepository).removeStudentFromCourse(1, 1);
+        doThrow(new RepositoryException("Student with id 1 doesn't exist")).when(studentRepository)
+                .removeStudentFromCourse(1, 1);
 
         // then
         assertThrows(ServiceException.class, () -> studentService.removeStudentFromCourse(1, 1),
@@ -153,7 +169,8 @@ public class StudentServiceImplTest {
     @Test
     void MethodGetStudentsByNameAndCourseShouldThrowAnExceptionWhenStudentDoesNotExist() throws RepositoryException {
         // when
-        doThrow(new RepositoryException("Students doesn't exist")).when(studentRepository).getStudentsByNameAndCourse("John", 1);
+        doThrow(new RepositoryException("Students doesn't exist")).when(studentRepository)
+                .getStudentsByNameAndCourse("John", 1);
 
         // then
         assertThrows(ServiceException.class, () -> studentService.getStudentsByNameAndCourse("John", 1),

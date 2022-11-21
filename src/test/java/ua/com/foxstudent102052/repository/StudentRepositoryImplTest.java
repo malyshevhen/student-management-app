@@ -367,4 +367,51 @@ public class StudentRepositoryImplTest {
             assertFalse(true);
         }
     }
+
+    @Test
+    void MethodGetLastStudentShouldThrowAnExceptionIfNoStudentsInDataBase() {
+
+        RepositoryException thrown = assertThrows(
+                RepositoryException.class,
+                () -> studentRepository.getLastStudent(),
+                "Expected getLastStudent() to throw, but it didn't");
+
+        assertEquals("Error while getting last student", thrown.getMessage());
+    }
+
+    @Test
+    void MethodGetLastStudentShouldReturnStudentWithMaxIdFromDb(){
+        try {
+            var expected = Student.builder()
+                    .firstName("John")
+                    .lastName("Doe")
+                    .groupId(1)
+                    .build();
+
+            List.of(
+                    Student.builder()
+                            .firstName("David")
+                            .lastName("Black")
+                            .groupId(1)
+                            .build(),
+                    expected)
+                    .forEach(student -> {
+
+                        try {
+                            studentRepository.addStudent(student);
+                        } catch (RepositoryException e) {
+                            log.error("Error", e);
+                        }
+                    });
+
+            var actual = studentRepository.getLastStudent();
+
+            assertEquals(expected, actual);
+
+        } catch (RepositoryException e) {
+            log.error("Error", e);
+
+            assertFalse(true);
+        }
+    }
 }

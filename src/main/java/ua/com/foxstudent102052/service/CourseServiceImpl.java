@@ -17,12 +17,21 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public void addCourse(CourseDto course) throws ServiceException {
-
+        var newCourse = CourseMapper.toCourse(course);
         try {
-            courseRepository.addCourse(CourseMapper.toCourse(course));
+            courseRepository.addCourse(newCourse);
+            var lastCourseFromDB = courseRepository.getLastCourse();
+
+            if (newCourse.equals(lastCourseFromDB)) {
+                log.info("Course with id {} was added", course.getId());
+            } else {
+                log.info("Course with id {} wasn't added", course.getId());
+
+                throw new ServiceException("Course wasn`t added");
+            }
 
         } catch (RepositoryException e) {
-            var msg = String.format("Course with %s already exists", course.getName());
+            var msg = String.format("Course with id %d already exist", course.getId());
             log.error(msg, e);
 
             throw new ServiceException(msg, e);

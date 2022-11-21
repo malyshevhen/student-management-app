@@ -78,4 +78,22 @@ public class CourseRepositoryImpl implements CourseRepository {
             throw new RepositoryException(e);
         }
     }
+
+    @Override
+    public Course getLastCourse() throws RepositoryException {
+        try {
+            return daoFactory.getCourse(
+                    """
+                            SELECT *
+                            FROM courses
+                            WHERE course_id = (
+                                SELECT MAX(course_id)
+                                FROM courses);""");
+
+        } catch (DAOException e) {
+            log.error("Error while getting last course", e);
+
+            throw new RepositoryException(e);
+        }
+    }
 }

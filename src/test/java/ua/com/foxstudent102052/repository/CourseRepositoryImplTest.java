@@ -143,4 +143,30 @@ public class CourseRepositoryImplTest {
         assertThrows(RepositoryException.class, () -> courseRepository.getCoursesByStudentId(1),
                 "Course wasn`t added");
     }
+
+    @Test
+    void MethodGetLastCourseShouldReturnLastCourseFromDb() throws RepositoryException {
+        // given
+        var expected = Course.builder().courseName("Course 1").courseDescription("Some course").build();
+        List.of(
+                Course.builder().courseName("Course 2").courseDescription("Some course").build(),
+                Course.builder().courseName("Course 3").courseDescription("Some course").build(),
+                expected).forEach(
+                        course -> {
+
+                            try {
+                                courseRepository.addCourse(course);
+                            } catch (RepositoryException e) {
+                                e.printStackTrace();
+                            }
+                        });
+
+        courseRepository.addCourse(expected);
+
+        // when
+        var courseFromDb = courseRepository.getLastCourse();
+
+        // then
+        assertEquals(expected, courseFromDb);
+    }
 }

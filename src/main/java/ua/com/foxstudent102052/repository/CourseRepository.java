@@ -12,4 +12,6 @@ public interface CourseRepository {
     Course getCourseById(int courseId) throws RepositoryException;
 
     List<Course> getCoursesByStudentId(int studentId) throws RepositoryException;
+
+    Course getLastCourse() throws RepositoryException;
 }

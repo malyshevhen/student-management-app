@@ -17,12 +17,12 @@ public class StudentRepositoryImpl implements StudentRepository {
     public void addStudent(Student student) throws RepositoryException {
         try {
             daoFactory.doPost(String.format(
-                """
-                    INSERT INTO students (
-                        group_id,
-                        first_name,
-                        last_name)
-                    VALUES ('%d', '%s', '%s');""", student.getGroupId(), student.getFirstName(),
+                    """
+                            INSERT INTO students (
+                                group_id,
+                                first_name,
+                                last_name)
+                            VALUES ('%d', '%s', '%s');""", student.getGroupId(), student.getFirstName(),
                     student.getLastName()));
             log.info(String.format("Student %s %s was added to the database",
                     student.getFirstName(), student.getLastName()));
@@ -38,10 +38,10 @@ public class StudentRepositoryImpl implements StudentRepository {
     public void removeStudent(int studentId) throws RepositoryException {
         try {
             daoFactory.doPost(String.format(
-                """
-                    DELETE
-                    FROM students
-                    WHERE student_id = %d;""",
+                    """
+                            DELETE
+                            FROM students
+                            WHERE student_id = %d;""",
                     studentId));
             log.info(String.format("Student with studentId %d was removed from the database", studentId));
         } catch (DAOException e) {
@@ -56,11 +56,11 @@ public class StudentRepositoryImpl implements StudentRepository {
     public void addStudentToCourse(int studentId, int courseId) throws RepositoryException {
         try {
             daoFactory.doPost(String.format(
-                """
-                    INSERT INTO students_courses (
-                        student_id,
-                        course_id)
-                    VALUES (%d, %d);""", studentId, courseId));
+                    """
+                            INSERT INTO students_courses (
+                                student_id,
+                                course_id)
+                            VALUES (%d, %d);""", studentId, courseId));
             log.info(String.format("Course with id %d was added to student with id %d", courseId, studentId));
         } catch (DAOException e) {
             String msg = String.format("Student with id %d was not added to Course with id %d", studentId, courseId);
@@ -75,11 +75,11 @@ public class StudentRepositoryImpl implements StudentRepository {
     public void removeStudentFromCourse(int studentId, int courseId) throws RepositoryException {
         try {
             daoFactory.doPost(String.format(
-                """
-                    DELETE
-                    FROM students_courses
-                    WHERE student_id = %d
-                    AND course_id = %d;""", studentId, courseId));
+                    """
+                            DELETE
+                            FROM students_courses
+                            WHERE student_id = %d
+                            AND course_id = %d;""", studentId, courseId));
             log.info(String.format("Course with id %d was removed from student with id %d", courseId, studentId));
         } catch (DAOException e) {
             String msg = String.format("Student with id %d was not removed from course with id %d", studentId,
@@ -107,13 +107,13 @@ public class StudentRepositoryImpl implements StudentRepository {
     @Override
     public List<Student> getStudentsByCourseId(int courseId) throws RepositoryException {
         String query = String.format(
-            """
-                SELECT *
-                FROM students
-                WHERE student_id IN (
-                    SELECT student_id
-                    FROM students_courses
-                    WHERE course_id = %d);""",
+                """
+                        SELECT *
+                        FROM students
+                        WHERE student_id IN (
+                            SELECT student_id
+                            FROM students_courses
+                            WHERE course_id = %d);""",
                 courseId);
 
         try {
@@ -129,14 +129,14 @@ public class StudentRepositoryImpl implements StudentRepository {
     @Override
     public List<Student> getStudentsByNameAndCourse(String studentName, Integer courseId) throws RepositoryException {
         String query = String.format(
-            """
-                SELECT *
-                FROM students
-                WHERE student_id IN (
-                    SELECT student_id
-                    FROM students_courses
-                    WHERE course_id = %d)
-                AND first_name ='%s';""",
+                """
+                        SELECT *
+                        FROM students
+                        WHERE student_id IN (
+                            SELECT student_id
+                            FROM students_courses
+                            WHERE course_id = %d)
+                        AND first_name ='%s';""",
                 courseId, studentName);
 
         try {
@@ -152,10 +152,10 @@ public class StudentRepositoryImpl implements StudentRepository {
     @Override
     public Student getStudentById(int id) throws RepositoryException {
         String query = String.format(
-            """
-                SELECT *
-                FROM students
-                WHERE student_id = %d;""",
+                """
+                        SELECT *
+                        FROM students
+                        WHERE student_id = %d;""",
                 id);
 
         try {
@@ -168,9 +168,16 @@ public class StudentRepositoryImpl implements StudentRepository {
         }
     }
 
+    // get Student with max Id
     @Override
     public Student getLastStudent() throws RepositoryException {
-        String query = "SELECT * FROM students ORDER BY student_id DESC LIMIT 1;";
+        String query = """
+                SELECT *
+                FROM students
+                WHERE student_id =
+                    (SELECT MAX(student_id)
+                    FROM students);""";
+
         try {
             return daoFactory.getStudents(query).get(0);
         } catch (DAOException e) {
@@ -180,5 +187,4 @@ public class StudentRepositoryImpl implements StudentRepository {
             throw new RepositoryException(msg, e);
         }
     }
-
 }

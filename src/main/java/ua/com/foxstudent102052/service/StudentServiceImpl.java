@@ -17,23 +17,21 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public void addStudent(StudentDto studentDto) throws ServiceException {
-        int studentId = studentDto.getId();
 
         try {
             var newStudent = StudentMapper.toStudent(studentDto);
             studentRepository.addStudent(newStudent);
             var lastStudentFromDB = studentRepository.getLastStudent();
-            var lastStudentFromDBDto = StudentMapper.toDto(lastStudentFromDB);
-            if (studentDto.equals(lastStudentFromDBDto)) {
-                log.info("Student with id {} was added", studentId);
+            if (newStudent.equals(lastStudentFromDB)) {
+                log.info("Student with id {} was added", lastStudentFromDB.getStudentId());
             } else {
-                log.info("Student with id {} wasn't added", studentId);
+                log.info("Student with id {} wasn't added", lastStudentFromDB.getStudentId());
 
                 throw new ServiceException("Student wasn`t added");
             }
 
         } catch (RepositoryException e) {
-            var msg = String.format("Student with id %d already exist", studentId);
+            var msg = "Student wasn`t added";
             log.error(msg, e);
 
             throw new ServiceException(msg, e);

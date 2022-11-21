@@ -103,13 +103,15 @@ public class TableBuilder {
     private static String createStudentTableBlock(StudentDto student) {
         StringBuilder studentBlockBuilder = new StringBuilder();
         String id = String.valueOf(student.getId());
-        String group = student.getGroup();
+        String group = student.getGroup().isEmpty() ? "No group" : student.getGroup();
         String firstName = student.getFirstName();
         String lastName = student.getLastName();
         var courses = student.getCoursesList();
 
         if (courses.isEmpty()) {
             studentBlockBuilder.append(String.format(STUDENT_LIST_ROW, id, group, firstName, lastName, "No courses"))
+                    .append(System.lineSeparator())
+                    .append(STUDENT_LIST_SEMI_FOOTER)
                     .append(System.lineSeparator());
         } else {
             for (int i = 0; i < courses.size(); i++) {
