@@ -4,7 +4,7 @@ DROP TABLE IF EXISTS groups;
 DROP TABLE IF EXISTS courses;
 CREATE TABLE students (
     student_id SERIAL,
-    group_id INT NOT NULL,
+    group_id INT,
     first_name VARCHAR(255) NOT NULL,
     last_name VARCHAR(255) NOT NULL,
     PRIMARY KEY (student_id)

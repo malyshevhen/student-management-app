@@ -1,18 +1,33 @@
 package ua.com.foxstudent102052.facade;
 
+import static ua.com.foxstudent102052.facade.InputUtils.takeInputIntFromUser;
+import static ua.com.foxstudent102052.facade.InputUtils.takeInputStringFromUser;
+import static ua.com.foxstudent102052.facade.TableBuilder.createCourseTable;
+import static ua.com.foxstudent102052.facade.TableBuilder.createGroupStudentsTable;
+import static ua.com.foxstudent102052.facade.TableBuilder.createGroupTable;
+import static ua.com.foxstudent102052.facade.TableBuilder.createStudentTable;
+
+import java.util.NoSuchElementException;
+
 import ua.com.foxstudent102052.controller.ControllerException;
 import ua.com.foxstudent102052.controller.CourseController;
 import ua.com.foxstudent102052.controller.GroupController;
 import ua.com.foxstudent102052.controller.StudentController;
 import ua.com.foxstudent102052.model.StudentDto;
-import ua.com.foxstudent102052.repository.*;
-import ua.com.foxstudent102052.service.*;
-
-import java.util.NoSuchElementException;
-
-import static ua.com.foxstudent102052.facade.InputUtils.takeInputIntFromUser;
-import static ua.com.foxstudent102052.facade.InputUtils.takeInputStringFromUser;
-import static ua.com.foxstudent102052.facade.TableBuilder.*;
+import ua.com.foxstudent102052.repository.CourseRepository;
+import ua.com.foxstudent102052.repository.CourseRepositoryImpl;
+import ua.com.foxstudent102052.repository.DAOFactory;
+import ua.com.foxstudent102052.repository.DAOFactoryImpl;
+import ua.com.foxstudent102052.repository.GroupRepository;
+import ua.com.foxstudent102052.repository.GroupRepositoryImpl;
+import ua.com.foxstudent102052.repository.StudentRepository;
+import ua.com.foxstudent102052.repository.StudentRepositoryImpl;
+import ua.com.foxstudent102052.service.CourseService;
+import ua.com.foxstudent102052.service.CourseServiceImpl;
+import ua.com.foxstudent102052.service.GroupService;
+import ua.com.foxstudent102052.service.GroupServiceImpl;
+import ua.com.foxstudent102052.service.StudentService;
+import ua.com.foxstudent102052.service.StudentServiceImpl;
 
 public class Facade {
 
@@ -77,12 +92,12 @@ public class Facade {
                     }
 
                     int groupId = takeInputIntFromUser(ENTER_OPTION_NUMBER);
-
                     var studentDto = StudentDto.builder()
                             .firstName(firstName)
                             .lastName(lastName)
                             .groupId(groupId)
                             .build();
+
                     try {
                         studentController.addStudent(studentDto);
                         print("Student added successfully");
@@ -128,6 +143,7 @@ public class Facade {
                     }
                 } else if (option == 5) {
                     int numberOfStudents = takeInputIntFromUser("Enter minimum number of students: ");
+
                     try {
                         var groupTable = createGroupStudentsTable(groupController.getGroupsSmallerThen(numberOfStudents));
                         print(groupTable);
@@ -136,6 +152,7 @@ public class Facade {
                     }
 
                 } else if (option == 6) {
+
                     try {
                         var studentName = takeInputStringFromUser(ENTER_STUDENT_NAME);
                     print(createCourseTable(courseController.getAllCourses()));
@@ -144,10 +161,12 @@ public class Facade {
                             .getStudentsByNameAndCourse(studentName, courseId);
                     var studentTable = createStudentTable(studentsByCourseNameAndGroupId);
                     print(studentTable);
+
                 } catch (ControllerException e) {
                     print(e.getMessage());
                 }
                 } else if (option == 7) {
+
                     try {
                        var allStudents = studentController.getAllStudents();
                        print(createStudentTable(allStudents));
@@ -160,6 +179,7 @@ public class Facade {
                 } else {
                     print(WRONG_INPUT);
                 }
+
             } catch (NoSuchElementException | IllegalArgumentException e) {
                 print(e.getMessage());
             }

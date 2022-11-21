@@ -188,7 +188,8 @@ public class GroupRepositoryImplTest {
     }
 
     @Test
-    void MathodGetGroupsSmallerThenShouldThrowExceptionWhenDAOExceptionThrown() throws RepositoryException, DAOException {
+    void MathodGetGroupsSmallerThenShouldThrowExceptionWhenDAOExceptionThrown()
+            throws RepositoryException, DAOException {
         // given
         daoFactory = mock(DAOFactory.class);
         groupRepository = new GroupRepositoryImpl(daoFactory);

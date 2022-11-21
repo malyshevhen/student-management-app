@@ -26,7 +26,6 @@ import ua.com.foxstudent102052.service.StudentServiceImpl;
 
 public class TestDataController {
     DAOFactory daoFactory = DAOFactoryImpl.getInstance();
-
     StudentRepository studentRepository = new StudentRepositoryImpl(daoFactory);
     CourseRepository courseRepository = new CourseRepositoryImpl(daoFactory);
     GroupRepository groupRepository = new GroupRepositoryImpl(daoFactory);
@@ -118,6 +117,7 @@ public class TestDataController {
                 DROP TABLE IF EXISTS groups;
                 DROP TABLE IF EXISTS courses;
                 """;
+
         try {
             daoFactory.doPost(query);
         } catch (DAOException e) {
@@ -158,8 +158,8 @@ public class TestDataController {
                     PRIMARY KEY (student_id, course_id),
                     FOREIGN KEY (student_id) REFERENCES students (student_id),
                     FOREIGN KEY (course_id) REFERENCES courses (course_id)
-                );
-                """;
+                );""";
+
         try {
             daoFactory.doPost(query);
         } catch (DAOException e) {
@@ -236,6 +236,7 @@ public class TestDataController {
                                     int courseId = random.nextInt(11) + 1;
 
                                     if (Boolean.FALSE.equals(courses.contains(courseId)) && courseId < 11) {
+
                                         try {
                                             studentService.addStudentToCourse(student.getId(), courseId);
                                         } catch (ServiceException e) {

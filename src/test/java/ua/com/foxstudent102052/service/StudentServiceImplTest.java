@@ -29,9 +29,10 @@ public class StudentServiceImplTest {
     @Test
     void MethodAddStudentShouldPassNewStudentToRepository() throws ServiceException, RepositoryException {
         // when
-        studentService.addStudent(new StudentDto());
+        studentService.addStudent(StudentDto.builder().firstName("Leia").lastName("Organa").build());
+
         // then
-        verify(studentRepository).addStudent(new Student());
+        verify(studentRepository).addStudent(Student.builder().firstName("Leia").lastName("Organa").build());
     }
 
     @Test
