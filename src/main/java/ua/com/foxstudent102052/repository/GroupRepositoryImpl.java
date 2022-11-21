@@ -175,4 +175,26 @@ public class GroupRepositoryImpl implements GroupRepository {
             throw new RepositoryException(msg, e);
         }
     }
+
+    @Override
+    public Boolean ifExist(String groupName) throws RepositoryException {
+        var query = String.format("""
+                SELECT *
+                FROM groups
+                WHERE group_name = '%s';""",
+                groupName);
+
+        try {
+            var group = daoFactory.getGroup(query);
+            log.info(QUERY_EXECUTED_SUCCESSFULLY);
+
+            return group != null;
+
+        } catch (DAOException e) {
+            var msg = String.format("Error while checking if group exist: '%s'", groupName);
+            log.error(msg, e);
+
+            throw new RepositoryException(msg, e);
+        }
+    }
 }

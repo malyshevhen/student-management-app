@@ -33,6 +33,7 @@ class CourseServiceImplTest {
         // given
         Course courseFromDb = Course.builder().courseName("Java").courseDescription("Java course").build();
         CourseDto newCourse = CourseDto.builder().name("Java").description("Java course").build();
+
         // when
         when(courseRepository.getLastCourse()).thenReturn(courseFromDb);
         courseService.addCourse(newCourse);

@@ -3,14 +3,19 @@ package ua.com.foxstudent102052.service;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.List;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
 import ua.com.foxstudent102052.mapper.StudentMapper;
 import ua.com.foxstudent102052.model.Student;
 import ua.com.foxstudent102052.model.StudentDto;
@@ -75,14 +80,13 @@ public class StudentServiceImplTest {
                 "Student wasn`t added");
     }
 
-
     @Test
     void MethodRemoveStudentShouldRemoveExistingStudentFromDb() throws RepositoryException, ServiceException {
         // given
         var student = Student.builder().studentId(1).firstName("John").lastName("Doe").build();
 
         // when
-        when(studentRepository.getStudentById(1)).thenReturn(student).thenReturn(null);
+        when(studentRepository.getStudentById(1)).thenReturn(student).thenThrow(RepositoryException.class);
         doNothing().when(studentRepository).removeStudent(student.getStudentId());
 
         // then
@@ -119,7 +123,27 @@ public class StudentServiceImplTest {
     }
 
     @Test
-    void MethodRemoveStudentShouldThrowAnExceptionIfStudentWasNotRemoved() throws RepositoryException{
+    void MethodGetAllStudentsShouldReturnListOfAllStudents() throws ServiceException, RepositoryException {
+        // when
+        studentService.getAllStudents();
+
+        // then
+        verify(studentRepository).getAllStudents();
+
+    }
+
+    @Test
+    void MethodGetAllStudentsShouldThrowAnExceptionWhenStudentDoesNotExist() throws RepositoryException {
+        // when
+        doThrow(new RepositoryException("Students doesn't exist")).when(studentRepository).getAllStudents();
+
+        // then
+        assertThrows(ServiceException.class, () -> studentService.getAllStudents(),
+                "Students doesn't exist");
+    }
+
+    @Test
+    void MethodRemoveStudentShouldThrowAnExceptionIfStudentWasNotRemoved() throws RepositoryException {
         // given
         var student = Student.builder().studentId(1).firstName("John").lastName("Doe").build();
 
@@ -135,7 +159,11 @@ public class StudentServiceImplTest {
     @Test
     void MethodAddStudentToCourseShouldAddExistingStudentToExistingCourse()
             throws ServiceException, RepositoryException {
+        // given
+        Student newStudent = Student.builder().studentId(1).firstName("John").lastName("Doe").build();
+
         // when
+        when(studentRepository.getStudentsByCourseId(newStudent.getStudentId())).thenReturn(List.of(newStudent));
         studentService.addStudentToCourse(1, 1);
 
         // then
@@ -157,6 +185,7 @@ public class StudentServiceImplTest {
     void MethodRemoveStudentFromCourseShouldRemoveExistingStudentFromExistingCourse()
             throws ServiceException, RepositoryException {
         // when
+        when(studentRepository.getStudentsByCourseId(anyInt())).thenReturn(List.of(new Student()));
         studentService.removeStudentFromCourse(1, 1);
 
         // then
@@ -175,28 +204,9 @@ public class StudentServiceImplTest {
     }
 
     @Test
-    void MethodGetAllStudentsShouldReturnListOfAllStudents() throws ServiceException, RepositoryException {
+    void MethodGetStudentsByCourseShouldReturnListOfStudentsByCourseId() throws ServiceException, RepositoryException {
         // when
-        studentService.getAllStudents();
-
-        // then
-        verify(studentRepository).getAllStudents();
-
-    }
-
-    @Test
-    void MethodGetAllStudentsShouldThrowAnExceptionWhenStudentDoesNotExist() throws RepositoryException {
-        // when
-        doThrow(new RepositoryException("Students doesn't exist")).when(studentRepository).getAllStudents();
-
-        // then
-        assertThrows(ServiceException.class, () -> studentService.getAllStudents(),
-                "Students doesn't exist");
-    }
-
-    @Test
-    void MethodGetStudentsByCourseShouldReturnLstOfStudentsByCourseId() throws ServiceException, RepositoryException {
-        // when
+        when(studentRepository.getStudentsByCourseId(anyInt())).thenReturn(List.of(new Student()));
         studentService.getStudentsByCourse(1);
 
         // then
@@ -216,6 +226,8 @@ public class StudentServiceImplTest {
     @Test
     void MethodGetStudentsByNameAndCourseShouldReturnListOfStudents() throws RepositoryException, ServiceException {
         // when
+        when(studentRepository.getStudentsByNameAndCourse(anyString(), anyInt()))
+                .thenReturn(List.of(new Student()));
         studentService.getStudentsByNameAndCourse("John", 1);
 
         // then
@@ -245,18 +257,9 @@ public class StudentServiceImplTest {
     @Test
     void MethodIfExistShouldReturnFalseIfStudentDoesNotExist() throws RepositoryException, ServiceException {
         // when
-        when(studentRepository.getStudentById(1)).thenReturn(null);
+        doThrow(new RepositoryException("Student with id 1 doesn't exist")).when(studentRepository).getStudentById(1);
 
         // then
         assertFalse(studentService.ifExist(1));
-    }
-
-    @Test
-    void MethodIfExistShouldThrowAnExceptionIfRepositoryThrowsAnException() throws RepositoryException {
-        // when
-        when(studentRepository.getStudentById(1)).thenThrow(RepositoryException.class);
-
-        // then
-        assertThrows(ServiceException.class, () -> studentService.ifExist(1));
     }
 }

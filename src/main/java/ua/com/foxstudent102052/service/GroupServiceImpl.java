@@ -23,20 +23,25 @@ public class GroupServiceImpl implements GroupService {
         var newGroup = GroupMapper.toGroup(groupDto);
 
         try {
-            groupRepository.addGroup(newGroup);
-            var lastGroupFromDB = groupRepository.getLastGroup();
+            if (Boolean.FALSE.equals(ifExist(newGroup.getGroupName()))) {
+                groupRepository.addGroup(newGroup);
+                var lastGroupFromDB = groupRepository.getLastGroup();
 
-            if (newGroup.equals(lastGroupFromDB)) {
-                log.info("Group with id {} was added", lastGroupFromDB.getGroupId());
+                if (newGroup.equals(lastGroupFromDB)) {
+                    log.info("Group with id was added");
+                } else {
+                    log.error("Group with id wasn`t added");
+                }
             } else {
-                log.info("Group with id {} was added", lastGroupFromDB.getGroupId());
+                log.info(String.format(GROUP_WITH_ID_EXISTS, newGroup.getGroupId()));
+
+                throw new ServiceException(String.format(GROUP_WITH_ID_EXISTS, newGroup.getGroupId()));
             }
 
         } catch (RepositoryException e) {
-            String msg = String.format(GROUP_WITH_ID_EXISTS, groupDto.getId());
-            log.error(msg, e);
+            log.error(e.getMessage(), e);
 
-            throw new ServiceException(msg, e);
+            throw new ServiceException(e);
         }
     }
 
@@ -44,10 +49,13 @@ public class GroupServiceImpl implements GroupService {
     public List<GroupDto> getAllGroups() throws ServiceException {
 
         try {
-            return groupRepository.getAllGroups()
-                .stream()
-                .map(GroupMapper::toDto)
-                .toList();
+            var allGroupsList = groupRepository.getAllGroups()
+                    .stream()
+                    .map(GroupMapper::toDto)
+                    .toList();
+            log.info("All groups were received");
+
+            return allGroupsList;
 
         } catch (RepositoryException e) {
             String msg = "There are no groups in the database";
@@ -61,10 +69,13 @@ public class GroupServiceImpl implements GroupService {
     public GroupDto getGroupById(int groupId) throws ServiceException {
 
         try {
-            return GroupMapper.toDto(groupRepository.getGroupById(groupId));
+            var groupDto = GroupMapper.toDto(groupRepository.getGroupById(groupId));
+            log.info("Group with id {} was received", groupId);
+
+            return groupDto;
 
         } catch (RepositoryException e) {
-            String msg = String.format(GROUP_WITH_ID_NOT_EXIST, groupId);
+            var msg = String.format(GROUP_WITH_ID_NOT_EXIST, groupId);
             log.error(msg, e);
 
             throw new ServiceException(msg, e);
@@ -75,14 +86,17 @@ public class GroupServiceImpl implements GroupService {
     public List<GroupDto> getGroupsSmallerThen(int numberOfStudents) throws ServiceException {
 
         try {
-            return groupRepository.getGroupsSmallerThen(numberOfStudents)
-                .stream()
-                .map(GroupMapper::toDto)
-                .toList();
+            var groupList = groupRepository.getGroupsSmallerThen(numberOfStudents)
+                    .stream()
+                    .map(GroupMapper::toDto)
+                    .toList();
+            log.info("Groups with number of students less then {} were received", numberOfStudents);
+
+            return groupList;
 
         } catch (RepositoryException e) {
-            String msg = String.format("There are no groups with number of students less then %d",
-                numberOfStudents);
+            var msg = String.format("There are no groups with number of students less then %d",
+                    numberOfStudents);
             log.error(msg, e);
 
             throw new ServiceException(msg, e);
@@ -93,10 +107,13 @@ public class GroupServiceImpl implements GroupService {
     public GroupDto getGroupByName(String groupName) throws ServiceException {
 
         try {
-            return GroupMapper.toDto(groupRepository.getGroupByName(groupName));
+            var grouddto = GroupMapper.toDto(groupRepository.getGroupByName(groupName));
+            log.info("Group with name {} was received", groupName);
+
+            return grouddto;
 
         } catch (RepositoryException e) {
-            String msg = String.format("Group with name %s doesn't exist", groupName);
+            var msg = String.format("Group with name %s doesn't exist", groupName);
             log.error(msg, e);
 
             throw new ServiceException(msg, e);
@@ -107,16 +124,34 @@ public class GroupServiceImpl implements GroupService {
     public List<StudentDto> getStudentsByGroup(int groupId) throws ServiceException {
 
         try {
-            return groupRepository.getStudentsByGroup(groupId)
-                .stream()
-                .map(StudentMapper::toDto)
-                .toList();
+            var studentsList = groupRepository.getStudentsByGroup(groupId)
+                    .stream()
+                    .map(StudentMapper::toDto)
+                    .toList();
+            log.info("Students from group with id {} were received", groupId);
+
+            return studentsList;
 
         } catch (RepositoryException e) {
-            String msg = String.format("There are no students in group with id %d", groupId);
+            var msg = String.format("There are no students in group with id %d", groupId);
             log.error(msg, e);
 
             throw new ServiceException(msg, e);
+        }
+    }
+
+    @Override
+    public Boolean ifExist(String groupName) {
+
+        try {
+            groupRepository.getGroupByName(groupName);
+
+            return true;
+
+        } catch (RepositoryException e) {
+            log.info(e.getMessage(), e);
+
+            return false;
         }
     }
 }

@@ -196,7 +196,6 @@ public class StudentRepositoryImpl implements StudentRepository {
         }
     }
 
-    // get Student with max Id
     @Override
     public Student getLastStudent() throws RepositoryException {
         var query = """

@@ -18,6 +18,7 @@ public class CourseServiceImpl implements CourseService {
     @Override
     public void addCourse(CourseDto course) throws ServiceException {
         var newCourse = CourseMapper.toCourse(course);
+
         try {
             courseRepository.addCourse(newCourse);
             var lastCourseFromDB = courseRepository.getLastCourse();

@@ -17,4 +17,6 @@ public interface GroupService {
     GroupDto getGroupByName(String groupName) throws ServiceException;
 
     List<StudentDto> getStudentsByGroup(int groupId) throws ServiceException;
+
+    Boolean ifExist(String groupName) throws ServiceException;
 }

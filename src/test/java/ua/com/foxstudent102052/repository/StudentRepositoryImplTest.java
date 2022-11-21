@@ -309,6 +309,74 @@ class StudentRepositoryImplTest {
     }
 
     @Test
+    void MethodGetStudentByIdShouldReturnStudentFromDb() throws RepositoryException {
+        List.of(
+                Student.builder()
+                        .studentId(1)
+                        .firstName("John")
+                        .lastName("Doe")
+                        .groupId(1)
+                        .build(),
+                Student.builder()
+                        .studentId(2)
+                        .firstName("David")
+                        .lastName("Black")
+                        .groupId(1)
+                        .build())
+                .forEach(student -> {
+
+                    try {
+                        studentRepository.addStudent(student);
+                        log.info("Student {} was added to database", student.getStudentId());
+                    } catch (RepositoryException e) {
+                        log.error("Error", e);
+                    }
+                });
+
+        var expected = Student.builder()
+                .studentId(1)
+                .firstName("John")
+                .lastName("Doe")
+                .groupId(1)
+                .build();
+
+        var actual = studentRepository.getStudentById(1);
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void MethodGetStudentByIdShouldThrowExceptionWhenStudentDoseNotExist() throws RepositoryException {
+        List.of(
+                Student.builder()
+                        .studentId(1)
+                        .firstName("John")
+                        .lastName("Doe")
+                        .groupId(1)
+                        .build(),
+                Student.builder()
+                        .studentId(2)
+                        .firstName("David")
+                        .lastName("Black")
+                        .groupId(1)
+                        .build())
+                .forEach(student -> {
+
+                    try {
+                        studentRepository.addStudent(student);
+                        log.info("Student {} was added to database", student.getStudentId());
+                    } catch (RepositoryException e) {
+                        log.error("Error", e);
+                    }
+                });
+
+        assertThrows(
+                RepositoryException.class,
+                () -> studentRepository.getStudentById(3),
+                "Expected getStudentById() to throw, but it didn't");
+    }
+
+    @Test
     void MethodGetStudentByIdShouldThrowExceptionIfDAOExceptionWasThrown() throws DAOException {
         // given
         daoFactory = mock(DAOFactory.class);
