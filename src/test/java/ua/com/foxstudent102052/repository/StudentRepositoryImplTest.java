@@ -10,6 +10,9 @@ import java.io.IOException;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mock;
 
 @Slf4j
 class StudentRepositoryImplTest {
@@ -47,6 +50,20 @@ class StudentRepositoryImplTest {
 
             fail("Student wasn`t added");
         }
+    }
+
+    @Test
+    void MethodAddStudentShouldThrowExceptionWhenDAOExceptionThrown() throws DAOException {
+        // given
+        daoFactory = mock(DAOFactory.class);
+        studentRepository = new StudentRepositoryImpl(daoFactory);
+
+        // when
+        doThrow(DAOException.class).when(daoFactory).doPost(anyString());
+
+        // then
+        assertThrows(RepositoryException.class, () -> studentRepository.addStudent(new Student()),
+                "Error while adding student to the database");
     }
 
     @Test
@@ -241,7 +258,7 @@ class StudentRepositoryImplTest {
     }
 
     @Test
-    void MethodShouldRemoveStudentIfItInDataBase() throws RepositoryException {
+    void MethodRemoveStudentShouldRemoveStudentIfItInDataBase() throws RepositoryException {
         List.of(
                 Student.builder()
                         .studentId(1)
@@ -273,6 +290,36 @@ class StudentRepositoryImplTest {
         actual = studentRepository.getAllStudents().size();
 
         assertEquals(expected, actual);
+    }
+
+    @Test
+    void MethodRemoveStudentShouldThrowAnExceptionIfDAOExceptionWasThrown() throws DAOException {
+        // given
+        daoFactory = mock(DAOFactory.class);
+        studentRepository = new StudentRepositoryImpl(daoFactory);
+
+        // when
+        doThrow(DAOException.class).when(daoFactory).doPost(anyString());
+
+        // then
+        assertThrows(
+                RepositoryException.class,
+                () -> studentRepository.removeStudent(1),
+                "Expected removeStudent() to throw, but it didn't");
+    }
+
+    @Test
+    void MethodGetStudentByIdShouldThrowExceptionIfDAOExceptionWasThrown() throws DAOException {
+        // given
+        daoFactory = mock(DAOFactory.class);
+        studentRepository = new StudentRepositoryImpl(daoFactory);
+
+        // when
+        doThrow(DAOException.class).when(daoFactory).getStudents(anyString());
+
+        // then
+        assertThrows(RepositoryException.class, () -> studentRepository.getStudentById(1),
+                "Error while getting student by id");
     }
 
     @Test
@@ -328,6 +375,22 @@ class StudentRepositoryImplTest {
     }
 
     @Test
+    void MethodRemoveStudentFromCourseShouldThrowAnExceptionIfDAOExceptionWasThrown() throws DAOException {
+        // given
+        daoFactory = mock(DAOFactory.class);
+        studentRepository = new StudentRepositoryImpl(daoFactory);
+
+        // when
+        doThrow(DAOException.class).when(daoFactory).doPost(anyString());
+
+        // then
+        RepositoryException thrown = assertThrows(
+                RepositoryException.class,
+                () -> studentRepository.removeStudentFromCourse(1, 1),
+                "Expected removeStudentFromCourse() to throw, but it didn't");
+    }
+
+    @Test
     void MethodGetLastStudentShouldReturnLastAddedStudent() {
         try {
             var expected = Student.builder()
@@ -377,7 +440,7 @@ class StudentRepositoryImplTest {
     }
 
     @Test
-    void MethodGetLastStudentShouldReturnStudentWithMaxIdFromDb(){
+    void MethodGetLastStudentShouldReturnStudentWithMaxIdFromDb() {
         try {
             var expected = Student.builder()
                     .firstName("John")

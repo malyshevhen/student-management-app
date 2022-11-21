@@ -82,6 +82,20 @@ class CourseRepositoryImplTest {
     }
 
     @Test
+    void MethodGetAllCoursesShouldThrowExceptionWhenDAOExceptionThrown() throws DAOException {
+        // given
+        daoFactory = mock(DAOFactory.class);
+        courseRepository = new CourseRepositoryImpl(daoFactory);
+
+        // when
+        doThrow(DAOException.class).when(daoFactory).getCourses(anyString());
+
+        // then
+        assertThrows(RepositoryException.class, () -> courseRepository.getAllCourses(),
+                "List of courses wasn`t returned");
+    }
+
+    @Test
     void MethodGetCourseByIdShouldReturnCourseFromDb() throws RepositoryException {
         // given
         var course = Course.builder().courseId(1).courseName("Course 1").courseDescription("Some course").build();
@@ -168,5 +182,19 @@ class CourseRepositoryImplTest {
 
         // then
         assertEquals(expected, courseFromDb);
+    }
+
+    @Test
+    void MethodGetLastCourseShouldThrowExceptionWhenDAOExceptionThrown() throws DAOException {
+        // given
+        daoFactory = mock(DAOFactory.class);
+        courseRepository = new CourseRepositoryImpl(daoFactory);
+
+        // when
+        doThrow(DAOException.class).when(daoFactory).getCourse(anyString());
+
+        // then
+        assertThrows(RepositoryException.class, () -> courseRepository.getLastCourse(),
+                "Course wasn`t added");
     }
 }
