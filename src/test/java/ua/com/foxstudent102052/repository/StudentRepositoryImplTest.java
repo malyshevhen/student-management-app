@@ -1,21 +1,18 @@
 package ua.com.foxstudent102052.repository;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import ua.com.foxstudent102052.model.Course;
+import ua.com.foxstudent102052.model.Student;
 
 import java.io.IOException;
 import java.util.List;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
-import lombok.extern.slf4j.Slf4j;
-import ua.com.foxstudent102052.model.Course;
-import ua.com.foxstudent102052.model.Student;
+import static org.junit.jupiter.api.Assertions.*;
 
 @Slf4j
-public class StudentRepositoryImplTest {
+class StudentRepositoryImplTest {
 
     private DAOFactory daoFactory;
     private StudentRepository studentRepository;
@@ -48,7 +45,7 @@ public class StudentRepositoryImplTest {
         } catch (RepositoryException e) {
             log.error("Error", e);
 
-            assertFalse(true);
+            fail("Student wasn`t added");
         }
     }
 
@@ -80,7 +77,7 @@ public class StudentRepositoryImplTest {
         } catch (RepositoryException e) {
             log.error("Error", e);
 
-            assertFalse(true);
+            fail("Student wasn`t added to course");
         }
     }
 
@@ -123,7 +120,7 @@ public class StudentRepositoryImplTest {
         } catch (RepositoryException e) {
             log.error("Error", e);
 
-            assertFalse(true);
+            fail("Students weren`t added");
         }
 
     }
@@ -176,7 +173,7 @@ public class StudentRepositoryImplTest {
         } catch (RepositoryException e) {
             log.error("Error", e);
 
-            assertFalse(true);
+            fail("Students weren`t added");
         }
     }
 
@@ -228,7 +225,7 @@ public class StudentRepositoryImplTest {
         } catch (RepositoryException e) {
             log.error("Error", e);
 
-            assertFalse(true);
+            fail("Students weren`t added");
         }
     }
 
@@ -271,7 +268,7 @@ public class StudentRepositoryImplTest {
         studentRepository.removeStudent(1);
 
         int expected = 1;
-        int actual = 0;
+        int actual;
 
         actual = studentRepository.getAllStudents().size();
 
@@ -326,7 +323,7 @@ public class StudentRepositoryImplTest {
         } catch (RepositoryException e) {
             log.error("Error", e);
 
-            assertFalse(true);
+            fail("Students weren`t added");
         }
     }
 
@@ -364,7 +361,7 @@ public class StudentRepositoryImplTest {
         } catch (RepositoryException e) {
             log.error("Error", e);
 
-            assertFalse(true);
+            fail("Students weren`t added");
         }
     }
 
@@ -411,7 +408,7 @@ public class StudentRepositoryImplTest {
         } catch (RepositoryException e) {
             log.error("Error", e);
 
-            assertFalse(true);
+            fail("Students weren`t added");
         }
     }
 }

@@ -1,21 +1,20 @@
 package ua.com.foxstudent102052.repository;
 
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import ua.com.foxstudent102052.model.Group;
+import ua.com.foxstudent102052.model.Student;
+
+import java.io.IOException;
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 
-import java.io.IOException;
-import java.util.List;
-
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
-import ua.com.foxstudent102052.model.Group;
-import ua.com.foxstudent102052.model.Student;
-
-public class GroupRepositoryImplTest {
+class GroupRepositoryImplTest {
     private DAOFactory daoFactory;
     private GroupRepository groupRepository;
 
@@ -39,7 +38,7 @@ public class GroupRepositoryImplTest {
     }
 
     @Test
-    void MethodAddGroupShouldThrowExceptionWhenDAOExceptionThrown() throws RepositoryException, DAOException {
+    void MethodAddGroupShouldThrowExceptionWhenDAOExceptionThrown() throws DAOException {
         // given
         daoFactory = mock(DAOFactory.class);
         groupRepository = new GroupRepositoryImpl(daoFactory);
@@ -48,15 +47,15 @@ public class GroupRepositoryImplTest {
         doThrow(DAOException.class).when(daoFactory).doPost(anyString());
 
         assertThrows(RepositoryException.class, () -> groupRepository.addGroup(new Group()),
-                "Group wasn`t added");
+            "Group wasn`t added");
     }
 
     @Test
     void MethodGetAllGroupsShouldReturnAllGroupsFromDb() throws RepositoryException {
         var groups = List.of(
-                Group.builder().groupId(1).groupName("Group 1").build(),
-                Group.builder().groupId(2).groupName("Group 2").build(),
-                Group.builder().groupId(3).groupName("Group 3").build());
+            Group.builder().groupId(1).groupName("Group 1").build(),
+            Group.builder().groupId(2).groupName("Group 2").build(),
+            Group.builder().groupId(3).groupName("Group 3").build());
 
         groups.forEach(group -> {
 
@@ -73,7 +72,7 @@ public class GroupRepositoryImplTest {
     }
 
     @Test
-    void MethodGetAllGroupsShouldThrowExceptionWhenDAOExceptionThrown() throws RepositoryException, DAOException {
+    void MethodGetAllGroupsShouldThrowExceptionWhenDAOExceptionThrown() throws DAOException {
         // given
         daoFactory = mock(DAOFactory.class);
         groupRepository = new GroupRepositoryImpl(daoFactory);
@@ -83,7 +82,7 @@ public class GroupRepositoryImplTest {
 
         // then
         assertThrows(RepositoryException.class, () -> groupRepository.getAllGroups(),
-                "Groups weren`t received");
+            "Groups weren`t received");
     }
 
     @Test
@@ -91,10 +90,10 @@ public class GroupRepositoryImplTest {
         var expected = Group.builder().groupId(1).groupName("Group 1").build();
 
         daoFactory.doPost(
-                """
-                        INSERT
-                        INTO groups (group_name) values ('Group 1');
-                        """);
+            """
+                INSERT
+                INTO groups (group_name) values ('Group 1');
+                """);
 
         var actual = groupRepository.getGroupById(1);
 
@@ -102,7 +101,7 @@ public class GroupRepositoryImplTest {
     }
 
     @Test
-    void MethodGetGroupByIdShouldThrowExceptionWhenDAOExceptionThrown() throws RepositoryException, DAOException {
+    void MethodGetGroupByIdShouldThrowExceptionWhenDAOExceptionThrown() throws DAOException {
         // given
         daoFactory = mock(DAOFactory.class);
         groupRepository = new GroupRepositoryImpl(daoFactory);
@@ -112,7 +111,7 @@ public class GroupRepositoryImplTest {
 
         // then
         assertThrows(RepositoryException.class, () -> groupRepository.getGroupById(1),
-                "Group wasn`t received");
+            "Group wasn`t received");
     }
 
     @Test
@@ -120,10 +119,10 @@ public class GroupRepositoryImplTest {
         var expected = Group.builder().groupId(1).groupName("Group 1").build();
 
         daoFactory.doPost(
-                """
-                        INSERT
-                        INTO groups (group_name) values ('Group 1');
-                        """);
+            """
+                INSERT
+                INTO groups (group_name) values ('Group 1');
+                """);
 
         var actual = groupRepository.getGroupByName("Group 1");
 
@@ -131,7 +130,7 @@ public class GroupRepositoryImplTest {
     }
 
     @Test
-    void MethodGetGroupByNameShouldThrowExceptionWhenDAOExceptionThrown() throws RepositoryException, DAOException {
+    void MethodGetGroupByNameShouldThrowExceptionWhenDAOExceptionThrown() throws DAOException {
         // given
         daoFactory = mock(DAOFactory.class);
         groupRepository = new GroupRepositoryImpl(daoFactory);
@@ -141,22 +140,22 @@ public class GroupRepositoryImplTest {
 
         // then
         assertThrows(RepositoryException.class, () -> groupRepository.getGroupByName("Group 1"),
-                "Group wasn`t received");
+            "Group wasn`t received");
     }
 
     @Test
-    void MathodGetGroupsSmallerThenShouldReturnGroupLessCount() throws RepositoryException {
+    void MethodGetGroupsSmallerThenShouldReturnGroupLessCount() throws RepositoryException {
         var students = List.of(
-                Student.builder().groupId(1).firstName("Dart").lastName("Vaider").build(),
-                Student.builder().groupId(1).firstName("Luke").lastName("Skywalker").build(),
-                Student.builder().groupId(1).firstName("Han").lastName("Solo").build(),
-                Student.builder().groupId(2).firstName("Leia").lastName("Organa").build(),
-                Student.builder().groupId(2).firstName("Chewbacca").lastName("Wookie").build());
+            Student.builder().groupId(1).firstName("Dart").lastName("Vaider").build(),
+            Student.builder().groupId(1).firstName("Luke").lastName("Skywalker").build(),
+            Student.builder().groupId(1).firstName("Han").lastName("Solo").build(),
+            Student.builder().groupId(2).firstName("Leia").lastName("Organa").build(),
+            Student.builder().groupId(2).firstName("Chewbacca").lastName("Wookie").build());
 
         var groups = List.of(
-                Group.builder().groupId(1).groupName("Group 1").build(),
-                Group.builder().groupId(2).groupName("Group 2").build(),
-                Group.builder().groupId(3).groupName("Group 3").build());
+            Group.builder().groupId(1).groupName("Group 1").build(),
+            Group.builder().groupId(2).groupName("Group 2").build(),
+            Group.builder().groupId(3).groupName("Group 3").build());
 
         groups.forEach(group -> {
             try {
@@ -170,11 +169,11 @@ public class GroupRepositoryImplTest {
 
             try {
                 daoFactory.doPost(String.format(
-                        """
-                                INSERT INTO students (first_name, last_name, group_id)
-                                VALUES ('%s', '%s', %d);
-                                """,
-                        student.getFirstName(), student.getLastName(), student.getGroupId()));
+                    """
+                        INSERT INTO students (first_name, last_name, group_id)
+                        VALUES ('%s', '%s', %d);
+                        """,
+                    student.getFirstName(), student.getLastName(), student.getGroupId()));
             } catch (DAOException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
@@ -188,8 +187,8 @@ public class GroupRepositoryImplTest {
     }
 
     @Test
-    void MathodGetGroupsSmallerThenShouldThrowExceptionWhenDAOExceptionThrown()
-            throws RepositoryException, DAOException {
+    void MethodGetGroupsSmallerThenShouldThrowExceptionWhenDAOExceptionThrown()
+        throws DAOException {
         // given
         daoFactory = mock(DAOFactory.class);
         groupRepository = new GroupRepositoryImpl(daoFactory);
@@ -199,22 +198,22 @@ public class GroupRepositoryImplTest {
 
         // then
         assertThrows(RepositoryException.class, () -> groupRepository.getGroupsSmallerThen(2),
-                "Groups weren`t received");
+            "Groups weren`t received");
     }
 
     @Test
     void MethodGetStudentsByGroupShouldReturnListOfStudentsRelatedToGivenGroup() throws RepositoryException {
         var students = List.of(
-                Student.builder().groupId(1).firstName("Dart").lastName("Vaider").build(),
-                Student.builder().groupId(1).firstName("Luke").lastName("Skywalker").build(),
-                Student.builder().groupId(1).firstName("Han").lastName("Solo").build(),
-                Student.builder().groupId(2).firstName("Leia").lastName("Organa").build(),
-                Student.builder().groupId(2).firstName("Chewbacca").lastName("Wookie").build());
+            Student.builder().groupId(1).firstName("Dart").lastName("Vaider").build(),
+            Student.builder().groupId(1).firstName("Luke").lastName("Skywalker").build(),
+            Student.builder().groupId(1).firstName("Han").lastName("Solo").build(),
+            Student.builder().groupId(2).firstName("Leia").lastName("Organa").build(),
+            Student.builder().groupId(2).firstName("Chewbacca").lastName("Wookie").build());
 
         var groups = List.of(
-                Group.builder().groupId(1).groupName("Group 1").build(),
-                Group.builder().groupId(2).groupName("Group 2").build(),
-                Group.builder().groupId(3).groupName("Group 3").build());
+            Group.builder().groupId(1).groupName("Group 1").build(),
+            Group.builder().groupId(2).groupName("Group 2").build(),
+            Group.builder().groupId(3).groupName("Group 3").build());
 
         groups.forEach(group -> {
             try {
@@ -228,11 +227,11 @@ public class GroupRepositoryImplTest {
 
             try {
                 daoFactory.doPost(String.format(
-                        """
-                                INSERT INTO students (first_name, last_name, group_id)
-                                VALUES ('%s', '%s', %d);
-                                """,
-                        student.getFirstName(), student.getLastName(), student.getGroupId()));
+                    """
+                        INSERT INTO students (first_name, last_name, group_id)
+                        VALUES ('%s', '%s', %d);
+                        """,
+                    student.getFirstName(), student.getLastName(), student.getGroupId()));
             } catch (DAOException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
@@ -245,7 +244,7 @@ public class GroupRepositoryImplTest {
     }
 
     @Test
-    void MethodGetStudentsByGroupShouldThrowExceptionWhenDAOExceptionThrown() throws RepositoryException, DAOException {
+    void MethodGetStudentsByGroupShouldThrowExceptionWhenDAOExceptionThrown() throws DAOException {
         // given
         daoFactory = mock(DAOFactory.class);
         groupRepository = new GroupRepositoryImpl(daoFactory);
@@ -255,6 +254,6 @@ public class GroupRepositoryImplTest {
 
         // then
         assertThrows(RepositoryException.class, () -> groupRepository.getStudentsByGroup(1),
-                "Students weren`t received");
+            "Students weren`t received");
     }
 }

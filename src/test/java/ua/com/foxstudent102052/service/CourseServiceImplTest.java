@@ -1,23 +1,20 @@
 package ua.com.foxstudent102052.service;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
-import java.util.List;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
 import ua.com.foxstudent102052.mapper.CourseMapper;
 import ua.com.foxstudent102052.model.Course;
 import ua.com.foxstudent102052.model.CourseDto;
 import ua.com.foxstudent102052.repository.CourseRepository;
 import ua.com.foxstudent102052.repository.RepositoryException;
 
-public class CourseServiceImplTest {
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.*;
+
+class CourseServiceImplTest {
     private CourseRepository courseRepository;
     private CourseService courseService;
 

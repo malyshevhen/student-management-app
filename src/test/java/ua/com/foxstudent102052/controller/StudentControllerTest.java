@@ -1,19 +1,7 @@
 package ua.com.foxstudent102052.controller;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
-import java.util.List;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
 import ua.com.foxstudent102052.mapper.StudentMapper;
 import ua.com.foxstudent102052.model.CourseDto;
 import ua.com.foxstudent102052.model.GroupDto;
@@ -24,7 +12,15 @@ import ua.com.foxstudent102052.service.GroupService;
 import ua.com.foxstudent102052.service.ServiceException;
 import ua.com.foxstudent102052.service.StudentService;
 
-public class StudentControllerTest {
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.*;
+
+class StudentControllerTest {
     private StudentService studentService;
     private GroupService groupService;
     private CourseService courseService;

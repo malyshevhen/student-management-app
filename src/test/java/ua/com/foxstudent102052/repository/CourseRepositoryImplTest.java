@@ -1,20 +1,19 @@
 package ua.com.foxstudent102052.repository;
 
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import ua.com.foxstudent102052.model.Course;
+
+import java.io.IOException;
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 
-import java.io.IOException;
-import java.util.List;
-
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
-import ua.com.foxstudent102052.model.Course;
-
-public class CourseRepositoryImplTest {
+class CourseRepositoryImplTest {
     private DAOFactory daoFactory;
     private CourseRepository courseRepository;
 
@@ -43,7 +42,7 @@ public class CourseRepositoryImplTest {
     }
 
     @Test
-    void MethodAddCourseShouldThrowExceptionWhenDAOExceptionThrown() throws RepositoryException, DAOException {
+    void MethodAddCourseShouldThrowExceptionWhenDAOExceptionThrown() throws  DAOException {
         // given
         daoFactory = mock(DAOFactory.class);
         courseRepository = new CourseRepositoryImpl(daoFactory);
@@ -95,7 +94,7 @@ public class CourseRepositoryImplTest {
     }
 
     @Test
-    void MethodGetCourseByIdShouldThrowExceptionWhenDAOExceptionThrown() throws RepositoryException, DAOException {
+    void MethodGetCourseByIdShouldThrowExceptionWhenDAOExceptionThrown() throws DAOException {
         // given
         daoFactory = mock(DAOFactory.class);
         courseRepository = new CourseRepositoryImpl(daoFactory);
@@ -131,7 +130,7 @@ public class CourseRepositoryImplTest {
 
     @Test
     void MethodGetCoursesByStudentIdShouldThrowExceptionWhenDAOExceptionThrown()
-            throws RepositoryException, DAOException {
+            throws DAOException {
         // given
         daoFactory = mock(DAOFactory.class);
         courseRepository = new CourseRepositoryImpl(daoFactory);
