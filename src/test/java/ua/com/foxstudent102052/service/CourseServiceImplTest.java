@@ -1,18 +1,22 @@
 package ua.com.foxstudent102052.service;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import java.util.List;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
 import ua.com.foxstudent102052.mapper.CourseMapper;
 import ua.com.foxstudent102052.model.Course;
 import ua.com.foxstudent102052.model.CourseDto;
 import ua.com.foxstudent102052.repository.CourseRepository;
 import ua.com.foxstudent102052.repository.RepositoryException;
-
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.*;
 
 class CourseServiceImplTest {
     private CourseRepository courseRepository;
@@ -48,6 +52,19 @@ class CourseServiceImplTest {
         // then
         assertThrows(ServiceException.class, () -> courseService.addCourse(CourseMapper.toDto(course)),
                 "Course wasn`t added");
+    }
+
+    @Test
+    void MethodAddCourseShouldThrowEnExceptionWhenRepositoryExceptionIsThrown() throws RepositoryException {
+        // given
+        var course = Course.builder().courseName("Java").courseDescription("Java course").build();
+
+        // when
+        doThrow(RepositoryException.class).when(courseRepository).addCourse(course);
+
+        // then
+        assertThrows(ServiceException.class, () -> courseService.addCourse(CourseMapper.toDto(course)),
+                "Course with id 1 already exist");
     }
 
     @Test

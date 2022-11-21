@@ -1,17 +1,18 @@
 package ua.com.foxstudent102052.repository;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import ua.com.foxstudent102052.model.Course;
-
-import java.io.IOException;
-import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
+
+import java.io.IOException;
+import java.util.List;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import ua.com.foxstudent102052.model.Course;
 
 class CourseRepositoryImplTest {
     private DAOFactory daoFactory;

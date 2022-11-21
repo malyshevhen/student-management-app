@@ -1,18 +1,20 @@
 package ua.com.foxstudent102052.repository;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import ua.com.foxstudent102052.model.Group;
-import ua.com.foxstudent102052.model.Student;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.fail;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mock;
 
 import java.io.IOException;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.mock;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import ua.com.foxstudent102052.model.Group;
+import ua.com.foxstudent102052.model.Student;
 
 class GroupRepositoryImplTest {
     private DAOFactory daoFactory;
@@ -175,8 +177,9 @@ class GroupRepositoryImplTest {
                         """,
                     student.getFirstName(), student.getLastName(), student.getGroupId()));
             } catch (DAOException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
+
+                fail();
             }
         });
 
@@ -187,8 +190,8 @@ class GroupRepositoryImplTest {
     }
 
     @Test
-    void MethodGetGroupsSmallerThenShouldThrowExceptionWhenDAOExceptionThrown()
-        throws DAOException {
+    void MethodGetGroupsSmallerThenShouldThrowExceptionWhenDAOExceptionThrown()throws DAOException {
+
         // given
         daoFactory = mock(DAOFactory.class);
         groupRepository = new GroupRepositoryImpl(daoFactory);
@@ -233,8 +236,9 @@ class GroupRepositoryImplTest {
                         """,
                     student.getFirstName(), student.getLastName(), student.getGroupId()));
             } catch (DAOException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
+
+                fail();
             }
         });
 
