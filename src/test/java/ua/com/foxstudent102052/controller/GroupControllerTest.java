@@ -24,7 +24,7 @@ class GroupControllerTest {
     }
 
     @Test
-    void MethodAllGroupsShouldReturnListOfAllGroups() throws ServiceException, ControllerException {
+    void MethodGetAllGroupsShouldReturnListOfAllGroups() throws ServiceException, ControllerException {
         // given
         var students = List.of(
             StudentDto.builder().id(1).groupId(1).firstName("Darth").lastName("Vader").coursesList(List.of()).build(),
@@ -45,7 +45,7 @@ class GroupControllerTest {
     }
 
     @Test
-    void MethodAllGroupsShouldThrowControllerException() throws ServiceException {
+    void MethodGetAllGroupsShouldThrowControllerException() throws ServiceException {
         // when
         doThrow(ServiceException.class).when(groupService).getAllGroups();
 
@@ -54,7 +54,7 @@ class GroupControllerTest {
     }
 
     @Test
-    void MethodGroupsSmallerThenReturnListOfAllGroups() throws ServiceException, ControllerException {
+    void MethodGetGroupsSmallerThenReturnListOfAllGroups() throws ServiceException, ControllerException {
         // given
         var students = List.of(
             StudentDto.builder().id(1).groupId(1).firstName("Darth").lastName("Vader").coursesList(List.of()).build(),
@@ -75,7 +75,7 @@ class GroupControllerTest {
     }
 
     @Test
-    void MethodGroupsSmallerThenShouldThrowControllerException() throws ServiceException {
+    void MethodGetGroupsSmallerThenShouldThrowControllerException() throws ServiceException {
         // when
         doThrow(ServiceException.class).when(groupService).getGroupsSmallerThen(anyInt());
 

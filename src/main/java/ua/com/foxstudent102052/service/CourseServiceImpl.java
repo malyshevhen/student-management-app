@@ -43,10 +43,14 @@ public class CourseServiceImpl implements CourseService {
     public List<CourseDto> getAllCourses() throws ServiceException {
 
         try {
-            return courseRepository.getAllCourses()
+            var courseDtos = courseRepository.getAllCourses()
                 .stream()
                 .map(CourseMapper::toDto)
                 .toList();
+            log.info("All courses were received");
+
+            return courseDtos;
+
         } catch (RepositoryException e) {
             var msg = "There are no courses in database";
             log.error(msg, e);
@@ -59,7 +63,10 @@ public class CourseServiceImpl implements CourseService {
     public CourseDto getCourseById(int id) throws ServiceException {
 
         try {
-            return CourseMapper.toDto(courseRepository.getCourseById(id));
+            var courseDto = CourseMapper.toDto(courseRepository.getCourseById(id));
+            log.info("Course with id {} was received", id);
+
+            return courseDto;
 
         } catch (RepositoryException e) {
             var msg = String.format(COURSE_ID_DOES_NOT_EXIST, id);
@@ -73,10 +80,13 @@ public class CourseServiceImpl implements CourseService {
     public List<CourseDto> getCoursesByStudentId(int studentId) throws ServiceException {
 
         try {
-            return courseRepository.getCoursesByStudentId(studentId)
+            var courseDtos = courseRepository.getCoursesByStudentId(studentId)
                 .stream()
                 .map(CourseMapper::toDto)
                 .toList();
+            log.info("Courses with student id {} were received", studentId);
+
+            return courseDtos;
 
         } catch (RepositoryException e) {
             String msg = String.format("Student with id %d doesn't have any courses", studentId);

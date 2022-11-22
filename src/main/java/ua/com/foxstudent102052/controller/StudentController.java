@@ -1,13 +1,13 @@
 package ua.com.foxstudent102052.controller;
 
-import java.util.List;
-
 import lombok.extern.slf4j.Slf4j;
 import ua.com.foxstudent102052.model.StudentDto;
 import ua.com.foxstudent102052.service.CourseService;
 import ua.com.foxstudent102052.service.GroupService;
 import ua.com.foxstudent102052.service.ServiceException;
 import ua.com.foxstudent102052.service.StudentService;
+
+import java.util.List;
 
 @Slf4j
 public class StudentController {
@@ -74,7 +74,7 @@ public class StudentController {
     }
 
     public List<StudentDto> getStudentsByNameAndCourse(String studentName, Integer courseId)
-            throws ControllerException {
+        throws ControllerException {
         try {
             var studentDtoList = studentService.getStudentsByNameAndCourse(studentName, courseId);
 
@@ -89,6 +89,7 @@ public class StudentController {
     private List<StudentDto> updateStudentsGroupAndCourse(List<StudentDto> studentDtoList) {
 
         studentDtoList.forEach(studentDto -> {
+
             try {
                 setStudentsGroup(studentDto);
                 setStudentsCourse(studentDto);
@@ -102,9 +103,9 @@ public class StudentController {
 
     private void setStudentsCourse(StudentDto studentDto) throws ControllerException {
         int id = studentDto.getId();
+
         try {
-            studentDto.setCoursesList(
-                    courseService.getCoursesByStudentId(id));
+            studentDto.setCoursesList(courseService.getCoursesByStudentId(id));
         } catch (ServiceException e) {
             String msg = "Student with id: %d has no courses".formatted(id);
             log.error(msg);
