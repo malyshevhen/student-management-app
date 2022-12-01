@@ -258,7 +258,7 @@ class StudentRepositoryImplTest {
     }
 
     @Test
-    void MethodRemoveStudentShouldRemoveStudentIfItInDataBase() throws RepositoryException {
+    void MethodRemoveStudentShouldRemoveStudentIfItInDataBase() throws RepositoryException, DAOException {
         List.of(
                 Student.builder()
                         .studentId(1)
@@ -281,6 +281,14 @@ class StudentRepositoryImplTest {
                         log.error("Error", e);
                     }
                 });
+        daoFactory.doPost(
+            """
+                        INSERT INTO courses (course_name, course_description)
+                        VALUES ('Java', 'Java course');
+                        INSERT INTO students_courses (student_id, course_id)
+                        VALUES (1, 1);
+                        """
+        );
 
         studentRepository.removeStudent(1);
 

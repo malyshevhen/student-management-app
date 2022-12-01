@@ -1,9 +1,9 @@
 package ua.com.foxstudent102052.repository;
 
-import java.util.List;
-
 import lombok.extern.slf4j.Slf4j;
 import ua.com.foxstudent102052.model.Student;
+
+import java.util.List;
 
 @Slf4j
 public class StudentRepositoryImpl implements StudentRepository {
@@ -42,10 +42,12 @@ public class StudentRepositoryImpl implements StudentRepository {
     public void removeStudent(int studentId) throws RepositoryException {
         var query = String.format(
                 """
+                        DELETE FROM students_courses
+                        WHERE student_id = '%d';
                         DELETE
                         FROM students
                         WHERE student_id = %d;""",
-                studentId);
+                studentId, studentId);
 
         try {
             daoFactory.doPost(query);
