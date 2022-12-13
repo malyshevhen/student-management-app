@@ -1,8 +1,9 @@
 package ua.com.foxstudent102052.mapper;
 
 import lombok.extern.slf4j.Slf4j;
+import ua.com.foxstudent102052.dto.GroupDto;
 import ua.com.foxstudent102052.model.Student;
-import ua.com.foxstudent102052.model.StudentDto;
+import ua.com.foxstudent102052.dto.StudentDto;
 
 import java.util.List;
 
@@ -13,33 +14,34 @@ public class StudentMapper {
         throw new IllegalStateException("Utility class");
     }
 
-    public static StudentDto toDto(Student student) {
+    public static StudentDto toStudentDto(Student student) {
         try {
-            return new StudentDto(
-                    student.getStudentId(),
-                    student.getGroupId(),
-                    "",
-                    student.getFirstName(),
-                    student.getLastName(),
-                    List.of());
-
+            return StudentDto.builder()
+                .id(student.studentId())
+                .group(GroupDto.builder().id(student.groupId()).build())
+                .firstName(student.firstName())
+                .lastName(student.lastName())
+                .coursesList(List.of())
+                .build();
         } catch (NullPointerException e) {
             log.error("StudentMapper.studentToDto() - NullPointerException: " + e.getMessage());
+
             return new StudentDto();
         }
     }
 
     public static Student toStudent(StudentDto studentDto) {
         try {
-            return new Student(
-                    studentDto.getId(),
-                    studentDto.getGroupId(),
-                    studentDto.getFirstName(),
-                    studentDto.getLastName());
-
+            return Student.builder()
+                .studentId(studentDto.getId())
+                .groupId(studentDto.getGroup().getId())
+                .firstName(studentDto.getFirstName())
+                .lastName(studentDto.getLastName())
+                .build();
         } catch (NullPointerException e) {
             log.error("StudentMapper.dtoToStudent() - NullPointerException: " + e.getMessage());
-            return new Student();
+
+            return Student.builder().build();
         }
     }
 }

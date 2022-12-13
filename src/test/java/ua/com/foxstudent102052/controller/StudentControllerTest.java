@@ -2,15 +2,16 @@ package ua.com.foxstudent102052.controller;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import ua.com.foxstudent102052.controller.exceptions.ControllerException;
 import ua.com.foxstudent102052.mapper.StudentMapper;
-import ua.com.foxstudent102052.model.CourseDto;
-import ua.com.foxstudent102052.model.GroupDto;
+import ua.com.foxstudent102052.dto.CourseDto;
+import ua.com.foxstudent102052.dto.GroupDto;
 import ua.com.foxstudent102052.model.Student;
-import ua.com.foxstudent102052.model.StudentDto;
-import ua.com.foxstudent102052.service.CourseService;
-import ua.com.foxstudent102052.service.GroupService;
-import ua.com.foxstudent102052.service.ServiceException;
-import ua.com.foxstudent102052.service.StudentService;
+import ua.com.foxstudent102052.dto.StudentDto;
+import ua.com.foxstudent102052.service.interfaces.CourseService;
+import ua.com.foxstudent102052.service.interfaces.GroupService;
+import ua.com.foxstudent102052.service.exceptions.ServiceException;
+import ua.com.foxstudent102052.service.interfaces.StudentService;
 
 import java.util.List;
 
@@ -35,7 +36,7 @@ class StudentControllerTest {
     }
 
     @Test
-    void MethodAddStudentShouldPassStudentToService() throws ControllerException, ServiceException {
+    void MethodAddStudent_ShouldPassStudentToService() throws ControllerException, ServiceException {
         // when
         studentController.addStudent(new StudentDto());
 
@@ -44,20 +45,20 @@ class StudentControllerTest {
     }
 
     @Test
-    void MethodAddStudentShouldThrowAnExceptionIfServiceThrowsAnException() throws ServiceException {
+    void MethodAddStudent_ShouldThrowAnExceptionIfServiceThrowsAnException() throws ServiceException {
         // given
         var student = Student.builder().firstName("John").lastName("Doe").build();
 
         // when
-        doThrow(ServiceException.class).when(studentService).addStudent(StudentMapper.toDto(student));
+        doThrow(ServiceException.class).when(studentService).addStudent(StudentMapper.toStudentDto(student));
 
         // then
-        assertThrows(ControllerException.class, () -> studentController.addStudent(StudentMapper.toDto(student)),
-                "Student wasn`t added");
+        assertThrows(ControllerException.class, () -> studentController.addStudent(StudentMapper.toStudentDto(student)),
+            "Student wasn`t added");
     }
 
     @Test
-    void MethodAddStudentToCourseShouldPassToServiceValues() throws ServiceException, ControllerException {
+    void MethodAddStudentToCourse_ShouldPassToServiceValues() throws ServiceException, ControllerException {
         // when
         studentController.addStudentToCourse(1, 1);
 
@@ -66,17 +67,17 @@ class StudentControllerTest {
     }
 
     @Test
-    void MethodAddStudentToCourseShouldThrowAnExceptionIfServiceThrowsAnException() throws ServiceException {
+    void MethodAddStudentToCourse_ShouldThrowAnException_WhenServiceThrowsAnException() throws ServiceException {
         // when
         doThrow(ServiceException.class).when(studentService).addStudentToCourse(1, 1);
 
         // then
         assertThrows(ControllerException.class, () -> studentController.addStudentToCourse(1, 1),
-                "Student wasn`t added to course");
+            "Student wasn`t added to course");
     }
 
     @Test
-    void MethodRemoveStudentShouldPassToServiceValues() throws ServiceException, ControllerException {
+    void MethodRemoveStudent_ShouldPassToServiceValues() throws ServiceException, ControllerException {
         // when
         studentController.removeStudent(1);
 
@@ -85,7 +86,7 @@ class StudentControllerTest {
     }
 
     @Test
-    void MethodRemoveStudentShouldThrowAnExceptionIfServiceThrowsAnException() throws ServiceException {
+    void MethodRemoveStudent_ShouldThrowAnException_WhenServiceThrowsAnException() throws ServiceException {
         // when
         doThrow(ServiceException.class).when(studentService).removeStudent(1);
 
@@ -94,7 +95,7 @@ class StudentControllerTest {
     }
 
     @Test
-    void MethodRemoveStudentFromCourseShouldPassToServiceValues() throws ServiceException, ControllerException {
+    void MethodRemoveStudentFromCourse_ShouldPassToServiceValues() throws ServiceException, ControllerException {
         // when
         studentController.removeStudentFromCourse(1, 1);
 
@@ -103,70 +104,68 @@ class StudentControllerTest {
     }
 
     @Test
-    void MethodRemoveStudentFromCourseShouldThrowAnExceptionIfServiceThrowsAnException() throws ServiceException {
+    void MethodRemoveStudentFromCourse_ShouldThrowAnException_WhenServiceThrowsAnException() throws ServiceException {
         // when
         doThrow(ServiceException.class).when(studentService).removeStudentFromCourse(1, 1);
 
         // then
         assertThrows(ControllerException.class, () -> studentController.removeStudentFromCourse(1, 1),
-                "Student wasn`t removed from course");
+            "Student wasn`t removed from course");
     }
 
     @Test
-    void MethodGetAllStudentsShouldReturnListOfDTOStudentSWithCoursesAndGroup()
-            throws ServiceException, ControllerException {
+    void MethodGetStudents_ShouldReturnListOfStudentsWithCoursesAndGroup()
+        throws ServiceException, ControllerException {
         // given
+        var group = GroupDto.builder().id(1).name("Java").build();
         var studentsDto = List.of(StudentDto
                 .builder()
                 .id(1)
-                .groupId(1)
                 .firstName("John")
                 .lastName("Doe")
+                .group(group)
                 .build(),
-                StudentDto.builder()
-                        .id(2)
-                        .groupId(1)
-                        .firstName("Jane")
-                        .lastName("Doe")
-                        .build());
+            StudentDto.builder()
+                .id(2)
+                .firstName("Jane")
+                .lastName("Doe")
+                .group(group)
+                .build());
         var courses = List.of(
-                CourseDto
-                        .builder()
-                        .id(1)
-                        .name("Java")
-                        .description("Java course")
-                        .build(),
-                CourseDto
-                        .builder()
-                        .id(2)
-                        .name("C#")
-                        .description("C# course")
-                        .build());
-        var group = GroupDto.builder().id(1).name("Java").build();
+            CourseDto
+                .builder()
+                .id(1)
+                .name("Java")
+                .description("Java course")
+                .build(),
+            CourseDto
+                .builder()
+                .id(2)
+                .name("C#")
+                .description("C# course")
+                .build());
 
         var expected = List.of(
-                StudentDto
-                        .builder()
-                        .id(1)
-                        .groupId(1)
-                        .firstName("John")
-                        .lastName("Doe")
-                        .coursesList(courses)
-                        .group(group.getName())
-                        .build(),
-                StudentDto.builder()
-                        .id(2)
-                        .groupId(1)
-                        .firstName("Jane")
-                        .lastName("Doe")
-                        .coursesList(courses)
-                        .group(group.getName())
-                        .build());
+            StudentDto
+                .builder()
+                .id(1)
+                .firstName("John")
+                .lastName("Doe")
+                .group(group)
+                .coursesList(courses)
+                .build(),
+            StudentDto.builder()
+                .id(2)
+                .firstName("Jane")
+                .lastName("Doe")
+                .group(group)
+                .coursesList(courses)
+                .build());
 
         // when
-        when(studentService.getAllStudents()).thenReturn(studentsDto);
-        when(courseService.getCoursesByStudentId(anyInt())).thenReturn(courses);
-        when(groupService.getGroupById(1)).thenReturn(group);
+        when(studentService.getStudents()).thenReturn(studentsDto);
+        when(courseService.getCourses(anyInt())).thenReturn(courses);
+        when(groupService.getGroup(1)).thenReturn(group);
 
         // then
         var actual = studentController.getAllStudents();
@@ -175,102 +174,100 @@ class StudentControllerTest {
     }
 
     @Test
-    void MethodGetAllStudentsShouldPassToServiceValue() throws ServiceException, ControllerException {
+    void MethodGetStudents_ShouldPassToServiceValue() throws ServiceException, ControllerException {
         // when
         studentController.getAllStudents();
 
         // then
-        verify(studentService).getAllStudents();
+        verify(studentService).getStudents();
     }
 
     @Test
-    void MethodGetAllStudentsShouldThrowAnExceptionIfServiceThrowsAnException() throws ServiceException {
+    void MethodGetStudents_ShouldThrowAnException_WhenServiceThrowsAnException() throws ServiceException {
         // when
-        doThrow(ServiceException.class).when(studentService).getAllStudents();
+        doThrow(ServiceException.class).when(studentService).getStudents();
 
         // then
         assertThrows(ControllerException.class, () -> studentController.getAllStudents(),
-                "Students weren`t found");
+            "Students weren`t found");
     }
 
     @Test
-    void MethodGetStudentsByNameAndCourseShouldReturnListOfDTOStudentSWithCoursesAndGroup()
-            throws ServiceException, ControllerException {
+    void MethodGetStudents_ShouldReturnListOfStudentsWithCoursesAndGroup_ByNameAndCourseId()
+        throws ServiceException, ControllerException {
         // given
+        var group = GroupDto.builder().id(1).name("Java").build();
         var studentsDto = List.of(StudentDto
                 .builder()
                 .id(1)
-                .groupId(1)
                 .firstName("John")
                 .lastName("Doe")
+                .group(group)
                 .build(),
-                StudentDto.builder()
-                        .id(2)
-                        .groupId(1)
-                        .firstName("John")
-                        .lastName("Fox")
-                        .build());
+            StudentDto.builder()
+                .id(2)
+                .firstName("John")
+                .lastName("Fox")
+                .group(group)
+                .build());
         var courses = List.of(
-                CourseDto
-                        .builder()
-                        .id(1)
-                        .name("Java")
-                        .description("Java course")
-                        .build(),
-                CourseDto
-                        .builder()
-                        .id(2)
-                        .name("C#")
-                        .description("C# course")
-                        .build());
-        var group = GroupDto.builder().id(1).name("Java").build();
+            CourseDto
+                .builder()
+                .id(1)
+                .name("Java")
+                .description("Java course")
+                .build(),
+            CourseDto
+                .builder()
+                .id(2)
+                .name("C#")
+                .description("C# course")
+                .build());
 
         var expected = List.of(
-                StudentDto
-                        .builder()
-                        .id(1)
-                        .groupId(1)
-                        .firstName("John")
-                        .lastName("Doe")
-                        .coursesList(courses)
-                        .group(group.getName())
-                        .build(),
-                StudentDto.builder()
-                        .id(2)
-                        .groupId(1)
-                        .firstName("John")
-                        .lastName("Fox")
-                        .coursesList(courses)
-                        .group(group.getName())
-                        .build());
+            StudentDto
+                .builder()
+                .id(1)
+                .firstName("John")
+                .lastName("Doe")
+                .group(group)
+                .coursesList(courses)
+                .build(),
+            StudentDto.builder()
+                .id(2)
+                .firstName("John")
+                .lastName("Fox")
+                .group(group)
+                .coursesList(courses)
+                .build());
 
         // when
-        when(studentService.getStudentsByNameAndCourse(anyString(), anyInt())).thenReturn(studentsDto);
-        when(courseService.getCoursesByStudentId(anyInt())).thenReturn(courses);
-        when(groupService.getGroupById(1)).thenReturn(group);
+        when(studentService.getStudents(anyString(), anyInt())).thenReturn(studentsDto);
+        when(courseService.getCourses(anyInt())).thenReturn(courses);
+        when(groupService.getGroup(1)).thenReturn(group);
 
         // then
-        var actual = studentController.getStudentsByNameAndCourse(anyString(), anyInt());
+        var actual = studentController.getStudents(anyString(), anyInt());
 
         assertEquals(expected, actual);
     }
 
     @Test
-    void MethodGetStudentsByNameAndCourseShouldPassToServiceValues() throws ServiceException, ControllerException {
+    void MethodGetStudents_ShouldPassToServiceValues() throws ServiceException, ControllerException {
         // when
-        studentController.getStudentsByNameAndCourse("John", 1);
+        studentController.getStudents("John", 1);
 
         // then
-        verify(studentService).getStudentsByNameAndCourse("John", 1);
+        verify(studentService).getStudents("John", 1);
     }
 
     @Test
-    void MethodGetStudentsByNameAndCourseShouldThrowAnExceptionIfServiceThrowsAnException() throws ServiceException {
+    void MethodGetStudentsByNameAndCourse_ShouldThrowAnException_WhenServiceThrowsAnException() throws ServiceException {
         // when
-        doThrow(ServiceException.class).when(studentService).getStudentsByNameAndCourse("John", 1);
+        doThrow(ServiceException.class).when(studentService).getStudents("John", 1);
 
         // then
-        assertThrows(ControllerException.class, () -> studentController.getStudentsByNameAndCourse("John", 1),
-                "Students weren`t found");
+        assertThrows(ControllerException.class, () -> studentController.getStudents("John", 1),
+            "Students weren`t found");
     }
 }

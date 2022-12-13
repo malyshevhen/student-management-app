@@ -1,9 +1,10 @@
 package ua.com.foxstudent102052.controller;
 
 import lombok.extern.slf4j.Slf4j;
-import ua.com.foxstudent102052.model.GroupDto;
-import ua.com.foxstudent102052.service.GroupService;
-import ua.com.foxstudent102052.service.ServiceException;
+import ua.com.foxstudent102052.controller.exceptions.ControllerException;
+import ua.com.foxstudent102052.dto.GroupDto;
+import ua.com.foxstudent102052.service.interfaces.GroupService;
+import ua.com.foxstudent102052.service.exceptions.ServiceException;
 
 import java.util.List;
 
@@ -17,8 +18,9 @@ public class GroupController {
 
     public List<GroupDto> getAllGroups() throws ControllerException {
         try {
-            var allGroupsDto = groupService.getAllGroups();
+            var allGroupsDto = groupService.getGroups();
             allGroupsDto.forEach(this::setStudentsToGroups);
+
             log.info("All groups were successfully received");
 
             return allGroupsDto;
@@ -31,8 +33,9 @@ public class GroupController {
 
     public List<GroupDto> getGroupsSmallerThen(int numberOfStudents) throws ControllerException {
         try {
-            var unpopularGroupsDto = groupService.getGroupsSmallerThen(numberOfStudents);
+            var unpopularGroupsDto = groupService.getGroupsLessThen(numberOfStudents);
             unpopularGroupsDto.forEach(this::setStudentsToGroups);
+
             log.info("Unpopular groups were found");
 
             return unpopularGroupsDto;

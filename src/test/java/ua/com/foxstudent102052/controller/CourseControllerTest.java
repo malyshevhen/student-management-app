@@ -2,11 +2,12 @@ package ua.com.foxstudent102052.controller;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import ua.com.foxstudent102052.model.CourseDto;
-import ua.com.foxstudent102052.model.StudentDto;
-import ua.com.foxstudent102052.service.CourseService;
-import ua.com.foxstudent102052.service.ServiceException;
-import ua.com.foxstudent102052.service.StudentService;
+import ua.com.foxstudent102052.controller.exceptions.ControllerException;
+import ua.com.foxstudent102052.dto.CourseDto;
+import ua.com.foxstudent102052.dto.StudentDto;
+import ua.com.foxstudent102052.service.interfaces.CourseService;
+import ua.com.foxstudent102052.service.exceptions.ServiceException;
+import ua.com.foxstudent102052.service.interfaces.StudentService;
 
 import java.util.List;
 
@@ -27,7 +28,7 @@ class CourseControllerTest {
     }
 
     @Test
-    void MethodGetAllCoursesShouldReturnListOfAllCourses() throws ServiceException, ControllerException {
+    void MethodGetAllCourses_ShouldReturnListOfAllCourses() throws ServiceException, ControllerException {
         // given
         var students = List.of(
             StudentDto.builder().id(1).firstName("John").lastName("Doe").build(),
@@ -41,8 +42,8 @@ class CourseControllerTest {
         );
 
         // when
-        when(studentService.getAllStudents()).thenReturn(students);
-        when(courseService.getAllCourses()).thenReturn(expected);
+        when(studentService.getStudents()).thenReturn(students);
+        when(courseService.getCourses()).thenReturn(expected);
 
         // then
         var actual = courseController.getAllCourses();
@@ -51,9 +52,9 @@ class CourseControllerTest {
     }
 
     @Test
-    void MethodGetAllCoursesShouldThrowAnExceptionIfServiceThrowsAnException() throws ServiceException {
+    void MethodGetAllCourses_ShouldThrowAnExceptionIfServiceThrowsAnException() throws ServiceException {
         // when
-        doThrow(ServiceException.class).when(courseService).getAllCourses();
+        doThrow(ServiceException.class).when(courseService).getCourses();
 
         // then
         assertThrows(ControllerException.class, () -> courseController.getAllCourses(),
@@ -61,7 +62,7 @@ class CourseControllerTest {
     }
 
     @Test
-    void MethodGetStudentsByCourseShouldReturnCourseDto() throws ControllerException, ServiceException {
+    void MethodGetStudents_ShouldReturnCourseDto_ByCourseId() throws ControllerException, ServiceException {
         // given
         var expected = List.of(
             StudentDto.builder().id(1).firstName("John").lastName("Doe").coursesList(List.of()).build(),
@@ -70,21 +71,21 @@ class CourseControllerTest {
         );
 
         // when
-        when(studentService.getStudentsByCourse(anyInt())).thenReturn(expected);
+        when(studentService.getStudents(anyInt())).thenReturn(expected);
 
         // then
-        var actual = courseController.getStudentsByCourse(1);
+        var actual = courseController.getStudents(1);
 
         assertEquals(expected, actual);
     }
 
     @Test
-    void MethodGetStudentsByCourseShoulThrowAnExceptionIfServiceThrowsAnException() throws ServiceException {
+    void MethodGetStudentsByCourse_ShouldThrowAnException_WhenServiceThrowsAnException() throws ServiceException {
         // when
-        doThrow(ServiceException.class).when(studentService).getStudentsByCourse(anyInt());
+        doThrow(ServiceException.class).when(studentService).getStudents(anyInt());
 
         // then
-        assertThrows(ControllerException.class, () -> courseController.getStudentsByCourse(1),
+        assertThrows(ControllerException.class, () -> courseController.getStudents(1),
                 "Couldn`t get students by course");
     }
 }

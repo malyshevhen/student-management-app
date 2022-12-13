@@ -1,11 +1,13 @@
 package ua.com.foxstudent102052.controller;
 
 import lombok.extern.slf4j.Slf4j;
-import ua.com.foxstudent102052.model.StudentDto;
-import ua.com.foxstudent102052.service.CourseService;
-import ua.com.foxstudent102052.service.GroupService;
-import ua.com.foxstudent102052.service.ServiceException;
-import ua.com.foxstudent102052.service.StudentService;
+import ua.com.foxstudent102052.controller.exceptions.ControllerException;
+import ua.com.foxstudent102052.dto.GroupDto;
+import ua.com.foxstudent102052.dto.StudentDto;
+import ua.com.foxstudent102052.service.exceptions.ServiceException;
+import ua.com.foxstudent102052.service.interfaces.CourseService;
+import ua.com.foxstudent102052.service.interfaces.GroupService;
+import ua.com.foxstudent102052.service.interfaces.StudentService;
 
 import java.util.List;
 
@@ -63,9 +65,9 @@ public class StudentController {
 
     public List<StudentDto> getAllStudents() throws ControllerException {
         try {
-            var studentDtoList = studentService.getAllStudents();
+            var studentDtoList = studentService.getStudents();
 
-            return updateStudentsGroupAndCourse(studentDtoList);
+            return setStudentsRelations(studentDtoList);
         } catch (ServiceException e) {
             log.error(e.getMessage());
 
@@ -73,12 +75,12 @@ public class StudentController {
         }
     }
 
-    public List<StudentDto> getStudentsByNameAndCourse(String studentName, Integer courseId)
+    public List<StudentDto> getStudents(String studentName, Integer courseId)
         throws ControllerException {
         try {
-            var studentDtoList = studentService.getStudentsByNameAndCourse(studentName, courseId);
+            var studentDtoList = studentService.getStudents(studentName, courseId);
 
-            return updateStudentsGroupAndCourse(studentDtoList);
+            return setStudentsRelations(studentDtoList);
         } catch (ServiceException e) {
             log.error(e.getMessage());
 
@@ -86,44 +88,37 @@ public class StudentController {
         }
     }
 
-    private List<StudentDto> updateStudentsGroupAndCourse(List<StudentDto> studentDtoList) {
-
-        studentDtoList.forEach(studentDto -> {
-
-            try {
-                setStudentsGroup(studentDto);
-                setStudentsCourse(studentDto);
-            } catch (ControllerException e) {
-                log.error(e.getMessage());
-            }
-        });
-
-        return studentDtoList;
+    private List<StudentDto> setStudentsRelations(List<StudentDto> studentDtoList) {
+        return studentDtoList.stream()
+            .map(this::setStudentsGroup)
+            .map(this::getSetCoursesList)
+            .toList();
     }
 
-    private void setStudentsCourse(StudentDto studentDto) throws ControllerException {
-        int id = studentDto.getId();
-
+    private StudentDto getSetCoursesList(StudentDto studentDto) {
         try {
-            studentDto.setCoursesList(courseService.getCoursesByStudentId(id));
-        } catch (ServiceException e) {
-            String msg = "Student with id: %d has no courses".formatted(id);
-            log.error(msg);
+            studentDto.setCoursesList(courseService.getCourses(studentDto.getId()));
 
-            throw new ControllerException(e);
+            return studentDto;
+        } catch (ServiceException e) {
+            log.info("Student with id: {} hase no courses", studentDto.getId());
+
+            return studentDto;
         }
     }
 
-    private void setStudentsGroup(StudentDto studentDto) throws ControllerException {
+    private StudentDto setStudentsGroup(StudentDto studentDto) {
+        int groupId = studentDto.getGroup().getId();
+        GroupDto groupById = null;
         try {
-            int groupId = studentDto.getGroupId();
-            var groupById = groupService.getGroupById(groupId);
-            studentDto.setGroup(groupById.getName());
-        } catch (ServiceException e) {
-            String msg = "Student with id: %d has no group".formatted(studentDto.getId());
-            log.error(msg);
+            groupById = groupService.getGroup(groupId);
+            studentDto.setGroup(groupById);
 
-            throw new ControllerException(e);
+            return studentDto;
+        } catch (ServiceException e) {
+            log.info("Student with id: {} hase no group", studentDto.getId());
+
+            return studentDto;
         }
     }
 }

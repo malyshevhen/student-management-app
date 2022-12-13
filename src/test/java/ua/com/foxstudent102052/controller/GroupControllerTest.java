@@ -2,10 +2,11 @@ package ua.com.foxstudent102052.controller;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import ua.com.foxstudent102052.model.GroupDto;
-import ua.com.foxstudent102052.model.StudentDto;
-import ua.com.foxstudent102052.service.GroupService;
-import ua.com.foxstudent102052.service.ServiceException;
+import ua.com.foxstudent102052.controller.exceptions.ControllerException;
+import ua.com.foxstudent102052.dto.GroupDto;
+import ua.com.foxstudent102052.dto.StudentDto;
+import ua.com.foxstudent102052.service.interfaces.GroupService;
+import ua.com.foxstudent102052.service.exceptions.ServiceException;
 
 import java.util.List;
 
@@ -24,12 +25,12 @@ class GroupControllerTest {
     }
 
     @Test
-    void MethodGetAllGroupsShouldReturnListOfAllGroups() throws ServiceException, ControllerException {
+    void MethodGetGroups_ShouldReturnListOfAllGroups() throws ServiceException, ControllerException {
         // given
         var students = List.of(
-            StudentDto.builder().id(1).groupId(1).firstName("Darth").lastName("Vader").coursesList(List.of()).build(),
-            StudentDto.builder().id(2).groupId(1).firstName("Luke").lastName("Skywalker").coursesList(List.of()).build(),
-            StudentDto.builder().id(3).groupId(2).firstName("Han").lastName("Solo").coursesList(List.of()).build()
+            StudentDto.builder().id(1).group(GroupDto.builder().id(1).build()).firstName("Darth").lastName("Vader").coursesList(List.of()).build(),
+            StudentDto.builder().id(2).group(GroupDto.builder().id(1).build()).firstName("Luke").lastName("Skywalker").coursesList(List.of()).build(),
+            StudentDto.builder().id(3).group(GroupDto.builder().id(2).build()).firstName("Han").lastName("Solo").coursesList(List.of()).build()
         );
         var expected = List.of(
             GroupDto.builder().id(1).name("Jedi").studentList(students).build(),
@@ -37,7 +38,7 @@ class GroupControllerTest {
         );
 
         // when
-        when(groupService.getAllGroups()).thenReturn(expected);
+        when(groupService.getGroups()).thenReturn(expected);
         var actual = groupController.getAllGroups();
 
         // then
@@ -45,21 +46,21 @@ class GroupControllerTest {
     }
 
     @Test
-    void MethodGetAllGroupsShouldThrowControllerException() throws ServiceException {
+    void MethodGetGroups_ShouldThrowControllerException() throws ServiceException {
         // when
-        doThrow(ServiceException.class).when(groupService).getAllGroups();
+        doThrow(ServiceException.class).when(groupService).getGroups();
 
         // then
         assertThrows(ControllerException.class, () -> groupController.getAllGroups());
     }
 
     @Test
-    void MethodGetGroupsSmallerThenReturnListOfAllGroups() throws ServiceException, ControllerException {
+    void MethodGetGroupsLessThen_ShouldReturnListOfAllGroups() throws ServiceException, ControllerException {
         // given
         var students = List.of(
-            StudentDto.builder().id(1).groupId(1).firstName("Darth").lastName("Vader").coursesList(List.of()).build(),
-            StudentDto.builder().id(2).groupId(1).firstName("Luke").lastName("Skywalker").coursesList(List.of()).build(),
-            StudentDto.builder().id(3).groupId(2).firstName("Han").lastName("Solo").coursesList(List.of()).build()
+            StudentDto.builder().id(1).group(GroupDto.builder().id(1).build()).firstName("Darth").lastName("Vader").coursesList(List.of()).build(),
+            StudentDto.builder().id(2).group(GroupDto.builder().id(1).build()).firstName("Luke").lastName("Skywalker").coursesList(List.of()).build(),
+            StudentDto.builder().id(3).group(GroupDto.builder().id(2).build()).firstName("Han").lastName("Solo").coursesList(List.of()).build()
         );
         var expected = List.of(
             GroupDto.builder().id(1).name("Jedi").studentList(students).build(),
@@ -67,7 +68,7 @@ class GroupControllerTest {
         );
 
         // when
-        when(groupService.getGroupsSmallerThen(anyInt())).thenReturn(expected);
+        when(groupService.getGroupsLessThen(anyInt())).thenReturn(expected);
         var actual = groupController.getGroupsSmallerThen(anyInt());
 
         // then
@@ -75,9 +76,9 @@ class GroupControllerTest {
     }
 
     @Test
-    void MethodGetGroupsSmallerThenShouldThrowControllerException() throws ServiceException {
+    void MethodGetGroupsLessThen_ShouldThrowControllerException() throws ServiceException {
         // when
-        doThrow(ServiceException.class).when(groupService).getGroupsSmallerThen(anyInt());
+        doThrow(ServiceException.class).when(groupService).getGroupsLessThen(anyInt());
 
         // then
         assertThrows(ControllerException.class, () -> groupController.getGroupsSmallerThen(anyInt()));

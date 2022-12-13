@@ -1,18 +1,18 @@
 package ua.com.foxstudent102052.controller;
 
 import lombok.extern.slf4j.Slf4j;
-import ua.com.foxstudent102052.model.CourseDto;
-import ua.com.foxstudent102052.model.StudentDto;
-import ua.com.foxstudent102052.service.CourseService;
-import ua.com.foxstudent102052.service.ServiceException;
-import ua.com.foxstudent102052.service.StudentService;
+import ua.com.foxstudent102052.controller.exceptions.ControllerException;
+import ua.com.foxstudent102052.dto.CourseDto;
+import ua.com.foxstudent102052.dto.StudentDto;
+import ua.com.foxstudent102052.service.interfaces.CourseService;
+import ua.com.foxstudent102052.service.exceptions.ServiceException;
+import ua.com.foxstudent102052.service.interfaces.StudentService;
 
 import java.util.List;
 
 @Slf4j
 public class CourseController {
     private final CourseService courseService;
-
     private final StudentService studentService;
 
     public CourseController(CourseService courseService, StudentService studentService) {
@@ -22,13 +22,13 @@ public class CourseController {
 
     public List<CourseDto> getAllCourses() throws ControllerException {
         try {
-            var coursesListDto = courseService.getAllCourses();
+            var coursesListDto = courseService.getCourses();
             log.info("All courses were successfully received");
 
             coursesListDto.forEach(courseDto -> {
 
                 try {
-                    var studentsByCourse = getStudentsByCourse(courseDto.getId());
+                    var studentsByCourse = getStudents(courseDto.getId());
                     courseDto.setStudentsList(studentsByCourse);
                     log.info("All students were successfully received");
 
@@ -46,10 +46,10 @@ public class CourseController {
         }
     }
 
-    public List<StudentDto> getStudentsByCourse(int courseId) throws ControllerException {
+    public List<StudentDto> getStudents(int courseId) throws ControllerException {
 
         try {
-            var studentsByCourse = studentService.getStudentsByCourse(courseId);
+            var studentsByCourse = studentService.getStudents(courseId);
             log.info("Students were successfully received");
             return studentsByCourse;
 

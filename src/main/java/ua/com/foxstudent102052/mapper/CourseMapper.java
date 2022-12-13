@@ -1,38 +1,44 @@
 package ua.com.foxstudent102052.mapper;
 
+import lombok.extern.slf4j.Slf4j;
 import ua.com.foxstudent102052.model.Course;
-import ua.com.foxstudent102052.model.CourseDto;
+import ua.com.foxstudent102052.dto.CourseDto;
 
 import java.util.List;
 
+@Slf4j
 public class CourseMapper {
 
     private CourseMapper() {
         throw new IllegalStateException("Utility class");
     }
 
-    public static CourseDto toDto(Course course) {
+    public static CourseDto toCourseDto(Course course) {
         try {
-            return new CourseDto(
-                    course.getCourseId(),
-                    course.getCourseName(),
-                    course.getCourseDescription(),
-                    List.of());
-
+            return CourseDto.builder()
+                .id(course.courseId())
+                .name(course.courseName())
+                .description(course.courseDescription())
+                .studentsList(List.of())
+                .build();
         } catch (NullPointerException e) {
+            log.error("CourseMapper.toCourseDto() - NullPointerException: " + e.getMessage());
+
             return new CourseDto();
         }
     }
 
     public static Course toCourse(CourseDto courseDto) {
         try {
-            return new Course(
-                    courseDto.getId(),
-                    courseDto.getName(),
-                    courseDto.getDescription());
-
+            return Course.builder()
+                .courseId(courseDto.getId())
+                .courseName(courseDto.getName())
+                .courseDescription(courseDto.getDescription())
+                .build();
         } catch (NullPointerException e) {
-            return new Course();
+            log.error("CourseMapper.toCourse() - NullPointerException: " + e.getMessage());
+
+            return Course.builder().build();
         }
     }
 }
