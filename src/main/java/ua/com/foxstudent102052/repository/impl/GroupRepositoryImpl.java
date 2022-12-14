@@ -25,13 +25,14 @@ public class GroupRepositoryImpl implements GroupRepository {
         var query =
             """
                 INSERT
-                INTO groups (group_name) values (?);""";
+                INTO groups (group_name)
+                    values (?);""";
 
         try (var connection = dataSource.getConnection();
              var statement = connection.prepareStatement(query)) {
             statement.setString(1, group.groupName());
 
-            statement.executeQuery();
+            statement.executeUpdate();
         } catch (SQLException e) {
             log.error("Error while adding group: {}", group.groupName(), e);
 
@@ -160,53 +161,6 @@ public class GroupRepositoryImpl implements GroupRepository {
             log.error("Error while getting students by group: {}", groupId);
 
             throw new RepositoryException(String.format("Error while getting students by group: '%d'", groupId), e);
-        }
-    }
-
-    @Override
-    public Group getLastGroup() throws RepositoryException {
-        var query =
-            """
-                SELECT *
-                FROM groups
-                WHERE group_id =
-                    (SELECT MAX(group_id)
-                    FROM groups);""";
-
-        try (var connection = dataSource.getConnection();
-             var statement = connection.prepareStatement(query)) {
-            var groupResultSet = statement.executeQuery();
-
-            if (groupResultSet.next()) {
-                return getGroupFromResultSet(groupResultSet);
-            } else {
-                throw new RepositoryException("No groups in DB");
-            }
-        } catch (Exception e) {
-            log.error("Error while getting last group", e);
-
-            throw new RepositoryException("Error while getting last group", e);
-        }
-    }
-
-    @Override
-    public Boolean ifExist(String groupName) throws RepositoryException {
-        var query =
-            """
-                SELECT *
-                FROM groups
-                WHERE group_name = ?;""";
-
-        try (var connection = dataSource.getConnection();
-             var statement = connection.prepareStatement(query)) {
-            statement.setString(1, groupName);
-            var groupResultSet = statement.executeQuery();
-
-            return groupResultSet.next();
-        } catch (SQLException e) {
-            log.error("Error while checking if group exist: {}", groupName);
-
-            throw new RepositoryException(String.format("Error while checking if group exist: '%s'", groupName), e);
         }
     }
 

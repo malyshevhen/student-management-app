@@ -32,7 +32,7 @@ public class CourseRepositoryImpl implements CourseRepository {
              var statement = connection.prepareStatement(query)) {
             statement.setString(1, course.courseName());
             statement.setString(2, course.courseDescription());
-            statement.executeQuery();
+            statement.executeUpdate();
             log.info(QUERY_EXECUTED_SUCCESSFULLY);
 
         } catch (SQLException e) {
@@ -102,31 +102,6 @@ public class CourseRepositoryImpl implements CourseRepository {
             return getCoursesFromResultSet(coursesResultSet);
         } catch (SQLException e) {
             log.error("Error while getting courses by student id", e);
-
-            throw new RepositoryException(e);
-        }
-    }
-
-    @Override
-    public Course getLastCourse() throws RepositoryException {
-        var query = """
-            SELECT *
-            FROM courses
-            WHERE course_id = (
-                SELECT MAX(course_id)
-                FROM courses);""";
-
-        try (var connection = dataSource.getConnection();
-             var statement = connection.createStatement();
-             var coursesResultSet = statement.executeQuery(query)) {
-
-            if (coursesResultSet.next()) {
-                return getCourseFromResultSet(coursesResultSet);
-            } else {
-                throw new RepositoryException("No such course in DB");
-            }
-        } catch (SQLException e) {
-            log.error("Error while getting last course", e);
 
             throw new RepositoryException(e);
         }

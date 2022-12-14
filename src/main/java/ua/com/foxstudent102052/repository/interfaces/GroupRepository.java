@@ -18,8 +18,4 @@ public interface GroupRepository {
     Group getGroup(String groupName) throws RepositoryException;
 
     List<Student> getStudents(int groupId) throws RepositoryException;
-
-    Group getLastGroup() throws RepositoryException;
-
-    Boolean ifExist(String groupName) throws RepositoryException;
 }

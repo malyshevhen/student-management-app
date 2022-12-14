@@ -36,7 +36,6 @@ class GroupServiceImplTest {
 
         // when
         doThrow(RepositoryException.class).when(groupRepository).getGroup(anyString());
-        when(groupRepository.getLastGroup()).thenReturn(group);
         groupService.addGroup(groupDto);
 
         // then
@@ -50,7 +49,6 @@ class GroupServiceImplTest {
         var groupDto = GroupDto.builder().name("SomeGroup").build();
 
         // when
-        when(groupRepository.getLastGroup()).thenReturn(group);
         doThrow(RepositoryException.class).when(groupRepository).addGroup(group);
 
         // then

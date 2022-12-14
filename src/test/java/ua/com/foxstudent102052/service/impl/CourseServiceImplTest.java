@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
-class  CourseServiceImplTest {
+class CourseServiceImplTest {
     private CourseRepository courseRepository;
     private CourseService courseService;
 
@@ -33,7 +33,6 @@ class  CourseServiceImplTest {
         CourseDto newCourse = CourseDto.builder().name("Java").description("Java course").build();
 
         // when
-        when(courseRepository.getLastCourse()).thenReturn(courseFromDb);
         courseService.addCourse(newCourse);
 
         // then
@@ -46,11 +45,10 @@ class  CourseServiceImplTest {
         var course = Course.builder().courseName("Java").courseDescription("Java course").build();
 
         // when
-        when(courseRepository.getLastCourse()).thenReturn(new Course());
 
         // then
         assertThrows(ServiceException.class, () -> courseService.addCourse(CourseMapper.toCourseDto(course)),
-                "Course wasn`t added");
+            "Course wasn`t added");
     }
 
     @Test
@@ -63,25 +61,25 @@ class  CourseServiceImplTest {
 
         // then
         assertThrows(ServiceException.class, () -> courseService.addCourse(CourseMapper.toCourseDto(course)),
-                "Course with id 1 already exist");
+            "Course with id 1 already exist");
     }
 
     @Test
     void MethodGetAllCourses_ShouldReturnListOfAllStudents() throws RepositoryException, ServiceException {
         // given
         var courses = List.of(
-                Course.builder().courseName("Java").courseDescription("Java course").build(),
-                Course.builder().courseName("C++").courseDescription("C++ course").build(),
-                Course.builder().courseName("C#").courseDescription("C# course").build());
+            Course.builder().courseName("Java").courseDescription("Java course").build(),
+            Course.builder().courseName("C++").courseDescription("C++ course").build(),
+            Course.builder().courseName("C#").courseDescription("C# course").build());
 
         // when
         when(courseRepository.getAllCourses()).thenReturn(courses);
 
         // then
         var expected = List.of(
-                CourseDto.builder().name("Java").description("Java course").studentsList(List.of()).build(),
-                CourseDto.builder().name("C++").description("C++ course").studentsList(List.of()).build(),
-                CourseDto.builder().name("C#").description("C# course").studentsList(List.of()).build());
+            CourseDto.builder().name("Java").description("Java course").studentsList(List.of()).build(),
+            CourseDto.builder().name("C++").description("C++ course").studentsList(List.of()).build(),
+            CourseDto.builder().name("C#").description("C# course").studentsList(List.of()).build());
 
         var actual = courseService.getCourses();
         assertEquals(expected, actual);

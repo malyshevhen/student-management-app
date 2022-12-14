@@ -55,7 +55,7 @@ class StudentServiceImplTest {
 
         // when
         doNothing().when(studentRepository).addStudent(student);
-        when(studentRepository.getLastStudent()).thenReturn(new Student());
+        when(studentRepository.getLastStudent()).thenReturn(new Student(0, 0, "", ""));
 
         // then
         assertThrows(ServiceException.class, () -> studentService.addStudent(StudentMapper.toStudentDto(student)),
@@ -82,12 +82,12 @@ class StudentServiceImplTest {
 
         // when
         when(studentRepository.getStudentById(1)).thenReturn(student).thenThrow(RepositoryException.class);
-        doNothing().when(studentRepository).removeStudent(student.getStudentId());
+        doNothing().when(studentRepository).removeStudent(student.studentId());
 
         // then
-        studentService.removeStudent(student.getStudentId());
+        studentService.removeStudent(student.studentId());
 
-        verify(studentRepository).removeStudent(student.getStudentId());
+        verify(studentRepository).removeStudent(student.studentId());
     }
 
     @Test
@@ -99,7 +99,7 @@ class StudentServiceImplTest {
         when(studentRepository.getStudentById(1)).thenReturn(null);
 
         // then
-        assertThrows(ServiceException.class, () -> studentService.removeStudent(student.getStudentId()),
+        assertThrows(ServiceException.class, () -> studentService.removeStudent(student.studentId()),
                 "Student wasn`t removed");
     }
 
@@ -110,10 +110,10 @@ class StudentServiceImplTest {
 
         // when
         when(studentRepository.getStudentById(1)).thenReturn(student);
-        doThrow(RepositoryException.class).when(studentRepository).removeStudent(student.getStudentId());
+        doThrow(RepositoryException.class).when(studentRepository).removeStudent(student.studentId());
 
         // then
-        assertThrows(ServiceException.class, () -> studentService.removeStudent(student.getStudentId()),
+        assertThrows(ServiceException.class, () -> studentService.removeStudent(student.studentId()),
                 "Student wasn`t removed");
     }
 
@@ -144,10 +144,10 @@ class StudentServiceImplTest {
 
         // when
         when(studentRepository.getStudentById(1)).thenReturn(student).thenReturn(student);
-        doNothing().when(studentRepository).removeStudent(student.getStudentId());
+        doNothing().when(studentRepository).removeStudent(student.studentId());
 
         // then
-        assertThrows(ServiceException.class, () -> studentService.removeStudent(student.getStudentId()),
+        assertThrows(ServiceException.class, () -> studentService.removeStudent(student.studentId()),
                 "Student wasn`t removed");
     }
 
@@ -158,7 +158,7 @@ class StudentServiceImplTest {
         Student newStudent = Student.builder().studentId(1).firstName("John").lastName("Doe").build();
 
         // when
-        when(studentRepository.getStudentsByCourseId(newStudent.getStudentId())).thenReturn(List.of(newStudent));
+        when(studentRepository.getStudentsByCourseId(newStudent.studentId())).thenReturn(List.of(newStudent));
         studentService.addStudentToCourse(1, 1);
 
         // then
@@ -180,7 +180,7 @@ class StudentServiceImplTest {
     void MethodRemoveStudentFromCourse_ShouldRemoveExistingStudentFromExistingCourse()
             throws ServiceException, RepositoryException {
         // when
-        when(studentRepository.getStudentsByCourseId(anyInt())).thenReturn(List.of(new Student()));
+        when(studentRepository.getStudentsByCourseId(anyInt())).thenReturn(List.of(new Student(0, 0, "", "")));
         studentService.removeStudentFromCourse(1, 1);
 
         // then
@@ -201,7 +201,7 @@ class StudentServiceImplTest {
     @Test
     void MethodGetStudentsByCourseShould_ReturnListOfStudents_ByCourseId() throws ServiceException, RepositoryException {
         // when
-        when(studentRepository.getStudentsByCourseId(anyInt())).thenReturn(List.of(new Student()));
+        when(studentRepository.getStudentsByCourseId(anyInt())).thenReturn(List.of(new Student(0, 0, "", "")));
         studentService.getStudents(1);
 
         // then
@@ -222,7 +222,7 @@ class StudentServiceImplTest {
     void MethodGetStudentsByNameAndCourse_ShouldReturnListOfStudents() throws RepositoryException, ServiceException {
         // when
         when(studentRepository.getStudentsByNameAndCourse(anyString(), anyInt()))
-                .thenReturn(List.of(new Student()));
+                .thenReturn(List.of(new Student(0, 0, "", "")));
         studentService.getStudents("John", 1);
 
         // then
