@@ -2,8 +2,8 @@ package ua.com.foxstudent102052.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import ua.com.foxstudent102052.controller.exceptions.ControllerException;
-import ua.com.foxstudent102052.dto.CourseDto;
-import ua.com.foxstudent102052.dto.StudentDto;
+import ua.com.foxstudent102052.model.dto.CourseDto;
+import ua.com.foxstudent102052.model.dto.StudentDto;
 import ua.com.foxstudent102052.service.interfaces.CourseService;
 import ua.com.foxstudent102052.service.exceptions.ServiceException;
 import ua.com.foxstudent102052.service.interfaces.StudentService;

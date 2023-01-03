@@ -2,89 +2,94 @@ package ua.com.foxstudent102052.service.impl;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import ua.com.foxstudent102052.mapper.GroupMapper;
-import ua.com.foxstudent102052.model.Group;
-import ua.com.foxstudent102052.dto.GroupDto;
-import ua.com.foxstudent102052.model.Student;
-import ua.com.foxstudent102052.dto.StudentDto;
-import ua.com.foxstudent102052.repository.interfaces.GroupRepository;
-import ua.com.foxstudent102052.repository.exceptions.RepositoryException;
+import ua.com.foxstudent102052.dao.exceptions.DAOException;
+import ua.com.foxstudent102052.dao.interfaces.GroupDao;
+import ua.com.foxstudent102052.model.dto.GroupDto;
+import ua.com.foxstudent102052.model.entity.Group;
+import ua.com.foxstudent102052.model.entity.Student;
+import ua.com.foxstudent102052.model.mapper.GroupModelMapper;
+import ua.com.foxstudent102052.model.mapper.StudentModelMapper;
 import ua.com.foxstudent102052.service.exceptions.ServiceException;
 import ua.com.foxstudent102052.service.interfaces.GroupService;
 
 import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 class GroupServiceImplTest {
-    private GroupRepository groupRepository;
+    private GroupDao groupDao;
     private GroupService groupService;
 
     @BeforeEach
     public void setUp() {
-        groupRepository = mock(GroupRepository.class);
-        groupService = new GroupServiceImpl(groupRepository);
+        groupDao = mock(GroupDao.class);
+        groupService = new GroupServiceImpl(groupDao);
     }
 
     @Test
-    void MethodAddGroup_ShouldPassGroupToRepository() throws RepositoryException, ServiceException {
+    void MethodAddGroup_ShouldPassGroupToRepository() throws DAOException, ServiceException {
         // given
         var group = Group.builder().groupName("SomeGroup").build();
-        var groupDto = GroupDto.builder().name("SomeGroup").build();
+        var groupDto = GroupModelMapper.toGroupDto(group);
 
         // when
-        doThrow(RepositoryException.class).when(groupRepository).getGroup(anyString());
         groupService.addGroup(groupDto);
 
         // then
-        verify(groupRepository).addGroup(group);
+        verify(groupDao).addGroup(group);
     }
 
     @Test
-    void MethodAddGroup_ShouldThrowException_WhenRepositoryExceptionIsThrown() throws RepositoryException {
+    void MethodAddGroup_ShouldThrowException_WhenRepositoryExceptionIsThrown() throws DAOException {
         // given
         var group = Group.builder().groupName("SomeGroup").build();
-        var groupDto = GroupDto.builder().name("SomeGroup").build();
+        var groupDto = GroupModelMapper.toGroupDto(group);
 
         // when
-        doThrow(RepositoryException.class).when(groupRepository).addGroup(group);
+        doThrow(DAOException.class).when(groupDao).addGroup(group);
 
         // then
         assertThrows(ServiceException.class, () -> groupService.addGroup(groupDto), "Group wasn`t added");
     }
 
     @Test
-    void MethodGetAllGroups_ShouldReturnAllGroupsFromDb() throws RepositoryException, ServiceException {
+    void MethodGetAllGroups_ShouldReturnAllGroupsFromDb() throws DAOException, ServiceException {
+        // given
         var groups = List.of(
             Group.builder().groupName("SomeGroup1").build(),
             Group.builder().groupName("SomeGroup2").build(),
             Group.builder().groupName("SomeGroup3").build());
 
-        when(groupRepository.getAllGroups()).thenReturn(groups);
+        var expected = groups.stream()
+            .map(GroupModelMapper::toGroupDto)
+            .toList();
 
-        var expected = List.of(
-            GroupDto.builder().name("SomeGroup1").studentList(List.of()).build(),
-            GroupDto.builder().name("SomeGroup2").studentList(List.of()).build(),
-            GroupDto.builder().name("SomeGroup3").studentList(List.of()).build());
+        // when
+        when(groupDao.getGroups()).thenReturn(groups);
 
         var actual = groupService.getGroups();
 
+        // then
         assertEquals(expected, actual);
     }
 
     @Test
-    void MethodGetAllGroups_ShouldThrowException_WhenRepositoryExceptionIsThrown() throws RepositoryException {
-        doThrow(RepositoryException.class).when(groupRepository).getAllGroups();
+    void MethodGetAllGroups_ShouldThrowException_WhenRepositoryExceptionIsThrown() throws DAOException {
+        // when
+        doThrow(DAOException.class).when(groupDao).getGroups();
 
+        // then
         assertThrows(ServiceException.class, () -> groupService.getGroups(), "Groups weren`t received");
     }
 
     @Test
-    void MethodGetGroupById_ShouldReturnGroupFromDb() throws RepositoryException, ServiceException {
-        var group = Group.builder().groupName("SomeGroup").build();
-        when(groupRepository.getGroup(1)).thenReturn(group);
+    void MethodGetGroupById_ShouldReturnGroupFromDb() throws DAOException, ServiceException {
+        var optionalGroup = Optional.of(Group.builder().groupName("SomeGroup").build());
+        when(groupDao.getGroup(1)).thenReturn(optionalGroup);
 
         var expected = GroupDto.builder().name("SomeGroup").studentList(List.of()).build();
 
@@ -94,16 +99,16 @@ class GroupServiceImplTest {
     }
 
     @Test
-    void MethodGetGroupById_ShouldThrowException_WhenRepositoryExceptionIsThrown() throws RepositoryException {
-        doThrow(RepositoryException.class).when(groupRepository).getGroup(1);
+    void MethodGetGroupById_ShouldThrowException_WhenRepositoryExceptionIsThrown() throws DAOException {
+        doThrow(DAOException.class).when(groupDao).getGroup(1);
 
         assertThrows(ServiceException.class, () -> groupService.getGroup(1), "Group wasn`t received");
     }
 
     @Test
-    void MethodGetGroupByName_ShouldReturnGroupFromDb() throws RepositoryException, ServiceException {
-        var group = Group.builder().groupName("SomeGroup").build();
-        when(groupRepository.getGroup("SomeGroup")).thenReturn(group);
+    void MethodGetGroupByName_ShouldReturnGroupFromDb() throws DAOException, ServiceException {
+        var optionalGroup = Optional.of(Group.builder().groupName("SomeGroup").build());
+        when(groupDao.getGroup("SomeGroup")).thenReturn(optionalGroup);
 
         var expected = GroupDto.builder().name("SomeGroup").studentList(List.of()).build();
 
@@ -113,78 +118,73 @@ class GroupServiceImplTest {
     }
 
     @Test
-    void MethodGetGroupByName_ShouldThrowException_WhenRepositoryExceptionIsThrown() throws RepositoryException {
-        doThrow(RepositoryException.class).when(groupRepository).getGroup("SomeGroup");
+    void MethodGetGroupByName_ShouldThrowException_WhenRepositoryExceptionIsThrown() throws DAOException {
+        doThrow(DAOException.class).when(groupDao).getGroup("SomeGroup");
 
         assertThrows(ServiceException.class, () -> groupService.getGroup("SomeGroup"), "Group wasn`t received");
     }
 
     @Test
-    void MethodGetGroupsSmallerThen_ShouldReturnGroupsFromDb() throws RepositoryException, ServiceException {
+    void MethodGetGroupsSmallerThen_ShouldReturnGroupsFromDb() throws DAOException, ServiceException {
+        // given
         var groups = List.of(
             Group.builder().groupName("SomeGroup1").build(),
             Group.builder().groupName("SomeGroup2").build(),
             Group.builder().groupName("SomeGroup3").build());
 
-        when(groupRepository.getGroupsLessThen(3)).thenReturn(groups);
+        var expected = groups.stream()
+            .map(GroupModelMapper::toGroupDto)
+            .toList();
 
-        var expected = List.of(
-            GroupDto.builder().name("SomeGroup1").studentList(List.of()).build(),
-            GroupDto.builder().name("SomeGroup2").studentList(List.of()).build(),
-            GroupDto.builder().name("SomeGroup3").studentList(List.of()).build());
+        // when
+        when(groupDao.getGroupsLessThen(3)).thenReturn(groups);
 
         var actual = groupService.getGroupsLessThen(3);
 
+        // then
         assertEquals(expected, actual);
     }
 
     @Test
-    void MethodGetGroupsSmallerThen_ShouldThrowException_WhenRepositoryExceptionIsThrown() throws RepositoryException {
-        doThrow(RepositoryException.class).when(groupRepository).getGroupsLessThen(3);
+    void MethodGetGroupsSmallerThen_ShouldThrowException_WhenRepositoryExceptionIsThrown() throws DAOException {
+        // when
+        doThrow(DAOException.class).when(groupDao).getGroupsLessThen(3);
 
+        // then
         assertThrows(ServiceException.class, () -> groupService.getGroupsLessThen(3), "Groups weren`t received");
     }
 
     @Test
-    void MethodGetStudentsByGroup_ShouldReturnStudentsFromDb() throws RepositoryException, ServiceException {
+    void MethodGetStudentsByGroup_ShouldReturnStudentsFromDb() throws DAOException, ServiceException {
+        // given
         var studentList = List.of(
             Student.builder().groupId(1).firstName("SomeName1").lastName("SomeLastName1").build(),
             Student.builder().groupId(1).firstName("SomeName2").lastName("SomeLastName2").build(),
             Student.builder().groupId(1).firstName("SomeName3").lastName("SomeLastName3").build());
 
-        var group = Group.builder().groupId(1).groupName("SomeGroup").build();
+        int groupId = 1;
+        var group = Group.builder().groupId(groupId).groupName("SomeGroup").build();
+        var groupDto = GroupModelMapper.toGroupDto(group);
 
-        when(groupRepository.getStudents(group.groupId())).thenReturn(studentList);
+        var expected = studentList.stream()
+            .map(StudentModelMapper::toStudentDto)
+            .toList();
+        expected.forEach(student -> student.setGroup(groupDto));
 
-        var expected = List.of(
-            StudentDto.builder().group(GroupMapper.toGroupDto(group)).firstName("SomeName1").lastName("SomeLastName1").coursesList(List.of()).build(),
-            StudentDto.builder().group(GroupMapper.toGroupDto(group)).firstName("SomeName2").lastName("SomeLastName2").coursesList(List.of()).build(),
-            StudentDto.builder().group(GroupMapper.toGroupDto(group)).firstName("SomeName3").lastName("SomeLastName3").coursesList(List.of()).build());
+        // when
+        when(groupDao.getGroup(groupId)).thenReturn(Optional.of(group));
+        when(groupDao.getStudents(groupId)).thenReturn(studentList);
 
-        var actual = groupService.getStudentsByGroup(group.groupId());
+        var actual = groupService.getStudentsByGroup(groupId);
 
+        // then
         assertEquals(expected, actual);
     }
 
     @Test
-    void MethodGetStudentsByGroupShould_TrowException_WhenRepositoryExceptionIsThrown() throws RepositoryException {
-        doThrow(RepositoryException.class).when(groupRepository).getStudents(1);
+    void MethodGetStudentsByGroupShould_TrowException_WhenRepositoryExceptionIsThrown() throws DAOException {
+        doThrow(DAOException.class).when(groupDao).getStudents(1);
 
-        assertThrows(ServiceException.class, () -> groupService.getStudentsByGroup(1), "Students weren`t received");
-    }
-
-    @Test
-    void methodIfExist_ShouldReturnTrueWhenGroupExist() throws RepositoryException, ServiceException {
-        var group = Group.builder().groupName("SomeGroup").build();
-        when(groupRepository.getGroup(group.groupName())).thenReturn(group);
-
-        assertTrue(groupService.ifExist(group.groupName()));
-    }
-
-    @Test
-    void methodIfExistShouldReturn_FalseWhenGroupDoesNotExist() throws RepositoryException, ServiceException {
-        doThrow(RepositoryException.class).when(groupRepository).getGroup(anyString());
-
-        assertFalse(groupService.ifExist(anyString()));
+        assertThrows(NoSuchElementException.class, () -> groupService.getStudentsByGroup(1), "Students weren`t received");
     }
 }

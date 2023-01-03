@@ -1,6 +1,6 @@
 package ua.com.foxstudent102052.service.interfaces;
 
-import ua.com.foxstudent102052.dto.CourseDto;
+import ua.com.foxstudent102052.model.dto.CourseDto;
 import ua.com.foxstudent102052.service.exceptions.ServiceException;
 
 import java.util.List;

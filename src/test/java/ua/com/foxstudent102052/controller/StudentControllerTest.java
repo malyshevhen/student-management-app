@@ -3,11 +3,11 @@ package ua.com.foxstudent102052.controller;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ua.com.foxstudent102052.controller.exceptions.ControllerException;
-import ua.com.foxstudent102052.mapper.StudentMapper;
-import ua.com.foxstudent102052.dto.CourseDto;
-import ua.com.foxstudent102052.dto.GroupDto;
-import ua.com.foxstudent102052.model.Student;
-import ua.com.foxstudent102052.dto.StudentDto;
+import ua.com.foxstudent102052.model.mapper.StudentModelMapper;
+import ua.com.foxstudent102052.model.dto.CourseDto;
+import ua.com.foxstudent102052.model.dto.GroupDto;
+import ua.com.foxstudent102052.model.entity.Student;
+import ua.com.foxstudent102052.model.dto.StudentDto;
 import ua.com.foxstudent102052.service.interfaces.CourseService;
 import ua.com.foxstudent102052.service.interfaces.GroupService;
 import ua.com.foxstudent102052.service.exceptions.ServiceException;
@@ -50,10 +50,10 @@ class StudentControllerTest {
         var student = Student.builder().firstName("John").lastName("Doe").build();
 
         // when
-        doThrow(ServiceException.class).when(studentService).addStudent(StudentMapper.toStudentDto(student));
+        doThrow(ServiceException.class).when(studentService).addStudent(StudentModelMapper.toStudentDto(student));
 
         // then
-        assertThrows(ControllerException.class, () -> studentController.addStudent(StudentMapper.toStudentDto(student)),
+        assertThrows(ControllerException.class, () -> studentController.addStudent(StudentModelMapper.toStudentDto(student)),
             "Student wasn`t added");
     }
 

@@ -1,7 +1,7 @@
 package ua.com.foxstudent102052.table.impl;
 
-import ua.com.foxstudent102052.dto.GroupDto;
-import ua.com.foxstudent102052.dto.StudentDto;
+import ua.com.foxstudent102052.model.dto.GroupDto;
+import ua.com.foxstudent102052.model.dto.StudentDto;
 
 public class ExpandedStudentTableBuilder extends DtoTableBuilderImpl<StudentDto>{
     private static final String ROW = "|%-5s|%-10s|%-10s|%-10s|%-40s|";

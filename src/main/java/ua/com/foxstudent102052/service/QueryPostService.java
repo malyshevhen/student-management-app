@@ -1,20 +1,19 @@
 package ua.com.foxstudent102052.service;
 
-import lombok.extern.slf4j.Slf4j;
-import ua.com.foxstudent102052.repository.exceptions.DAOException;
-import ua.com.foxstudent102052.repository.impl.PostDAOImpl;
-import ua.com.foxstudent102052.datasource.impl.PostgresPooledDataSource;
-import ua.com.foxstudent102052.repository.interfaces.PostDAO;
+import ua.com.foxstudent102052.dao.datasource.interfaces.CustomDataSource;
+import ua.com.foxstudent102052.dao.exceptions.DAOException;
+import ua.com.foxstudent102052.dao.impl.PostDAOImpl;
+import ua.com.foxstudent102052.dao.interfaces.PostDAO;
 import ua.com.foxstudent102052.service.exceptions.ServiceException;
 
-@Slf4j
 public class QueryPostService {
-    private static final PostDAO daoFactory = new PostDAOImpl(PostgresPooledDataSource.getInstance());
+    private final PostDAO daoFactory;
 
-    private QueryPostService() {
+    public QueryPostService(CustomDataSource customDataSource) {
+        daoFactory = new PostDAOImpl(customDataSource);
     }
 
-    public static void executeQuery(String query) throws ServiceException {
+    public void executeQuery(String query) throws ServiceException {
         try {
             daoFactory.doPost(query);
         } catch (DAOException e) {

@@ -2,14 +2,14 @@ package ua.com.foxstudent102052.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import ua.com.foxstudent102052.controller.exceptions.ControllerException;
-import ua.com.foxstudent102052.dto.GroupDto;
-import ua.com.foxstudent102052.dto.StudentDto;
+import ua.com.foxstudent102052.model.dto.StudentDto;
 import ua.com.foxstudent102052.service.exceptions.ServiceException;
 import ua.com.foxstudent102052.service.interfaces.CourseService;
 import ua.com.foxstudent102052.service.interfaces.GroupService;
 import ua.com.foxstudent102052.service.interfaces.StudentService;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Slf4j
 public class StudentController {
@@ -36,7 +36,7 @@ public class StudentController {
     public void removeStudent(int studentId) throws ControllerException {
         try {
             studentService.removeStudent(studentId);
-        } catch (ServiceException e) {
+        } catch (NoSuchElementException | ServiceException e) {
             log.error(e.getMessage(), e);
 
             throw new ControllerException(e);
@@ -46,7 +46,7 @@ public class StudentController {
     public void addStudentToCourse(int studentId, int courseId) throws ControllerException {
         try {
             studentService.addStudentToCourse(studentId, courseId);
-        } catch (ServiceException e) {
+        } catch (NoSuchElementException | ServiceException e) {
             log.error(e.getMessage(), e);
 
             throw new ControllerException(e);
@@ -56,7 +56,7 @@ public class StudentController {
     public void removeStudentFromCourse(int studentId, int courseId) throws ControllerException {
         try {
             studentService.removeStudentFromCourse(studentId, courseId);
-        } catch (ServiceException e) {
+        } catch (NoSuchElementException | ServiceException e) {
             log.error(e.getMessage());
 
             throw new ControllerException(e);
@@ -65,10 +65,12 @@ public class StudentController {
 
     public List<StudentDto> getAllStudents() throws ControllerException {
         try {
-            var studentDtoList = studentService.getStudents();
-
-            return setStudentsRelations(studentDtoList);
-        } catch (ServiceException e) {
+            return studentService.getStudents()
+                .stream()
+                .map(this::setStudentsGroup)
+                .map(this::setStudentsCourseList)
+                .toList();
+        } catch (NoSuchElementException | ServiceException e) {
             log.error(e.getMessage());
 
             throw new ControllerException(e);
@@ -78,44 +80,42 @@ public class StudentController {
     public List<StudentDto> getStudents(String studentName, Integer courseId)
         throws ControllerException {
         try {
-            var studentDtoList = studentService.getStudents(studentName, courseId);
-
-            return setStudentsRelations(studentDtoList);
-        } catch (ServiceException e) {
+            return studentService.getStudents(studentName, courseId)
+                .stream()
+                .map(this::setStudentsGroup)
+                .map(this::setStudentsCourseList)
+                .toList();
+        } catch (NoSuchElementException | ServiceException e) {
             log.error(e.getMessage());
 
             throw new ControllerException(e);
         }
     }
 
-    private List<StudentDto> setStudentsRelations(List<StudentDto> studentDtoList) {
-        return studentDtoList.stream()
-            .map(this::setStudentsGroup)
-            .map(this::getSetCoursesList)
-            .toList();
-    }
+    private StudentDto setStudentsCourseList(StudentDto studentDto) {
+        int studentId = studentDto.getId();
 
-    private StudentDto getSetCoursesList(StudentDto studentDto) {
         try {
-            studentDto.setCoursesList(courseService.getCourses(studentDto.getId()));
+            var courseDtoList = courseService.getCourses(studentId);
+
+            studentDto.setCoursesList(courseDtoList);
 
             return studentDto;
-        } catch (ServiceException e) {
-            log.info("Student with id: {} hase no courses", studentDto.getId());
+        } catch (NoSuchElementException | ServiceException e) {
+            log.info("Student with id: {} hase no courses", studentId);
 
             return studentDto;
         }
     }
 
     private StudentDto setStudentsGroup(StudentDto studentDto) {
-        int groupId = studentDto.getGroup().getId();
-        GroupDto groupById = null;
         try {
-            groupById = groupService.getGroup(groupId);
-            studentDto.setGroup(groupById);
+            int groupId = studentDto.getGroup().getId();
+            var studentsGroup = groupService.getGroup(groupId);
+            studentDto.setGroup(studentsGroup);
 
             return studentDto;
-        } catch (ServiceException e) {
+        } catch (NullPointerException | NoSuchElementException | ServiceException e) {
             log.info("Student with id: {} hase no group", studentDto.getId());
 
             return studentDto;

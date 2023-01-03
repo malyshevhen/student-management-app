@@ -2,11 +2,12 @@ package ua.com.foxstudent102052.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import ua.com.foxstudent102052.controller.exceptions.ControllerException;
-import ua.com.foxstudent102052.dto.GroupDto;
-import ua.com.foxstudent102052.service.interfaces.GroupService;
+import ua.com.foxstudent102052.model.dto.GroupDto;
 import ua.com.foxstudent102052.service.exceptions.ServiceException;
+import ua.com.foxstudent102052.service.interfaces.GroupService;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Slf4j
 public class GroupController {
@@ -21,11 +22,9 @@ public class GroupController {
             var allGroupsDto = groupService.getGroups();
             allGroupsDto.forEach(this::setStudentsToGroups);
 
-            log.info("All groups were successfully received");
-
             return allGroupsDto;
-        } catch (ServiceException e) {
-            log.info(e.getMessage());
+        } catch (NoSuchElementException | ServiceException e) {
+            log.error(e.getMessage());
 
             throw new ControllerException(e);
         }
@@ -33,14 +32,12 @@ public class GroupController {
 
     public List<GroupDto> getGroupsSmallerThen(int numberOfStudents) throws ControllerException {
         try {
-            var unpopularGroupsDto = groupService.getGroupsLessThen(numberOfStudents);
-            unpopularGroupsDto.forEach(this::setStudentsToGroups);
+            var unpopularGroupDtoList = groupService.getGroupsLessThen(numberOfStudents);
+            unpopularGroupDtoList.forEach(this::setStudentsToGroups);
 
-            log.info("Unpopular groups were found");
-
-            return unpopularGroupsDto;
-        } catch (ServiceException e) {
-            log.info(e.getMessage());
+            return unpopularGroupDtoList;
+        } catch (NoSuchElementException | ServiceException e) {
+            log.error(e.getMessage());
 
             throw new ControllerException(e);
         }
@@ -51,7 +48,7 @@ public class GroupController {
             var result = groupService.getStudentsByGroup(groupDto.getId());
             groupDto.setStudentList(result);
 
-        } catch (ServiceException e) {
+        } catch (NoSuchElementException | ServiceException e) {
             log.info("Students were not received", e);
         }
     }

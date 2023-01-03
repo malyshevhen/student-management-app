@@ -1,13 +1,13 @@
 package ua.com.foxstudent102052.controller;
 
 import lombok.extern.slf4j.Slf4j;
-import ua.com.foxstudent102052.dto.CourseDto;
-import ua.com.foxstudent102052.dto.GroupDto;
-import ua.com.foxstudent102052.dto.StudentDto;
-import ua.com.foxstudent102052.repository.impl.CourseRepositoryImpl;
-import ua.com.foxstudent102052.repository.impl.GroupRepositoryImpl;
-import ua.com.foxstudent102052.datasource.impl.PostgresPooledDataSource;
-import ua.com.foxstudent102052.repository.impl.StudentRepositoryImpl;
+import ua.com.foxstudent102052.dao.impl.GroupDaoImpl;
+import ua.com.foxstudent102052.model.dto.CourseDto;
+import ua.com.foxstudent102052.model.dto.GroupDto;
+import ua.com.foxstudent102052.model.dto.StudentDto;
+import ua.com.foxstudent102052.dao.impl.CourseDaoImpl;
+import ua.com.foxstudent102052.dao.datasource.impl.PostgresPooledDataSource;
+import ua.com.foxstudent102052.dao.impl.StudentDaoImpl;
 import ua.com.foxstudent102052.service.QueryPostService;
 import ua.com.foxstudent102052.service.exceptions.ServiceException;
 import ua.com.foxstudent102052.service.impl.CourseServiceImpl;
@@ -19,13 +19,7 @@ import ua.com.foxstudent102052.service.interfaces.StudentService;
 import ua.com.foxstudent102052.utils.FileUtils;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-import java.util.Set;
+import java.util.*;
 
 @Slf4j
 public class TestDataInitializer {
@@ -35,16 +29,18 @@ public class TestDataInitializer {
     private static final StudentService studentService;
     private static final CourseService courseService;
     private static final GroupService groupService;
+    public static final QueryPostService queryPostService;
 
     static {
         var customDataSource = PostgresPooledDataSource.getInstance();
-        var studentRepository = new StudentRepositoryImpl(customDataSource);
-        var courseRepository = new CourseRepositoryImpl(customDataSource);
-        var groupRepository = new GroupRepositoryImpl(customDataSource);
+        var studentRepository = new StudentDaoImpl(customDataSource);
+        var courseRepository = new CourseDaoImpl(customDataSource);
+        var groupRepository = new GroupDaoImpl(customDataSource);
 
         studentService = new StudentServiceImpl(studentRepository);
         courseService = new CourseServiceImpl(courseRepository);
         groupService = new GroupServiceImpl(groupRepository);
+        queryPostService = new QueryPostService(customDataSource);
     }
 
     public void initTestDada() {
@@ -58,10 +54,9 @@ public class TestDataInitializer {
     private void runDdlScript() {
         try {
             var query = FileUtils.readTextFile("src/main/resources/scripts/ddl/Table_creation.sql");
-            QueryPostService.executeQuery(query);
-        } catch (IOException e) {
-            log.error("Error while creating tables", e);
-        } catch (ServiceException e) {
+
+            queryPostService.executeQuery(query);
+        } catch (IOException | ServiceException e) {
             log.error(e.getMessage());
         }
     }
@@ -72,7 +67,7 @@ public class TestDataInitializer {
         for (var course : courses) {
             try {
                 courseService.addCourse(course);
-            } catch (ServiceException e) {
+            } catch (NoSuchElementException | ServiceException e) {
                 log.error("Error while adding courses", e);
             }
         }
@@ -83,7 +78,7 @@ public class TestDataInitializer {
         for (var group : groups) {
             try {
                 groupService.addGroup(group);
-            } catch (ServiceException e) {
+            } catch (NoSuchElementException | ServiceException e) {
                 log.error("Error while adding groups", e);
             }
         }
@@ -93,7 +88,7 @@ public class TestDataInitializer {
         for (int i = 0; i < STUDENTS_COUNT; i++) {
             try {
                 studentService.addStudent(RandomData.getStudent());
-            } catch (ServiceException e) {
+            } catch (NoSuchElementException | ServiceException e) {
                 log.error("Error while adding students", e);
             }
         }
@@ -109,7 +104,7 @@ public class TestDataInitializer {
             for (var courseId : courseIdSet) {
                 try {
                     studentService.addStudentToCourse(studentId, courseId);
-                } catch (ServiceException e) {
+                } catch (NoSuchElementException | ServiceException e) {
                     log.error("Error while adding students to courses", e);
                 }
             }

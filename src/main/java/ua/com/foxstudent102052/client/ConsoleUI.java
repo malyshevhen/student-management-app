@@ -4,12 +4,12 @@ import ua.com.foxstudent102052.controller.CourseController;
 import ua.com.foxstudent102052.controller.GroupController;
 import ua.com.foxstudent102052.controller.StudentController;
 import ua.com.foxstudent102052.controller.exceptions.ControllerException;
-import ua.com.foxstudent102052.dto.GroupDto;
-import ua.com.foxstudent102052.dto.StudentDto;
-import ua.com.foxstudent102052.repository.impl.CourseRepositoryImpl;
-import ua.com.foxstudent102052.repository.impl.GroupRepositoryImpl;
-import ua.com.foxstudent102052.datasource.impl.PostgresPooledDataSource;
-import ua.com.foxstudent102052.repository.impl.StudentRepositoryImpl;
+import ua.com.foxstudent102052.dao.impl.StudentDaoImpl;
+import ua.com.foxstudent102052.model.dto.GroupDto;
+import ua.com.foxstudent102052.model.dto.StudentDto;
+import ua.com.foxstudent102052.dao.impl.CourseDaoImpl;
+import ua.com.foxstudent102052.dao.impl.GroupDaoImpl;
+import ua.com.foxstudent102052.dao.datasource.impl.PostgresPooledDataSource;
 import ua.com.foxstudent102052.service.impl.CourseServiceImpl;
 import ua.com.foxstudent102052.service.impl.GroupServiceImpl;
 import ua.com.foxstudent102052.service.impl.StudentServiceImpl;
@@ -59,9 +59,9 @@ public class ConsoleUI {
 
     static {
         var customDataSource = PostgresPooledDataSource.getInstance();
-        var courseRepository = new CourseRepositoryImpl(customDataSource);
-        var studentRepository = new StudentRepositoryImpl(customDataSource);
-        var groupRepository = new GroupRepositoryImpl(customDataSource);
+        var courseRepository = new CourseDaoImpl(customDataSource);
+        var studentRepository = new StudentDaoImpl(customDataSource);
+        var groupRepository = new GroupDaoImpl(customDataSource);
         var courseService = new CourseServiceImpl(courseRepository);
         var studentService = new StudentServiceImpl(studentRepository);
         var groupService = new GroupServiceImpl(groupRepository);

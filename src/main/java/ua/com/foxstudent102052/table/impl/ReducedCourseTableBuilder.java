@@ -1,6 +1,6 @@
 package ua.com.foxstudent102052.table.impl;
 
-import ua.com.foxstudent102052.dto.CourseDto;
+import ua.com.foxstudent102052.model.dto.CourseDto;
 
 public class ReducedCourseTableBuilder extends DtoTableBuilderImpl<CourseDto> {
     private static final String ROW = "|%-5s|%-15s|";

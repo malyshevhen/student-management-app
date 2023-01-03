@@ -2,32 +2,33 @@ package ua.com.foxstudent102052.service.impl;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import ua.com.foxstudent102052.mapper.CourseMapper;
-import ua.com.foxstudent102052.model.Course;
-import ua.com.foxstudent102052.dto.CourseDto;
-import ua.com.foxstudent102052.repository.interfaces.CourseRepository;
-import ua.com.foxstudent102052.repository.exceptions.RepositoryException;
+import ua.com.foxstudent102052.dao.exceptions.DAOException;
+import ua.com.foxstudent102052.dao.interfaces.CourseDao;
+import ua.com.foxstudent102052.model.dto.CourseDto;
+import ua.com.foxstudent102052.model.entity.Course;
+import ua.com.foxstudent102052.model.mapper.CourseModelMapper;
 import ua.com.foxstudent102052.service.exceptions.ServiceException;
 import ua.com.foxstudent102052.service.interfaces.CourseService;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 class CourseServiceImplTest {
-    private CourseRepository courseRepository;
+    private CourseDao courseDao;
     private CourseService courseService;
 
     @BeforeEach
     public void setUp() {
-        courseRepository = mock(CourseRepository.class);
-        courseService = new CourseServiceImpl(courseRepository);
+        courseDao = mock(CourseDao.class);
+        courseService = new CourseServiceImpl(courseDao);
     }
 
     @Test
-    void MethodAddCourse_ShouldPassCourseToRepository() throws RepositoryException, ServiceException {
+    void MethodAddCourse_ShouldPassCourseToRepository() throws DAOException, ServiceException {
         // given
         Course courseFromDb = Course.builder().courseName("Java").courseDescription("Java course").build();
         CourseDto newCourse = CourseDto.builder().name("Java").description("Java course").build();
@@ -36,36 +37,37 @@ class CourseServiceImplTest {
         courseService.addCourse(newCourse);
 
         // then
-        verify(courseRepository).addCourse(courseFromDb);
+        verify(courseDao).addCourse(courseFromDb);
     }
 
     @Test
-    void MethodAddCourse_ShouldThrowEnException_WhenCheckIsFailed() throws RepositoryException {
+    void MethodAddCourse_ShouldThrowEnException_WhenCheckIsFailed() throws DAOException {
         // given
         var course = Course.builder().courseName("Java").courseDescription("Java course").build();
 
         // when
+        doThrow(DAOException.class).when(courseDao).addCourse(any(Course.class));
 
         // then
-        assertThrows(ServiceException.class, () -> courseService.addCourse(CourseMapper.toCourseDto(course)),
+        assertThrows(ServiceException.class, () -> courseService.addCourse(CourseModelMapper.toCourseDto(course)),
             "Course wasn`t added");
     }
 
     @Test
-    void MethodAddCourse_ShouldThrowEnException_WhenRepositoryExceptionIsThrown() throws RepositoryException {
+    void MethodAddCourse_ShouldThrowEnException_WhenRepositoryExceptionIsThrown() throws DAOException {
         // given
         var course = Course.builder().courseName("Java").courseDescription("Java course").build();
 
         // when
-        doThrow(RepositoryException.class).when(courseRepository).addCourse(course);
+        doThrow(DAOException.class).when(courseDao).addCourse(course);
 
         // then
-        assertThrows(ServiceException.class, () -> courseService.addCourse(CourseMapper.toCourseDto(course)),
+        assertThrows(ServiceException.class, () -> courseService.addCourse(CourseModelMapper.toCourseDto(course)),
             "Course with id 1 already exist");
     }
 
     @Test
-    void MethodGetAllCourses_ShouldReturnListOfAllStudents() throws RepositoryException, ServiceException {
+    void MethodGetAllCourses_ShouldReturnListOfAllStudents() throws DAOException, ServiceException {
         // given
         var courses = List.of(
             Course.builder().courseName("Java").courseDescription("Java course").build(),
@@ -73,7 +75,7 @@ class CourseServiceImplTest {
             Course.builder().courseName("C#").courseDescription("C# course").build());
 
         // when
-        when(courseRepository.getAllCourses()).thenReturn(courses);
+        when(courseDao.getCourses()).thenReturn(courses);
 
         // then
         var expected = List.of(
@@ -86,21 +88,21 @@ class CourseServiceImplTest {
     }
 
     @Test
-    void MethodGetAllCourses_ShouldThrowException_WhenRepositoryExceptionThrown() throws RepositoryException {
+    void MethodGetAllCourses_ShouldThrowException_WhenRepositoryExceptionThrown() throws DAOException {
         // when
-        when(courseRepository.getAllCourses()).thenThrow(RepositoryException.class);
+        when(courseDao.getCourses()).thenThrow(DAOException.class);
 
         // then
         assertThrows(ServiceException.class, () -> courseService.getCourses(), "Courses weren`t found");
     }
 
     @Test
-    void MethodGetCourseById_ShouldReturnCourseFromDb() throws RepositoryException, ServiceException {
+    void MethodGetCourseById_ShouldReturnCourseFromDb() throws DAOException, ServiceException {
         // given
         var course = Course.builder().courseName("Java").courseDescription("Java course").build();
 
         // when
-        when(courseRepository.getCourseById(1)).thenReturn(course);
+        when(courseDao.getCourse(1)).thenReturn(Optional.of(course));
 
         // then
         var expected = CourseDto.builder().name("Java").description("Java course").studentsList(List.of()).build();
@@ -110,21 +112,21 @@ class CourseServiceImplTest {
     }
 
     @Test
-    void MethodGetCourseById_ShouldThrowException_WhenRepositoryExceptionThrown() throws RepositoryException {
+    void MethodGetCourseById_ShouldThrowException_WhenRepositoryExceptionThrown() throws DAOException {
         // when
-        when(courseRepository.getCourseById(1)).thenThrow(RepositoryException.class);
+        when(courseDao.getCourse(1)).thenThrow(DAOException.class);
 
         // then
         assertThrows(ServiceException.class, () -> courseService.getCourse(1), "Course wasn`t found");
     }
 
     @Test
-    void MethodGetCoursesByStudentId_ShouldReturnCourseFromDb() throws RepositoryException, ServiceException {
+    void MethodGetCoursesByStudentId_ShouldReturnCourseFromDb() throws DAOException, ServiceException {
         // given
         var course = Course.builder().courseName("Java").courseDescription("Java course").build();
 
         // when
-        when(courseRepository.getCoursesByStudentId(1)).thenReturn(List.of(course));
+        when(courseDao.getCourses(1)).thenReturn(List.of(course));
 
         // then
         var expected = List.of(CourseDto.builder().name("Java").description("Java course").studentsList(List.of()).build());
@@ -134,9 +136,9 @@ class CourseServiceImplTest {
     }
 
     @Test
-    void MethodGetCoursesByStudentId_ShouldThrowException_WhenRepositoryExceptionThrown() throws RepositoryException {
+    void MethodGetCoursesByStudentId_ShouldThrowException_WhenRepositoryExceptionThrown() throws DAOException {
         // when
-        when(courseRepository.getCoursesByStudentId(1)).thenThrow(RepositoryException.class);
+        when(courseDao.getCourses(1)).thenThrow(DAOException.class);
 
         // then
         assertThrows(ServiceException.class, () -> courseService.getCourses(1), "Courses weren`t found");

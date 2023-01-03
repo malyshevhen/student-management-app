@@ -1,7 +1,7 @@
 package ua.com.foxstudent102052.service.interfaces;
 
-import ua.com.foxstudent102052.dto.GroupDto;
-import ua.com.foxstudent102052.dto.StudentDto;
+import ua.com.foxstudent102052.model.dto.GroupDto;
+import ua.com.foxstudent102052.model.dto.StudentDto;
 import ua.com.foxstudent102052.service.exceptions.ServiceException;
 
 import java.util.List;
@@ -18,6 +18,4 @@ public interface GroupService {
     GroupDto getGroup(String groupName) throws ServiceException;
 
     List<StudentDto> getStudentsByGroup(int groupId) throws ServiceException;
-
-    Boolean ifExist(String groupName) throws ServiceException;
 }

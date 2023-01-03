@@ -1,6 +1,6 @@
 package ua.com.foxstudent102052.table.impl;
 
-import ua.com.foxstudent102052.dto.GroupDto;
+import ua.com.foxstudent102052.model.dto.GroupDto;
 
 public class ReducedGroupTableBuilder extends DtoTableBuilderImpl<GroupDto>{
     private static final String ROW = "|%-5s|%-10s|";
