@@ -42,7 +42,7 @@ public class CourseController {
         } catch (ServiceException e) {
             log.info(e.getMessage());
 
-            throw new ControllerException(e.getMessage(), e);
+            throw new ControllerException(e);
         }
     }
 
@@ -56,7 +56,7 @@ public class CourseController {
         } catch (ServiceException e) {
             log.info(e.getMessage());
 
-            throw new ControllerException(e.getMessage(), e);
+            throw new ControllerException(e);
         }
     }
 }

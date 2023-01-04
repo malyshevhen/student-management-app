@@ -101,7 +101,7 @@ public class ConsoleUI {
                     ConsoleUtils.print(WRONG_INPUT_MESSAGE);
                 }
             } catch (NoSuchElementException | IllegalArgumentException e) {
-                ConsoleUtils.print(e.getMessage());
+                ConsoleUtils.print(e.getCause().getMessage());
             }
         }
         ConsoleUtils.print("Thank you for using Student Management Application!");
@@ -120,7 +120,7 @@ public class ConsoleUI {
 
             ConsoleUtils.print(groupTable);
         } catch (ControllerException e) {
-            ConsoleUtils.print(e.getMessage());
+            ConsoleUtils.print(e.getCause().getMessage());
         }
 
         int groupId = ConsoleUtils.getInputInt(ENTER_OPTION_NUMBER);
@@ -138,7 +138,7 @@ public class ConsoleUI {
 
             ConsoleUtils.print("Student added successfully");
         } catch (ControllerException e) {
-            ConsoleUtils.print(e.getMessage());
+            ConsoleUtils.print(e.getCause().getCause().getMessage());
         }
     }
 
@@ -150,7 +150,7 @@ public class ConsoleUI {
 
             ConsoleUtils.print("Student removed successfully");
         } catch (ControllerException e) {
-            ConsoleUtils.print(e.getMessage());
+            ConsoleUtils.print(e.getCause().getMessage());
         }
     }
 
@@ -168,7 +168,7 @@ public class ConsoleUI {
 
             ConsoleUtils.print("Student added to course successfully");
         } catch (ControllerException e) {
-            ConsoleUtils.print(e.getMessage());
+            ConsoleUtils.print(e.getCause().getMessage());
         }
     }
 
@@ -186,7 +186,7 @@ public class ConsoleUI {
 
             ConsoleUtils.print("Student removed from course successfully");
         } catch (ControllerException e) {
-            ConsoleUtils.print(e.getMessage());
+            ConsoleUtils.print(e.getCause().getMessage());
         }
     }
 
@@ -199,7 +199,7 @@ public class ConsoleUI {
 
             ConsoleUtils.print(groupTable);
         } catch (ControllerException e) {
-            ConsoleUtils.print(e.getMessage());
+            ConsoleUtils.print(e.getCause().getMessage());
         }
     }
 
@@ -217,7 +217,7 @@ public class ConsoleUI {
 
             ConsoleUtils.print(studentTable);
         } catch (ControllerException e) {
-            ConsoleUtils.print(e.getMessage());
+            ConsoleUtils.print(e.getCause().getMessage());
         }
     }
 
@@ -228,7 +228,7 @@ public class ConsoleUI {
 
             ConsoleUtils.print(studentTable);
         } catch (ControllerException e) {
-            ConsoleUtils.print(e.getMessage());
+            ConsoleUtils.print(e.getCause().getMessage());
         }
     }
 }
