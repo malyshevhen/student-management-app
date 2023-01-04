@@ -1,16 +1,13 @@
 package ua.com.foxstudent102052;
 
-import ua.com.foxstudent102052.controller.TestDataController;
-import ua.com.foxstudent102052.facade.MainFacade;
+import ua.com.foxstudent102052.controller.TestDataInitializer;
+import ua.com.foxstudent102052.client.ConsoleUI;
 
 public class StudentManagementApp {
-    private static final TestDataController testDataController = new TestDataController();
+    private static final TestDataInitializer testDataInitializer = new TestDataInitializer();
 
     public static void main(String[] args) {
-        testDataController.createTestData();
-        
-        MainFacade.callUpMainMenu();
+        testDataInitializer.initTestDada();
+        ConsoleUI.callMainMenu();
     }
-
-    
 }

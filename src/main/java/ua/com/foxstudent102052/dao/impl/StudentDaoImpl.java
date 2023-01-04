@@ -1,0 +1,205 @@
+package ua.com.foxstudent102052.dao.impl;
+
+import lombok.extern.slf4j.Slf4j;
+import ua.com.foxstudent102052.dao.datasource.interfaces.CustomDataSource;
+import ua.com.foxstudent102052.dao.exceptions.DAOException;
+import ua.com.foxstudent102052.dao.interfaces.StudentDao;
+import ua.com.foxstudent102052.dao.mapper.StudentDaoMapper;
+import ua.com.foxstudent102052.model.entity.Student;
+
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Optional;
+
+@Slf4j
+public class StudentDaoImpl implements StudentDao {
+    private final CustomDataSource dataSource;
+
+    public StudentDaoImpl(CustomDataSource customDataSource) {
+        this.dataSource = customDataSource;
+    }
+
+    @Override
+    public void addStudent(Student student) throws DAOException {
+        var query =
+            """
+                INSERT INTO students (
+                    group_id,
+                    first_name,
+                    last_name)
+                VALUES (?, ?, ?);""";
+
+        try (var connection = dataSource.getConnection();
+             var statement = connection.prepareStatement(query)) {
+            statement.setInt(1, student.groupId());
+            statement.setString(2, student.firstName());
+            statement.setString(3, student.lastName());
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            var message = "Error while adding student to the database";
+
+            log.error(message, e);
+
+            throw new DAOException(message, e);
+        }
+    }
+
+    @Override
+    public void removeStudent(int studentId) throws DAOException {
+        var query =
+            """
+                DELETE FROM students_courses
+                WHERE student_id = ?;
+                DELETE
+                FROM students
+                WHERE student_id = ?;""";
+
+        try (var connection = dataSource.getConnection();
+             var statement = connection.prepareStatement(query)) {
+            statement.setInt(1, studentId);
+            statement.setInt(2, studentId);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            log.error("Student with studentId {} was not removed from the database", studentId);
+
+            throw new DAOException(String.format("Student with studentId %d was not removed from the database", studentId), e);
+        }
+    }
+
+    @Override
+    public void addStudentToCourse(int studentId, int courseId) throws DAOException {
+        var query =
+            """
+                INSERT INTO students_courses (
+                    student_id,
+                    course_id)
+                VALUES (?, ?);""";
+
+        try (var connection = dataSource.getConnection();
+             var statement = connection.prepareStatement(query)) {
+            statement.setInt(1, studentId);
+            statement.setInt(2, courseId);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            log.error("Student with id {} was not added to Course with id {}", studentId, courseId);
+
+            throw new DAOException(String.format("Student with id %d was not added to Course with id %d",
+                studentId, courseId), e);
+        }
+    }
+
+    @Override
+    public void removeStudentFromCourse(int studentId, int courseId) throws DAOException {
+        var query =
+            """
+                DELETE
+                FROM students_courses
+                WHERE student_id = ?
+                AND course_id = ?;""";
+
+        try (var connection = dataSource.getConnection();
+             var statement = connection.prepareStatement(query)) {
+            statement.setInt(1, studentId);
+            statement.setInt(2, courseId);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            log.error("Student with id {} was not removed from course with id {}", studentId, courseId);
+
+            throw new DAOException(String.format("Student with id %d was not removed from course with id %d",
+                studentId, courseId), e);
+        }
+    }
+
+    @Override
+    public Optional<Student> getStudent(int id) throws DAOException {
+        var query =
+            """
+                SELECT *
+                FROM students
+                WHERE student_id = ?;""";
+
+        try (var connection = dataSource.getConnection();
+             var statement = connection.prepareStatement(query)) {
+            statement.setInt(1, id);
+            var studentsResultSet = statement.executeQuery();
+
+            if (studentsResultSet.next()) {
+                var student = StudentDaoMapper.mapToStudent(studentsResultSet);
+
+                return Optional.of(student);
+            } else {
+                return Optional.empty();
+            }
+        } catch (SQLException e) {
+            log.error("Error while getting student by id");
+
+            throw new DAOException("Error while getting student by id", e);
+        }
+    }
+
+    @Override
+    public List<Student> getStudents() throws DAOException {
+        var query = "SELECT * FROM students;";
+
+        try (var connection = dataSource.getConnection();
+             var statement = connection.createStatement();
+             var studentsResultSet = statement.executeQuery(query)) {
+
+            return StudentDaoMapper.mapToStudents(studentsResultSet);
+        } catch (SQLException e) {
+            log.error("There are no students in the database");
+
+            throw new DAOException("There are no students in the database", e);
+        }
+    }
+
+    @Override
+    public List<Student> getStudents(int courseId) throws DAOException {
+        var query =
+            """
+                SELECT *
+                FROM students
+                WHERE student_id IN (
+                    SELECT student_id
+                    FROM students_courses
+                    WHERE course_id = ?);""";
+
+        try (var connection = dataSource.getConnection();
+             var statement = connection.prepareStatement(query)) {
+            statement.setInt(1, courseId);
+            var studentsResultSet = statement.executeQuery();
+
+            return StudentDaoMapper.mapToStudents(studentsResultSet);
+        } catch (SQLException e) {
+            log.error("Error while getting students by course id");
+
+            throw new DAOException("Error while getting students by course id", e);
+        }
+    }
+
+    @Override
+    public List<Student> getStudents(String studentName, Integer courseId) throws DAOException {
+        var query =
+            """
+                SELECT *
+                FROM students
+                WHERE student_id IN (
+                    SELECT student_id
+                    FROM students_courses
+                    WHERE course_id = ?)
+                AND first_name = ?;""";
+
+        try (var connection = dataSource.getConnection();
+             var statement = connection.prepareStatement(query)) {
+            statement.setInt(1, courseId);
+            statement.setString(2, studentName);
+            var studentsResultSet = statement.executeQuery();
+
+            return StudentDaoMapper.mapToStudents(studentsResultSet);
+        } catch (SQLException e) {
+            log.error("Error while getting students by name and course");
+
+            throw new DAOException("Error while getting students by name and course", e);
+        }
+    }
+}

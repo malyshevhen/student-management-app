@@ -1,116 +1,62 @@
 package ua.com.foxstudent102052.controller;
 
 import lombok.extern.slf4j.Slf4j;
-import ua.com.foxstudent102052.mapper.CourseMapper;
-import ua.com.foxstudent102052.mapper.StudentMapper;
-import ua.com.foxstudent102052.model.CourseDto;
-import ua.com.foxstudent102052.model.StudentDto;
-import ua.com.foxstudent102052.service.CourseService;
-import ua.com.foxstudent102052.service.exception.CourseAlreadyExistException;
+import ua.com.foxstudent102052.controller.exceptions.ControllerException;
+import ua.com.foxstudent102052.model.dto.CourseDto;
+import ua.com.foxstudent102052.model.dto.StudentDto;
+import ua.com.foxstudent102052.service.interfaces.CourseService;
+import ua.com.foxstudent102052.service.exceptions.ServiceException;
+import ua.com.foxstudent102052.service.interfaces.StudentService;
 
 import java.util.List;
 
 @Slf4j
 public class CourseController {
-    private static CourseService courseService;
-    
-    public CourseController(CourseService courseService) {
+    private final CourseService courseService;
+    private final StudentService studentService;
+
+    public CourseController(CourseService courseService, StudentService studentService) {
         this.courseService = courseService;
+        this.studentService = studentService;
     }
 
-    public void addCourse(CourseDto courseDto) {
+    public List<CourseDto> getAllCourses() throws ControllerException {
         try {
-            courseService.addCourse(courseDto);
-        } catch (CourseAlreadyExistException e) {
-            log.info(e.getMessage());
-        }
-    }
+            var coursesListDto = courseService.getCourses();
+            log.info("All courses were successfully received");
 
-    public void updateCourse(CourseDto courseDto) {
-        try {
-            courseService.updateCourse(courseDto);
-        } catch (IllegalArgumentException e) {
-            log.info(e.getMessage());
-        }
-    }
+            coursesListDto.forEach(courseDto -> {
 
-    public void updateCourseName(CourseDto  courseDto) {
-        try {
-            courseService.updateCourseName(courseDto);
-        } catch (IllegalArgumentException e) {
-            log.info(e.getMessage());
-        }
-    }
+                try {
+                    var studentsByCourse = getStudents(courseDto.getId());
+                    courseDto.setStudentsList(studentsByCourse);
+                    log.info("All students were successfully received");
 
-    public void updateCourseDescription(CourseDto courseDto) {
-        try {
-            courseService.updateCourseDescription(courseDto);
-        } catch (IllegalArgumentException e) {
-            log.info(e.getMessage());
-        }
-    }
-
-    public void removeCourse(int courseId) {
-        try {
-            courseService.removeCourse(courseId);
-        } catch (IllegalArgumentException e) {
-            log.info(e.getMessage());
-        }
-    }
-
-    public CourseDto getCourseById(int courseId) {
-        try {
-            CourseDto courseDto = CourseMapper.courseToDto(courseService.getCourseById(courseId));
-            courseDto.setStudentsList(getStudentsByCourse(courseId));
-
-            return courseDto;
-        } catch (IllegalArgumentException e) {
-            log.info(e.getMessage());
-        }
-
-        return new CourseDto();
-    }
-
-    public List<CourseDto> getAllCourses() {
-        try {
-            var coursesListDto = courseService.getAllCourses()
-                .stream()
-                .map(CourseMapper::courseToDto)
-                .toList();
-            coursesListDto.forEach(courseDto -> courseDto.setStudentsList(getStudentsByCourse(courseDto.getId())));
+                } catch (ControllerException e) {
+                    log.info("Students were not received", e);
+                }
+            });
 
             return coursesListDto;
-        } catch (IllegalArgumentException e) {
-            log.info(e.getMessage());
-        }
 
-        return List.of();
+        } catch (ServiceException e) {
+            log.info(e.getMessage());
+
+            throw new ControllerException(e);
+        }
     }
 
-    public List<StudentDto> getStudentsByCourse(int courseId) {
+    public List<StudentDto> getStudents(int courseId) throws ControllerException {
 
         try {
-            return courseService.getStudentsByCourse(courseId)
-                .stream()
-                .map(StudentMapper::studentToDto)
-                .toList();
-        } catch (IllegalArgumentException e) {
+            var studentsByCourse = studentService.getStudents(courseId);
+            log.info("Students were successfully received");
+            return studentsByCourse;
+
+        } catch (ServiceException e) {
             log.info(e.getMessage());
+
+            throw new ControllerException(e);
         }
-
-        return List.of();
-    }
-
-    public CourseDto getCourseByName(String courseName) {
-        try {
-            CourseDto courseDto = CourseMapper.courseToDto(courseService.getCourseByName(courseName));
-            courseDto.setStudentsList(getStudentsByCourse(courseDto.getId()));
-
-            return courseDto;
-        } catch (IllegalArgumentException e) {
-            log.info(e.getMessage());
-        }
-
-        return new CourseDto();
     }
 }
