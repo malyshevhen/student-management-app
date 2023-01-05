@@ -22,7 +22,7 @@ public class CourseDaoImpl implements CourseDao {
     }
 
     @Override
-    public void addCourse(Course course) throws DAOException {
+    public void addCourse(Course course) {
         var query = """
             INSERT
             INTO courses (course_name, course_description)
@@ -30,20 +30,20 @@ public class CourseDaoImpl implements CourseDao {
 
         try (var connection = dataSource.getConnection();
              var statement = connection.prepareStatement(query)) {
-            statement.setString(1, course.courseName());
-            statement.setString(2, course.courseDescription());
+            statement.setString(1, course.getName());
+            statement.setString(2, course.getDescription());
             statement.executeUpdate();
             log.info(QUERY_EXECUTED_SUCCESSFULLY);
 
         } catch (SQLException e) {
-            log.error("Error while adding course", e);
+            log.error(e.getMessage());
 
             throw new DAOException(e);
         }
     }
 
     @Override
-    public Optional<Course> getCourse(int courseId) throws DAOException {
+    public Optional<Course> getCourse(int courseId) {
         var query = """
             SELECT *
             FROM courses
@@ -62,14 +62,14 @@ public class CourseDaoImpl implements CourseDao {
                 return Optional.empty();
             }
         } catch (SQLException e) {
-            log.error("Error while getting course by id", e);
+            log.error(e.getMessage());
 
             throw new DAOException(e);
         }
     }
 
     @Override
-    public Optional<Course> getCourse(String courseName) throws DAOException {
+    public Optional<Course> getCourse(String courseName) {
         var query = """
             SELECT *
             FROM courses
@@ -88,14 +88,14 @@ public class CourseDaoImpl implements CourseDao {
                 return Optional.empty();
             }
         } catch (SQLException e) {
-            log.error("Error while getting course by id", e);
+            log.error(e.getMessage());
 
             throw new DAOException(e);
         }
     }
 
     @Override
-    public List<Course> getCourses() throws DAOException {
+    public List<Course> getCourses() {
         var query = "SELECT * FROM courses;";
 
         try (var connection = dataSource.getConnection();
@@ -103,16 +103,15 @@ public class CourseDaoImpl implements CourseDao {
              var coursesResultSet = statement.executeQuery(query)) {
 
             return CourseDaoMapper.mapToCourses(coursesResultSet);
-
         } catch (SQLException e) {
-            log.error("Error while getting all courses", e);
+            log.error(e.getMessage());
 
             throw new DAOException(e);
         }
     }
 
     @Override
-    public List<Course> getCourses(int studentId) throws DAOException {
+    public List<Course> getCourses(int studentId) {
         var query = """
             SELECT *
             FROM courses
@@ -129,7 +128,7 @@ public class CourseDaoImpl implements CourseDao {
 
             return CourseDaoMapper.mapToCourses(coursesResultSet);
         } catch (SQLException e) {
-            log.error("Error while getting courses by student id", e);
+            log.error(e.getMessage());
 
             throw new DAOException(e);
         }

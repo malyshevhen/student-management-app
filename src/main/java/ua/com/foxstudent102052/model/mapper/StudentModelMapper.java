@@ -17,10 +17,10 @@ public class StudentModelMapper {
     public static StudentDto toStudentDto(Student student) {
         try {
             return StudentDto.builder()
-                .id(student.studentId())
-                .group(GroupDto.builder().id(student.groupId()).build())
-                .firstName(student.firstName())
-                .lastName(student.lastName())
+                .id(student.getId())
+                .group(GroupDto.builder().id(student.getGroupId()).build())
+                .firstName(student.getFirstName())
+                .lastName(student.getLastName())
                 .coursesList(List.of())
                 .build();
         } catch (NullPointerException e) {
@@ -33,7 +33,7 @@ public class StudentModelMapper {
     public static Student toStudent(StudentDto studentDto) {
         try {
             return Student.builder()
-                .studentId(studentDto.getId())
+                .id(studentDto.getId())
                 .groupId(studentDto.getGroup().getId())
                 .firstName(studentDto.getFirstName())
                 .lastName(studentDto.getLastName())

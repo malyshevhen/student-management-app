@@ -3,13 +3,13 @@ package ua.com.foxstudent102052.client;
 import ua.com.foxstudent102052.controller.CourseController;
 import ua.com.foxstudent102052.controller.GroupController;
 import ua.com.foxstudent102052.controller.StudentController;
-import ua.com.foxstudent102052.controller.exceptions.ControllerException;
+import ua.com.foxstudent102052.dao.datasource.impl.PostgresPooledDataSource;
+import ua.com.foxstudent102052.dao.exceptions.DAOException;
+import ua.com.foxstudent102052.dao.impl.CourseDaoImpl;
+import ua.com.foxstudent102052.dao.impl.GroupDaoImpl;
 import ua.com.foxstudent102052.dao.impl.StudentDaoImpl;
 import ua.com.foxstudent102052.model.dto.GroupDto;
 import ua.com.foxstudent102052.model.dto.StudentDto;
-import ua.com.foxstudent102052.dao.impl.CourseDaoImpl;
-import ua.com.foxstudent102052.dao.impl.GroupDaoImpl;
-import ua.com.foxstudent102052.dao.datasource.impl.PostgresPooledDataSource;
 import ua.com.foxstudent102052.service.impl.CourseServiceImpl;
 import ua.com.foxstudent102052.service.impl.GroupServiceImpl;
 import ua.com.foxstudent102052.service.impl.StudentServiceImpl;
@@ -101,7 +101,7 @@ public class ConsoleUI {
                     ConsoleUtils.print(WRONG_INPUT_MESSAGE);
                 }
             } catch (NoSuchElementException | IllegalArgumentException e) {
-                ConsoleUtils.print(e.getCause().getMessage());
+                ConsoleUtils.print(e.getMessage());
             }
         }
         ConsoleUtils.print("Thank you for using Student Management Application!");
@@ -119,8 +119,8 @@ public class ConsoleUI {
             var groupTable = tableFactory.buildTable(allGroups, new ReducedGroupTableBuilder());
 
             ConsoleUtils.print(groupTable);
-        } catch (ControllerException e) {
-            ConsoleUtils.print(e.getCause().getMessage());
+        } catch (DAOException | NoSuchElementException e) {
+            ConsoleUtils.print(e.getMessage());
         }
 
         int groupId = ConsoleUtils.getInputInt(ENTER_OPTION_NUMBER);
@@ -137,8 +137,8 @@ public class ConsoleUI {
             studentController.addStudent(studentDto);
 
             ConsoleUtils.print("Student added successfully");
-        } catch (ControllerException e) {
-            ConsoleUtils.print(e.getCause().getCause().getMessage());
+        } catch (DAOException | NoSuchElementException e) {
+            ConsoleUtils.print(e.getMessage());
         }
     }
 
@@ -149,8 +149,8 @@ public class ConsoleUI {
             studentController.removeStudent(studentId);
 
             ConsoleUtils.print("Student removed successfully");
-        } catch (ControllerException e) {
-            ConsoleUtils.print(e.getCause().getMessage());
+        } catch (DAOException | NoSuchElementException e) {
+            ConsoleUtils.print(e.getMessage());
         }
     }
 
@@ -167,8 +167,8 @@ public class ConsoleUI {
             studentController.addStudentToCourse(studentId, courseId);
 
             ConsoleUtils.print("Student added to course successfully");
-        } catch (ControllerException e) {
-            ConsoleUtils.print(e.getCause().getMessage());
+        } catch (DAOException | NoSuchElementException e) {
+            ConsoleUtils.print(e.getMessage());
         }
     }
 
@@ -185,8 +185,8 @@ public class ConsoleUI {
             studentController.removeStudentFromCourse(studentId, courseId);
 
             ConsoleUtils.print("Student removed from course successfully");
-        } catch (ControllerException e) {
-            ConsoleUtils.print(e.getCause().getMessage());
+        } catch (DAOException | NoSuchElementException e) {
+            ConsoleUtils.print(e.getMessage());
         }
     }
 
@@ -198,8 +198,8 @@ public class ConsoleUI {
             var groupTable = tableFactory.buildTable(groupsSmallerThen, new ExpandedGroupTableBuilder());
 
             ConsoleUtils.print(groupTable);
-        } catch (ControllerException e) {
-            ConsoleUtils.print(e.getCause().getMessage());
+        } catch (DAOException | NoSuchElementException e) {
+            ConsoleUtils.print(e.getMessage());
         }
     }
 
@@ -216,8 +216,8 @@ public class ConsoleUI {
             var studentTable = tableFactory.buildTable(studentsByCourseNameAndGroupId, new ExpandedStudentTableBuilder());
 
             ConsoleUtils.print(studentTable);
-        } catch (ControllerException e) {
-            ConsoleUtils.print(e.getCause().getMessage());
+        } catch (DAOException | NoSuchElementException e) {
+            ConsoleUtils.print(e.getMessage());
         }
     }
 
@@ -227,8 +227,8 @@ public class ConsoleUI {
             var studentTable = tableFactory.buildTable(allStudents, new ExpandedStudentTableBuilder());
 
             ConsoleUtils.print(studentTable);
-        } catch (ControllerException e) {
-            ConsoleUtils.print(e.getCause().getMessage());
+        } catch (DAOException | NoSuchElementException e) {
+            ConsoleUtils.print(e.getMessage());
         }
     }
 }

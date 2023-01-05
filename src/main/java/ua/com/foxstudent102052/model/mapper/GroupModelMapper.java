@@ -16,8 +16,8 @@ public class GroupModelMapper {
     public static GroupDto toGroupDto(Group group) {
         try {
             return GroupDto.builder()
-                .id(group.groupId())
-                .name(group.groupName())
+                .id(group.getId())
+                .name(group.getName())
                 .studentList(List.of())
                 .build();
         } catch (NullPointerException e) {
@@ -30,8 +30,8 @@ public class GroupModelMapper {
     public static Group toGroup(GroupDto groupDto) {
         try {
             return Group.builder()
-                .groupId(groupDto.getId())
-                .groupName(groupDto.getName())
+                .id(groupDto.getId())
+                .name(groupDto.getName())
                 .build();
         } catch (NullPointerException e) {
             log.error("GroupMapper.toGroup() - NullPointerException: " + e.getMessage());

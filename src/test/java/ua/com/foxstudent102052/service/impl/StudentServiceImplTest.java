@@ -2,24 +2,25 @@ package ua.com.foxstudent102052.service.impl;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import ua.com.foxstudent102052.model.mapper.StudentModelMapper;
-import ua.com.foxstudent102052.model.entity.Student;
-import ua.com.foxstudent102052.model.dto.StudentDto;
+import org.modelmapper.ModelMapper;
 import ua.com.foxstudent102052.dao.exceptions.DAOException;
 import ua.com.foxstudent102052.dao.interfaces.StudentDao;
-import ua.com.foxstudent102052.service.exceptions.ServiceException;
+import ua.com.foxstudent102052.model.dto.StudentDto;
+import ua.com.foxstudent102052.model.entity.Student;
+import ua.com.foxstudent102052.service.exceptions.ElementAlreadyExistException;
 import ua.com.foxstudent102052.service.interfaces.StudentService;
 
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 class StudentServiceImplTest {
+    private final ModelMapper modelMapper = new ModelMapper();
     private StudentDao studentDao;
     private StudentService studentService;
 
@@ -30,13 +31,13 @@ class StudentServiceImplTest {
     }
 
     @Test
-    void MethodAddStudent_ShouldPassNewStudentToRepository() throws ServiceException, DAOException {
+    void MethodAddStudent_ShouldPassNewStudentToRepository() throws ElementAlreadyExistException, DAOException {
         // given
         var studentDto = StudentDto.builder()
-            .firstName("firstName")
-            .lastName("lastName")
+            .firstName("John")
+            .lastName("Doe")
             .build();
-        var student = StudentModelMapper.toStudent(studentDto);
+        var student = modelMapper.map(studentDto, Student.class);
 
         // when
         studentService.addStudent(studentDto);
@@ -46,76 +47,36 @@ class StudentServiceImplTest {
     }
 
     @Test
-    void MethodAddStudent_ShouldThrowAnException_IfCheckIsFailed() throws DAOException {
+    void MethodRemoveStudent_ShouldRemoveExistingStudentFromDb() throws DAOException, ElementAlreadyExistException {
         // given
-        var student = Student.builder().firstName("John").lastName("Doe").build();
-
-        // when
-        doThrow(DAOException.class).when(studentDao).addStudent(student);
-
-        // then
-        assertThrows(ServiceException.class, () -> studentService.addStudent(StudentModelMapper.toStudentDto(student)),
-            "Student wasn`t added");
-    }
-
-    @Test
-    void MethodAddStudentShould_ThrowAnException_IfRepositoryThrowsAnException() throws DAOException {
-        // given
-        var student = Student.builder().firstName("John").lastName("Doe").build();
-
-        // when
-        doThrow(DAOException.class).when(studentDao).addStudent(student);
-
-        // then
-        assertThrows(ServiceException.class, () -> studentService.addStudent(StudentModelMapper.toStudentDto(student)),
-            "Student wasn`t added");
-    }
-
-    @Test
-    void MethodRemoveStudent_ShouldRemoveExistingStudentFromDb() throws DAOException, ServiceException {
-        // given
-        var student = Student.builder().studentId(1).firstName("John").lastName("Doe").build();
+        var student = Student.builder().id(1).firstName("John").lastName("Doe").build();
 
         // when
         when(studentDao.getStudent(1)).thenReturn(Optional.of(student)).thenThrow(DAOException.class);
-        doNothing().when(studentDao).removeStudent(student.studentId());
+        doNothing().when(studentDao).removeStudent(student.getId());
 
         // then
-        studentService.removeStudent(student.studentId());
+        studentService.removeStudent(student.getId());
 
-        verify(studentDao).removeStudent(student.studentId());
+        verify(studentDao).removeStudent(student.getId());
     }
 
     @Test
     void MethodRemoveStudent_ShouldThrowAnException_IfStudentDoesNotExist() throws DAOException {
         // given
-        var student = Student.builder().studentId(1).firstName("John").lastName("Doe").build();
+        var student = Student.builder().id(1).firstName("John").lastName("Doe").build();
 
         // when
         when(studentDao.getStudent(1)).thenReturn(Optional.empty());
         doNothing().when(studentDao).removeStudent(anyInt());
 
         // then
-        assertThrows(NoSuchElementException.class, () -> studentService.removeStudent(student.studentId()),
+        assertThrows(NoSuchElementException.class, () -> studentService.removeStudent(student.getId()),
             "Student wasn`t removed");
     }
 
     @Test
-    void MethodRemoveStudent_ShouldThrowAnException_IfRepositoryThrowsAnException() throws DAOException {
-        // given
-        var student = Student.builder().studentId(1).firstName("John").lastName("Doe").build();
-
-        // when
-        when(studentDao.getStudent(1)).thenReturn(Optional.of(student));
-        doThrow(DAOException.class).when(studentDao).removeStudent(student.studentId());
-
-        // then
-        assertThrows(ServiceException.class, () -> studentService.removeStudent(student.studentId()),
-            "Student wasn`t removed");
-    }
-
-    @Test
-    void MethodGetStudents_ShouldSendRequestToDao() throws ServiceException, DAOException {
+    void MethodGetStudents_ShouldSendRequestToDao() throws ElementAlreadyExistException, DAOException {
         // given
         var students = List.of(
             new Student(1, 1, "John", "Doe")
@@ -155,12 +116,12 @@ class StudentServiceImplTest {
 
     @Test
     void MethodAddStudentToCourse_ShouldAddExistingStudentToExistingCourse()
-        throws ServiceException, DAOException {
+        throws ElementAlreadyExistException, DAOException {
         // given
-        Student newStudent = Student.builder().studentId(1).firstName("John").lastName("Doe").build();
+        Student newStudent = Student.builder().id(1).firstName("John").lastName("Doe").build();
 
         // when
-        when(studentDao.getStudent(newStudent.studentId())).thenReturn(Optional.of(newStudent));
+        when(studentDao.getStudent(newStudent.getId())).thenReturn(Optional.of(newStudent));
         studentService.addStudentToCourse(1, 1);
 
         // then
@@ -180,7 +141,7 @@ class StudentServiceImplTest {
 
     @Test
     void MethodRemoveStudentFromCourse_ShouldRemoveExistingStudentFromExistingCourse()
-        throws ServiceException, DAOException {
+        throws ElementAlreadyExistException, DAOException {
         // given
         int studentId = 1;
         int groupId = 1;
@@ -206,7 +167,7 @@ class StudentServiceImplTest {
     }
 
     @Test
-    void MethodGetStudentsByCourseShould_ReturnListOfStudents_ByCourseId() throws ServiceException, DAOException {
+    void MethodGetStudentsByCourseShould_ReturnListOfStudents_ByCourseId() throws ElementAlreadyExistException, DAOException {
         // when
         when(studentDao.getStudents(anyInt())).thenReturn(List.of(new Student(0, 0, "", "")));
         studentService.getStudents(1);
@@ -216,17 +177,7 @@ class StudentServiceImplTest {
     }
 
     @Test
-    void MethodGetStudentsByCourse_ShouldThrowAnException_WhenStudentDoesNotExist() throws DAOException {
-        // when
-        doThrow(new DAOException("Students doesn't exist")).when(studentDao).getStudents(1);
-
-        // then
-        assertThrows(ServiceException.class, () -> studentService.getStudents(1),
-            "Students doesn't exist");
-    }
-
-    @Test
-    void MethodGetStudentsByNameAndCourse_ShouldReturnListOfStudents() throws DAOException, ServiceException {
+    void MethodGetStudentsByNameAndCourse_ShouldReturnListOfStudents() throws DAOException, ElementAlreadyExistException {
         // when
         when(studentDao.getStudents(anyString(), anyInt()))
             .thenReturn(List.of(new Student(0, 0, "", "")));
@@ -234,16 +185,5 @@ class StudentServiceImplTest {
 
         // then
         verify(studentDao).getStudents("John", 1);
-    }
-
-    @Test
-    void MethodGetStudentsByNameAndCourse_ShouldThrowAnException_WhenStudentDoesNotExist() throws DAOException {
-        // when
-        doThrow(new DAOException("Students doesn't exist")).when(studentDao)
-            .getStudents("John", 1);
-
-        // then
-        assertThrows(ServiceException.class, () -> studentService.getStudents("John", 1),
-            "Students doesn't exist");
     }
 }

@@ -1,9 +1,9 @@
 package ua.com.foxstudent102052.controller;
 
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import ua.com.foxstudent102052.controller.exceptions.ControllerException;
+import ua.com.foxstudent102052.dao.exceptions.DAOException;
 import ua.com.foxstudent102052.model.dto.StudentDto;
-import ua.com.foxstudent102052.service.exceptions.ServiceException;
 import ua.com.foxstudent102052.service.interfaces.CourseService;
 import ua.com.foxstudent102052.service.interfaces.GroupService;
 import ua.com.foxstudent102052.service.interfaces.StudentService;
@@ -12,98 +12,52 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 @Slf4j
+@AllArgsConstructor
 public class StudentController {
     private final StudentService studentService;
     private final GroupService groupService;
     private final CourseService courseService;
 
-    public StudentController(StudentService studentService, GroupService groupService, CourseService courseService) {
-        this.studentService = studentService;
-        this.groupService = groupService;
-        this.courseService = courseService;
+    public void addStudent(StudentDto studentDto) throws DAOException {
+        studentService.addStudent(studentDto);
     }
 
-    public void addStudent(StudentDto studentDto) throws ControllerException {
-        try {
-            studentService.addStudent(studentDto);
-        } catch (ServiceException e) {
-            log.error(e.getMessage(), e);
-
-            throw new ControllerException(e);
-        }
+    public void removeStudent(int studentId) throws NoSuchElementException, DAOException{
+        studentService.removeStudent(studentId);
     }
 
-    public void removeStudent(int studentId) throws ControllerException {
-        try {
-            studentService.removeStudent(studentId);
-        } catch (NoSuchElementException | ServiceException e) {
-            log.error(e.getMessage(), e);
-
-            throw new ControllerException(e);
-        }
+    public void addStudentToCourse(int studentId, int courseId) throws NoSuchElementException, DAOException {
+        studentService.addStudentToCourse(studentId, courseId);
     }
 
-    public void addStudentToCourse(int studentId, int courseId) throws ControllerException {
-        try {
-            studentService.addStudentToCourse(studentId, courseId);
-        } catch (NoSuchElementException | ServiceException e) {
-            log.error(e.getMessage(), e);
-
-            throw new ControllerException(e);
-        }
+    public void removeStudentFromCourse(int studentId, int courseId) throws NoSuchElementException, DAOException {
+        studentService.removeStudentFromCourse(studentId, courseId);
     }
 
-    public void removeStudentFromCourse(int studentId, int courseId) throws ControllerException {
-        try {
-            studentService.removeStudentFromCourse(studentId, courseId);
-        } catch (NoSuchElementException | ServiceException e) {
-            log.error(e.getMessage());
-
-            throw new ControllerException(e);
-        }
+    public List<StudentDto> getAllStudents() throws NoSuchElementException, DAOException {
+        return studentService.getStudents()
+            .stream()
+            .map(this::setStudentsGroup)
+            .map(this::setStudentsCourseList)
+            .toList();
     }
 
-    public List<StudentDto> getAllStudents() throws ControllerException {
-        try {
-            return studentService.getStudents()
-                .stream()
-                .map(this::setStudentsGroup)
-                .map(this::setStudentsCourseList)
-                .toList();
-        } catch (NoSuchElementException | ServiceException e) {
-            log.error(e.getMessage());
-
-            throw new ControllerException(e);
-        }
-    }
-
-    public List<StudentDto> getStudents(String studentName, Integer courseId)
-        throws ControllerException {
-        try {
-            return studentService.getStudents(studentName, courseId)
-                .stream()
-                .map(this::setStudentsGroup)
-                .map(this::setStudentsCourseList)
-                .toList();
-        } catch (NoSuchElementException | ServiceException e) {
-            log.error(e.getMessage());
-
-            throw new ControllerException(e);
-        }
+    public List<StudentDto> getStudents(String studentName, Integer courseId) throws NoSuchElementException, DAOException {
+        return studentService.getStudents(studentName, courseId)
+            .stream()
+            .map(this::setStudentsGroup)
+            .map(this::setStudentsCourseList)
+            .toList();
     }
 
     private StudentDto setStudentsCourseList(StudentDto studentDto) {
-        int studentId = studentDto.getId();
-
         try {
+            int studentId = studentDto.getId();
             var courseDtoList = courseService.getCourses(studentId);
-
             studentDto.setCoursesList(courseDtoList);
 
             return studentDto;
-        } catch (NoSuchElementException | ServiceException e) {
-            log.info("Student with id: {} hase no courses", studentId);
-
+        } catch (NoSuchElementException | DAOException e) {
             return studentDto;
         }
     }
@@ -115,9 +69,7 @@ public class StudentController {
             studentDto.setGroup(studentsGroup);
 
             return studentDto;
-        } catch (NullPointerException | NoSuchElementException | ServiceException e) {
-            log.info("Student with id: {} hase no group", studentDto.getId());
-
+        } catch (NullPointerException | NoSuchElementException | DAOException e) {
             return studentDto;
         }
     }

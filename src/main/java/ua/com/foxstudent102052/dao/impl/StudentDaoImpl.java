@@ -20,7 +20,7 @@ public class StudentDaoImpl implements StudentDao {
     }
 
     @Override
-    public void addStudent(Student student) throws DAOException {
+    public void addStudent(Student student) {
         var query =
             """
                 INSERT INTO students (
@@ -31,21 +31,19 @@ public class StudentDaoImpl implements StudentDao {
 
         try (var connection = dataSource.getConnection();
              var statement = connection.prepareStatement(query)) {
-            statement.setInt(1, student.groupId());
-            statement.setString(2, student.firstName());
-            statement.setString(3, student.lastName());
+            statement.setInt(1, student.getGroupId());
+            statement.setString(2, student.getFirstName());
+            statement.setString(3, student.getLastName());
             statement.executeUpdate();
         } catch (SQLException e) {
-            var message = "Error while adding student to the database";
+            log.error(e.getMessage());
 
-            log.error(message, e);
-
-            throw new DAOException(message, e);
+            throw new DAOException(e);
         }
     }
 
     @Override
-    public void removeStudent(int studentId) throws DAOException {
+    public void removeStudent(int studentId) {
         var query =
             """
                 DELETE FROM students_courses
@@ -60,14 +58,14 @@ public class StudentDaoImpl implements StudentDao {
             statement.setInt(2, studentId);
             statement.executeUpdate();
         } catch (SQLException e) {
-            log.error("Student with studentId {} was not removed from the database", studentId);
+            log.error(e.getMessage());
 
-            throw new DAOException(String.format("Student with studentId %d was not removed from the database", studentId), e);
+            throw new DAOException(e);
         }
     }
 
     @Override
-    public void addStudentToCourse(int studentId, int courseId) throws DAOException {
+    public void addStudentToCourse(int studentId, int courseId) {
         var query =
             """
                 INSERT INTO students_courses (
@@ -89,7 +87,7 @@ public class StudentDaoImpl implements StudentDao {
     }
 
     @Override
-    public void removeStudentFromCourse(int studentId, int courseId) throws DAOException {
+    public void removeStudentFromCourse(int studentId, int courseId) {
         var query =
             """
                 DELETE
@@ -103,15 +101,14 @@ public class StudentDaoImpl implements StudentDao {
             statement.setInt(2, courseId);
             statement.executeUpdate();
         } catch (SQLException e) {
-            log.error("Student with id {} was not removed from course with id {}", studentId, courseId);
+            log.error(e.getMessage());
 
-            throw new DAOException(String.format("Student with id %d was not removed from course with id %d",
-                studentId, courseId), e);
+            throw new DAOException(e);
         }
     }
 
     @Override
-    public Optional<Student> getStudent(int id) throws DAOException {
+    public Optional<Student> getStudent(int id) {
         var query =
             """
                 SELECT *
@@ -131,14 +128,14 @@ public class StudentDaoImpl implements StudentDao {
                 return Optional.empty();
             }
         } catch (SQLException e) {
-            log.error("Error while getting student by id");
+            log.error(e.getMessage());
 
-            throw new DAOException("Error while getting student by id", e);
+            throw new DAOException(e);
         }
     }
 
     @Override
-    public List<Student> getStudents() throws DAOException {
+    public List<Student> getStudents() {
         var query = "SELECT * FROM students;";
 
         try (var connection = dataSource.getConnection();
@@ -147,14 +144,14 @@ public class StudentDaoImpl implements StudentDao {
 
             return StudentDaoMapper.mapToStudents(studentsResultSet);
         } catch (SQLException e) {
-            log.error("There are no students in the database");
+            log.error(e.getMessage());
 
-            throw new DAOException("There are no students in the database", e);
+            throw new DAOException(e);
         }
     }
 
     @Override
-    public List<Student> getStudents(int courseId) throws DAOException {
+    public List<Student> getStudents(int courseId) {
         var query =
             """
                 SELECT *
@@ -171,14 +168,14 @@ public class StudentDaoImpl implements StudentDao {
 
             return StudentDaoMapper.mapToStudents(studentsResultSet);
         } catch (SQLException e) {
-            log.error("Error while getting students by course id");
+            log.error(e.getMessage());
 
-            throw new DAOException("Error while getting students by course id", e);
+            throw new DAOException(e);
         }
     }
 
     @Override
-    public List<Student> getStudents(String studentName, Integer courseId) throws DAOException {
+    public List<Student> getStudents(String studentName, Integer courseId) {
         var query =
             """
                 SELECT *
@@ -197,9 +194,9 @@ public class StudentDaoImpl implements StudentDao {
 
             return StudentDaoMapper.mapToStudents(studentsResultSet);
         } catch (SQLException e) {
-            log.error("Error while getting students by name and course");
+            log.error(e.getMessage());
 
-            throw new DAOException("Error while getting students by name and course", e);
+            throw new DAOException(e);
         }
     }
 }

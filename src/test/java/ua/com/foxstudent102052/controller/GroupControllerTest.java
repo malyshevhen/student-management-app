@@ -2,16 +2,14 @@ package ua.com.foxstudent102052.controller;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import ua.com.foxstudent102052.controller.exceptions.ControllerException;
 import ua.com.foxstudent102052.model.dto.GroupDto;
 import ua.com.foxstudent102052.model.dto.StudentDto;
+import ua.com.foxstudent102052.service.exceptions.ElementAlreadyExistException;
 import ua.com.foxstudent102052.service.interfaces.GroupService;
-import ua.com.foxstudent102052.service.exceptions.ServiceException;
 
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 class GroupControllerTest {
@@ -25,7 +23,7 @@ class GroupControllerTest {
     }
 
     @Test
-    void MethodGetGroups_ShouldReturnListOfAllGroups() throws ServiceException, ControllerException {
+    void MethodGetGroups_ShouldReturnListOfAllGroups() throws ElementAlreadyExistException{
         // given
         var students = List.of(
             StudentDto.builder().id(1).group(GroupDto.builder().id(1).build()).firstName("Darth").lastName("Vader").coursesList(List.of()).build(),
@@ -46,16 +44,7 @@ class GroupControllerTest {
     }
 
     @Test
-    void MethodGetGroups_ShouldThrowControllerException() throws ServiceException {
-        // when
-        doThrow(ServiceException.class).when(groupService).getGroups();
-
-        // then
-        assertThrows(ControllerException.class, () -> groupController.getAllGroups());
-    }
-
-    @Test
-    void MethodGetGroupsLessThen_ShouldReturnListOfAllGroups() throws ServiceException, ControllerException {
+    void MethodGetGroupsLessThen_ShouldReturnListOfAllGroups() throws ElementAlreadyExistException{
         // given
         var students = List.of(
             StudentDto.builder().id(1).group(GroupDto.builder().id(1).build()).firstName("Darth").lastName("Vader").coursesList(List.of()).build(),
@@ -73,14 +62,5 @@ class GroupControllerTest {
 
         // then
         assertEquals(expected, actual);
-    }
-
-    @Test
-    void MethodGetGroupsLessThen_ShouldThrowControllerException() throws ServiceException {
-        // when
-        doThrow(ServiceException.class).when(groupService).getGroupsLessThen(anyInt());
-
-        // then
-        assertThrows(ControllerException.class, () -> groupController.getGroupsSmallerThen(anyInt()));
     }
 }

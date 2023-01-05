@@ -13,7 +13,7 @@ public class StudentDaoMapper {
 
     public static Student mapToStudent(ResultSet studentsResultSet) throws SQLException {
         return Student.builder()
-            .studentId(studentsResultSet.getInt(1))
+            .id(studentsResultSet.getInt(1))
             .groupId(studentsResultSet.getInt(2))
             .firstName(studentsResultSet.getString(3))
             .lastName(studentsResultSet.getString(4))

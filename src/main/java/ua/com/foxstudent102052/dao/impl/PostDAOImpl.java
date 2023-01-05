@@ -10,7 +10,6 @@ import java.sql.SQLException;
 public class PostDAOImpl implements ua.com.foxstudent102052.dao.interfaces.PostDAO {
     private static final String QUERY_EXEC_SUCCESSFUL = "Query: '{}' executed successfully";
     private static final String CONNECTION_SUCCESSFUL = "Connection to DB successful!";
-    private static final String ERROR_MESSAGE = "Error while executing query: {}";
 
     private final CustomDataSource customDataSource;
 
@@ -19,7 +18,7 @@ public class PostDAOImpl implements ua.com.foxstudent102052.dao.interfaces.PostD
     }
 
     @Override
-    public void doPost(String query) throws DAOException {
+    public void doPost(String query) {
         try (var connection = customDataSource.getConnection();
              var statement = connection.createStatement()) {
 
@@ -28,7 +27,7 @@ public class PostDAOImpl implements ua.com.foxstudent102052.dao.interfaces.PostD
             log.info(QUERY_EXEC_SUCCESSFUL, query);
 
         } catch (SQLException e) {
-            log.error(ERROR_MESSAGE + query, e);
+            log.error(e.getMessage());
 
             throw new DAOException(e);
         }

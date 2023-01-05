@@ -13,9 +13,9 @@ public class CourseDaoMapper {
 
     public static Course mapToCourse(ResultSet courseResultSet) throws SQLException {
         return Course.builder()
-            .courseId(courseResultSet.getInt(1))
-            .courseName(courseResultSet.getString(2))
-            .courseDescription(courseResultSet.getString(3))
+            .id(courseResultSet.getInt(1))
+            .name(courseResultSet.getString(2))
+            .description(courseResultSet.getString(3))
             .build();
     }
 

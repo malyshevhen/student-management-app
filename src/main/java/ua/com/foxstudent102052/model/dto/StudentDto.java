@@ -13,5 +13,5 @@ public class StudentDto {
     private String firstName;
     private String lastName;
     private GroupDto group;
-    private List<CourseDto> coursesList;
+    private List<CourseDto> coursesList = List.of();
 }

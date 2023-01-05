@@ -2,21 +2,17 @@ package ua.com.foxstudent102052.controller;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import ua.com.foxstudent102052.controller.exceptions.ControllerException;
-import ua.com.foxstudent102052.model.mapper.StudentModelMapper;
 import ua.com.foxstudent102052.model.dto.CourseDto;
 import ua.com.foxstudent102052.model.dto.GroupDto;
-import ua.com.foxstudent102052.model.entity.Student;
 import ua.com.foxstudent102052.model.dto.StudentDto;
+import ua.com.foxstudent102052.service.exceptions.ElementAlreadyExistException;
 import ua.com.foxstudent102052.service.interfaces.CourseService;
 import ua.com.foxstudent102052.service.interfaces.GroupService;
-import ua.com.foxstudent102052.service.exceptions.ServiceException;
 import ua.com.foxstudent102052.service.interfaces.StudentService;
 
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
@@ -36,7 +32,7 @@ class StudentControllerTest {
     }
 
     @Test
-    void MethodAddStudent_ShouldPassStudentToService() throws ControllerException, ServiceException {
+    void MethodAddStudent_ShouldPassStudentToService() throws ElementAlreadyExistException {
         // when
         studentController.addStudent(new StudentDto());
 
@@ -45,20 +41,7 @@ class StudentControllerTest {
     }
 
     @Test
-    void MethodAddStudent_ShouldThrowAnExceptionIfServiceThrowsAnException() throws ServiceException {
-        // given
-        var student = Student.builder().firstName("John").lastName("Doe").build();
-
-        // when
-        doThrow(ServiceException.class).when(studentService).addStudent(StudentModelMapper.toStudentDto(student));
-
-        // then
-        assertThrows(ControllerException.class, () -> studentController.addStudent(StudentModelMapper.toStudentDto(student)),
-            "Student wasn`t added");
-    }
-
-    @Test
-    void MethodAddStudentToCourse_ShouldPassToServiceValues() throws ServiceException, ControllerException {
+    void MethodAddStudentToCourse_ShouldPassToServiceValues() throws ElementAlreadyExistException{
         // when
         studentController.addStudentToCourse(1, 1);
 
@@ -67,17 +50,7 @@ class StudentControllerTest {
     }
 
     @Test
-    void MethodAddStudentToCourse_ShouldThrowAnException_WhenServiceThrowsAnException() throws ServiceException {
-        // when
-        doThrow(ServiceException.class).when(studentService).addStudentToCourse(1, 1);
-
-        // then
-        assertThrows(ControllerException.class, () -> studentController.addStudentToCourse(1, 1),
-            "Student wasn`t added to course");
-    }
-
-    @Test
-    void MethodRemoveStudent_ShouldPassToServiceValues() throws ServiceException, ControllerException {
+    void MethodRemoveStudent_ShouldPassToServiceValues() throws ElementAlreadyExistException{
         // when
         studentController.removeStudent(1);
 
@@ -86,16 +59,7 @@ class StudentControllerTest {
     }
 
     @Test
-    void MethodRemoveStudent_ShouldThrowAnException_WhenServiceThrowsAnException() throws ServiceException {
-        // when
-        doThrow(ServiceException.class).when(studentService).removeStudent(1);
-
-        // then
-        assertThrows(ControllerException.class, () -> studentController.removeStudent(1), "Student wasn`t removed");
-    }
-
-    @Test
-    void MethodRemoveStudentFromCourse_ShouldPassToServiceValues() throws ServiceException, ControllerException {
+    void MethodRemoveStudentFromCourse_ShouldPassToServiceValues() throws ElementAlreadyExistException{
         // when
         studentController.removeStudentFromCourse(1, 1);
 
@@ -104,18 +68,7 @@ class StudentControllerTest {
     }
 
     @Test
-    void MethodRemoveStudentFromCourse_ShouldThrowAnException_WhenServiceThrowsAnException() throws ServiceException {
-        // when
-        doThrow(ServiceException.class).when(studentService).removeStudentFromCourse(1, 1);
-
-        // then
-        assertThrows(ControllerException.class, () -> studentController.removeStudentFromCourse(1, 1),
-            "Student wasn`t removed from course");
-    }
-
-    @Test
-    void MethodGetStudents_ShouldReturnListOfStudentsWithCoursesAndGroup()
-        throws ServiceException, ControllerException {
+    void MethodGetStudents_ShouldReturnListOfStudentsWithCoursesAndGroup() throws ElementAlreadyExistException{
         // given
         var group = GroupDto.builder().id(1).name("Java").build();
         var studentsDto = List.of(StudentDto
@@ -174,7 +127,7 @@ class StudentControllerTest {
     }
 
     @Test
-    void MethodGetStudents_ShouldPassToServiceValue() throws ServiceException, ControllerException {
+    void MethodGetStudents_ShouldPassToServiceValue() throws ElementAlreadyExistException{
         // when
         studentController.getAllStudents();
 
@@ -183,18 +136,8 @@ class StudentControllerTest {
     }
 
     @Test
-    void MethodGetStudents_ShouldThrowAnException_WhenServiceThrowsAnException() throws ServiceException {
-        // when
-        doThrow(ServiceException.class).when(studentService).getStudents();
-
-        // then
-        assertThrows(ControllerException.class, () -> studentController.getAllStudents(),
-            "Students weren`t found");
-    }
-
-    @Test
     void MethodGetStudents_ShouldReturnListOfStudentsWithCoursesAndGroup_ByNameAndCourseId()
-        throws ServiceException, ControllerException {
+        throws ElementAlreadyExistException{
         // given
         var group = GroupDto.builder().id(1).name("Java").build();
         var studentsDto = List.of(StudentDto
@@ -253,21 +196,11 @@ class StudentControllerTest {
     }
 
     @Test
-    void MethodGetStudents_ShouldPassToServiceValues() throws ServiceException, ControllerException {
+    void MethodGetStudents_ShouldPassToServiceValues() throws ElementAlreadyExistException{
         // when
         studentController.getStudents("John", 1);
 
         // then
         verify(studentService).getStudents("John", 1);
-    }
-
-    @Test
-    void MethodGetStudentsByNameAndCourse_ShouldThrowAnException_WhenServiceThrowsAnException() throws ServiceException {
-        // when
-        doThrow(ServiceException.class).when(studentService).getStudents("John", 1);
-
-        // then
-        assertThrows(ControllerException.class, () -> studentController.getStudents("John", 1),
-            "Students weren`t found");
     }
 }

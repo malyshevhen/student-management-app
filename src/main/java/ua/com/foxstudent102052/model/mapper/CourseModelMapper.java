@@ -16,9 +16,9 @@ public class CourseModelMapper {
     public static CourseDto toCourseDto(Course course) {
         try {
             return CourseDto.builder()
-                .id(course.courseId())
-                .name(course.courseName())
-                .description(course.courseDescription())
+                .id(course.getId())
+                .name(course.getName())
+                .description(course.getDescription())
                 .studentsList(List.of())
                 .build();
         } catch (NullPointerException e) {
@@ -31,9 +31,9 @@ public class CourseModelMapper {
     public static Course toCourse(CourseDto courseDto) {
         try {
             return Course.builder()
-                .courseId(courseDto.getId())
-                .courseName(courseDto.getName())
-                .courseDescription(courseDto.getDescription())
+                .id(courseDto.getId())
+                .name(courseDto.getName())
+                .description(courseDto.getDescription())
                 .build();
         } catch (NullPointerException e) {
             log.error("CourseMapper.toCourse() - NullPointerException: " + e.getMessage());

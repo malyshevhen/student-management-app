@@ -1,6 +1,6 @@
 package ua.com.foxstudent102052.dao.exceptions;
 
-public class DAOException extends Exception {
+public class DAOException extends RuntimeException {
 
     public DAOException(String message) {
         super(message);

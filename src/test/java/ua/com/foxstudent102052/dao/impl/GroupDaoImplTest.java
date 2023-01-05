@@ -37,7 +37,7 @@ class GroupDaoImplTest {
     @Test
     void MethodAddGroup_ShouldAddGroupToDb() throws DAOException {
         // given
-        var group = Group.builder().groupName("New Group").build();
+        var group = Group.builder().name("New Group").build();
         groupDao.addGroup(group);
 
         // when
@@ -87,7 +87,7 @@ class GroupDaoImplTest {
     @Test
     void MethodGetGroup_ById_ShouldReturnGroupById() throws DAOException {
         // given
-        var expected = Group.builder().groupId(1).groupName("Group 1").build();
+        var expected = Group.builder().id(1).name("Group 1").build();
 
         // when
         var actual = groupDao.getGroup(1).get();
@@ -113,7 +113,7 @@ class GroupDaoImplTest {
     @Test
     void MethodGetGroup_ByName_ShouldReturnGroupByName() throws DAOException {
         // given
-        var expected = Group.builder().groupId(1).groupName("Group 1").build();
+        var expected = Group.builder().id(1).name("Group 1").build();
 
         // when
         var actual = groupDao.getGroup("Group 1").get();

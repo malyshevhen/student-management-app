@@ -1,16 +1,15 @@
 package ua.com.foxstudent102052.service.interfaces;
 
 import ua.com.foxstudent102052.model.dto.CourseDto;
-import ua.com.foxstudent102052.service.exceptions.ServiceException;
 
 import java.util.List;
 
 public interface CourseService {
-    void addCourse(CourseDto courseDto) throws ServiceException;
+    void addCourse(CourseDto courseDto);
 
-    CourseDto getCourse(int id) throws ServiceException;
+    CourseDto getCourse(int id);
 
-    List<CourseDto> getCourses() throws ServiceException;
+    List<CourseDto> getCourses();
 
-    List<CourseDto> getCourses(int studentId) throws ServiceException;
+    List<CourseDto> getCourses(int studentId);
 }

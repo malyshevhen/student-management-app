@@ -22,7 +22,7 @@ public class GroupDaoImpl implements GroupDao {
     }
 
     @Override
-    public void addGroup(Group group) throws DAOException {
+    public void addGroup(Group group) {
         var query =
             """
                 INSERT
@@ -31,18 +31,18 @@ public class GroupDaoImpl implements GroupDao {
 
         try (var connection = dataSource.getConnection();
              var statement = connection.prepareStatement(query)) {
-            statement.setString(1, group.groupName());
+            statement.setString(1, group.getName());
 
             statement.executeUpdate();
         } catch (SQLException e) {
-            log.error("Error while adding group: {}", group.groupName(), e);
+            log.error(e.getMessage());
 
-            throw new DAOException(String.format("Error while adding group: '%s'", group.groupName()), e);
+            throw new DAOException(e);
         }
     }
 
     @Override
-    public Optional<Group> getGroup(int groupId) throws DAOException {
+    public Optional<Group> getGroup(int groupId) {
         var query =
             """
                 SELECT *
@@ -63,15 +63,14 @@ public class GroupDaoImpl implements GroupDao {
                 return Optional.empty();
             }
         } catch (SQLException e) {
+            log.error(e.getMessage());
 
-            log.error("Error while getting group by id: {}", groupId, e);
-
-            throw new DAOException(String.format("Error while getting group by id: '%d'", groupId), e);
+            throw new DAOException(e);
         }
     }
 
     @Override
-    public Optional<Group> getGroup(String groupName) throws DAOException {
+    public Optional<Group> getGroup(String groupName) {
         var query =
             """
                 SELECT *
@@ -92,14 +91,14 @@ public class GroupDaoImpl implements GroupDao {
                 return Optional.empty();
             }
         } catch (SQLException e) {
-            log.error("Error while getting group by name: {}", groupName, e);
+            log.error(e.getMessage());
 
-            throw new DAOException("Error while getting group by name", e);
+            throw new DAOException(e);
         }
     }
 
     @Override
-    public List<Group> getGroups() throws DAOException {
+    public List<Group> getGroups() {
         var query = "SELECT * FROM groups;";
 
         try (var connection = dataSource.getConnection();
@@ -108,16 +107,14 @@ public class GroupDaoImpl implements GroupDao {
 
             return GroupDaoMapper.mapToGroups(groupResultSet);
         } catch (SQLException e) {
-            var msg = "Error while getting all groups";
+            log.error(e.getMessage());
 
-            log.error(msg, e);
-
-            throw new DAOException(msg, e);
+            throw new DAOException(e);
         }
     }
 
     @Override
-    public List<Group> getGroupsLessThen(int numberOfStudents) throws DAOException {
+    public List<Group> getGroupsLessThen(int numberOfStudents) {
         var query =
             """
                 SELECT *
@@ -143,14 +140,14 @@ public class GroupDaoImpl implements GroupDao {
 
             return GroupDaoMapper.mapToGroups(groupResultSet);
         } catch (SQLException e) {
-            log.error("Error while getting groups smaller then: {}", numberOfStudents);
+            log.error(e.getMessage());
 
-            throw new DAOException(String.format("Error while getting groups smaller then: '%d'", numberOfStudents), e);
+            throw new DAOException(e);
         }
     }
 
     @Override
-    public List<Student> getStudents(int groupId) throws DAOException {
+    public List<Student> getStudents(int groupId) {
         var query =
             """
                 SELECT *
@@ -164,9 +161,9 @@ public class GroupDaoImpl implements GroupDao {
 
             return StudentDaoMapper.mapToStudents(studentResultSet);
         } catch (SQLException e) {
-            log.error("Error while getting students by group: {}", groupId);
+            log.error(e.getMessage());
 
-            throw new DAOException(String.format("Error while getting students by group: '%d'", groupId), e);
+            throw new DAOException(e);
         }
     }
 }

@@ -1,15 +1,16 @@
 package ua.com.foxstudent102052.controller;
 
 import lombok.extern.slf4j.Slf4j;
+import ua.com.foxstudent102052.dao.datasource.impl.PostgresPooledDataSource;
+import ua.com.foxstudent102052.dao.exceptions.DAOException;
+import ua.com.foxstudent102052.dao.impl.CourseDaoImpl;
 import ua.com.foxstudent102052.dao.impl.GroupDaoImpl;
+import ua.com.foxstudent102052.dao.impl.StudentDaoImpl;
 import ua.com.foxstudent102052.model.dto.CourseDto;
 import ua.com.foxstudent102052.model.dto.GroupDto;
 import ua.com.foxstudent102052.model.dto.StudentDto;
-import ua.com.foxstudent102052.dao.impl.CourseDaoImpl;
-import ua.com.foxstudent102052.dao.datasource.impl.PostgresPooledDataSource;
-import ua.com.foxstudent102052.dao.impl.StudentDaoImpl;
 import ua.com.foxstudent102052.service.QueryPostService;
-import ua.com.foxstudent102052.service.exceptions.ServiceException;
+import ua.com.foxstudent102052.service.exceptions.ElementAlreadyExistException;
 import ua.com.foxstudent102052.service.impl.CourseServiceImpl;
 import ua.com.foxstudent102052.service.impl.GroupServiceImpl;
 import ua.com.foxstudent102052.service.impl.StudentServiceImpl;
@@ -56,7 +57,7 @@ public class TestDataInitializer {
             var query = FileUtils.readTextFile("src/main/resources/scripts/ddl/Table_creation.sql");
 
             queryPostService.executeQuery(query);
-        } catch (IOException | ServiceException e) {
+        } catch (IOException | DAOException e) {
             log.error(e.getMessage());
         }
     }
@@ -67,7 +68,7 @@ public class TestDataInitializer {
         for (var course : courses) {
             try {
                 courseService.addCourse(course);
-            } catch (NoSuchElementException | ServiceException e) {
+            } catch (DAOException | ElementAlreadyExistException e) {
                 log.error("Error while adding courses", e);
             }
         }
@@ -78,7 +79,7 @@ public class TestDataInitializer {
         for (var group : groups) {
             try {
                 groupService.addGroup(group);
-            } catch (NoSuchElementException | ServiceException e) {
+            } catch (DAOException | ElementAlreadyExistException e) {
                 log.error("Error while adding groups", e);
             }
         }
@@ -88,7 +89,7 @@ public class TestDataInitializer {
         for (int i = 0; i < STUDENTS_COUNT; i++) {
             try {
                 studentService.addStudent(RandomData.getStudent());
-            } catch (NoSuchElementException | ServiceException e) {
+            } catch (DAOException e) {
                 log.error("Error while adding students", e);
             }
         }
@@ -104,7 +105,7 @@ public class TestDataInitializer {
             for (var courseId : courseIdSet) {
                 try {
                     studentService.addStudentToCourse(studentId, courseId);
-                } catch (NoSuchElementException | ServiceException e) {
+                } catch (NoSuchElementException | DAOException e) {
                     log.error("Error while adding students to courses", e);
                 }
             }
@@ -199,9 +200,11 @@ public class TestDataInitializer {
         }
 
         static List<CourseDto> getCourses() {
+            int coursesCount = courseNames.length;
+
             var courses = new ArrayList<CourseDto>();
 
-            for (int i = 0; i < courseNames.length; i++) {
+            for (int i = 0; i < coursesCount; i++) {
                 var course = CourseDto.builder()
                     .name(courseNames[i])
                     .description(courseDescriptions[i])
@@ -213,27 +216,31 @@ public class TestDataInitializer {
         }
 
         static StudentDto getStudent() {
+            int uniqueStudentsNameCount = 20;
+
             var group = GroupDto.builder()
-                .id(random.nextInt(11))
+                .id(random.nextInt(groupNames.length + 1))
                 .build();
 
             return StudentDto.builder()
                 .group(group)
-                .firstName(firstNames[random.nextInt(19)])
-                .lastName(lastNames[random.nextInt(19)])
+                .firstName(firstNames[random.nextInt(uniqueStudentsNameCount)])
+                .lastName(lastNames[random.nextInt(uniqueStudentsNameCount)])
                 .build();
         }
 
         static Map<Integer, Set<Integer>> getStudentCoursesRelations() {
+            int coursesCount = courseNames.length;
+
             var studentCourseMap = new HashMap<Integer, Set<Integer>>();
 
             for (int i = 1; i <= STUDENTS_COUNT; i++) {
                 var courses = new HashSet<Integer>();
 
                 for (int j = 1; j <= MAX_COUNT_OF_COURSES; j++) {
-                    int courseId = random.nextInt(11) + 1;
+                    int courseId = random.nextInt(coursesCount) + 1;
 
-                    if (Boolean.FALSE.equals(courses.contains(courseId)) && courseId < 11) {
+                    if (Boolean.FALSE.equals(courses.contains(courseId)) && courseId < coursesCount) {
                         courses.add(courseId);
                     }
                 }

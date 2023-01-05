@@ -6,7 +6,7 @@ import ua.com.foxstudent102052.dao.exceptions.DAOException;
 import ua.com.foxstudent102052.dao.interfaces.CourseDao;
 import ua.com.foxstudent102052.model.dto.CourseDto;
 import ua.com.foxstudent102052.model.mapper.CourseModelMapper;
-import ua.com.foxstudent102052.service.exceptions.ServiceException;
+import ua.com.foxstudent102052.service.exceptions.ElementAlreadyExistException;
 import ua.com.foxstudent102052.service.interfaces.CourseService;
 
 import java.util.List;
@@ -18,70 +18,44 @@ public class CourseServiceImpl implements CourseService {
     private final CourseDao courseDao;
 
     @Override
-    public void addCourse(CourseDto course) throws ServiceException {
-        try {
-            var courseName = course.getName();
+    public void addCourse(CourseDto course) throws DAOException {
+        var courseName = course.getName();
 
-            if (courseDao.getCourse(courseName).isEmpty()) {
-                courseDao.addCourse(CourseModelMapper.toCourse(course));
-            } else {
-                var message = String.format("Course with id %d already exist", course.getId());
-
-                log.error(message);
-
-                throw new ServiceException(message);
-            }
-        } catch (DAOException e) {
-            throw new ServiceException(e);
+        if (courseDao.getCourse(courseName).isEmpty()) {
+            courseDao.addCourse(CourseModelMapper.toCourse(course));
+        } else {
+            throw new ElementAlreadyExistException(String.format("Course with id %d already exist", course.getId()));
         }
     }
 
     @Override
-    public CourseDto getCourse(int courseId) throws ServiceException {
-        try {
-            var course = courseDao.getCourse(courseId).orElseThrow();
+    public CourseDto getCourse(int courseId) throws DAOException {
+        var course = courseDao.getCourse(courseId).orElseThrow();
 
-            return CourseModelMapper.toCourseDto(course);
-        } catch (DAOException e) {
-            log.error(e.getMessage());
+        return CourseModelMapper.toCourseDto(course);
+    }
 
-            throw new ServiceException(e.getMessage());
+    @Override
+    public List<CourseDto> getCourses() throws DAOException {
+        if (courseDao.getCourses().isEmpty()) {
+            throw new NoSuchElementException("There are no courses in database");
+        } else {
+            return courseDao.getCourses()
+                .stream()
+                .map(CourseModelMapper::toCourseDto)
+                .toList();
         }
     }
 
     @Override
-    public List<CourseDto> getCourses() throws ServiceException {
-        try {
-            if (courseDao.getCourses().isEmpty()) {
-                throw new NoSuchElementException("There are no courses in database");
-            } else {
-                return courseDao.getCourses()
-                    .stream()
-                    .map(CourseModelMapper::toCourseDto)
-                    .toList();
-            }
-        } catch (DAOException e) {
-            log.error(e.getMessage());
-
-            throw new ServiceException(e);
-        }
-    }
-
-    @Override
-    public List<CourseDto> getCourses(int studentId) throws ServiceException {
-        try {
-            if (courseDao.getCourses(studentId).isEmpty()) {
-                throw new ServiceException("There are no students on course");
-            } else {
-                return courseDao.getCourses(studentId)
-                    .stream()
-                    .map(CourseModelMapper::toCourseDto)
-                    .toList();
-            }
-        } catch (DAOException e) {
-            log.error(e.getMessage());
-
-            throw new ServiceException(e);
+    public List<CourseDto> getCourses(int studentId) throws DAOException {
+        if (courseDao.getCourses(studentId).isEmpty()) {
+            throw new NoSuchElementException("There are no students on course");
+        } else {
+            return courseDao.getCourses(studentId)
+                .stream()
+                .map(CourseModelMapper::toCourseDto)
+                .toList();
         }
     }
 }

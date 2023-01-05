@@ -2,20 +2,19 @@ package ua.com.foxstudent102052.service.interfaces;
 
 import ua.com.foxstudent102052.model.dto.GroupDto;
 import ua.com.foxstudent102052.model.dto.StudentDto;
-import ua.com.foxstudent102052.service.exceptions.ServiceException;
 
 import java.util.List;
 
 public interface GroupService {
-    void addGroup(GroupDto groupDto) throws ServiceException;
+    void addGroup(GroupDto groupDto);
 
-    GroupDto getGroup(int groupId) throws ServiceException;
+    GroupDto getGroup(int groupId);
 
-    List<GroupDto> getGroups() throws ServiceException;
+    List<GroupDto> getGroups();
 
-    List<GroupDto> getGroupsLessThen(int numberOfStudents) throws ServiceException;
+    List<GroupDto> getGroupsLessThen(int numberOfStudents);
 
-    GroupDto getGroup(String groupName) throws ServiceException;
+    GroupDto getGroup(String groupName);
 
-    List<StudentDto> getStudentsByGroup(int groupId) throws ServiceException;
+    List<StudentDto> getStudentsByGroup(int groupId);
 }

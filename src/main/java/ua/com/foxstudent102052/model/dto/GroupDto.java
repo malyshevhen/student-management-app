@@ -14,5 +14,5 @@ import java.util.List;
 public class GroupDto {
     private int id;
     private String name;
-    private List<StudentDto> studentList;
+    private List<StudentDto> studentList = List.of();
 }

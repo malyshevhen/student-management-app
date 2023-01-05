@@ -13,8 +13,8 @@ public class GroupDaoMapper {
 
     public static Group mapToGroup(ResultSet groupResultSet) throws SQLException {
         return Group.builder()
-            .groupId(groupResultSet.getInt(1))
-            .groupName(groupResultSet.getString(2))
+            .id(groupResultSet.getInt(1))
+            .name(groupResultSet.getString(2))
             .build();
     }
 

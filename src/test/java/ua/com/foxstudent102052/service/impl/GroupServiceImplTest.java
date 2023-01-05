@@ -2,14 +2,14 @@ package ua.com.foxstudent102052.service.impl;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.modelmapper.ModelMapper;
 import ua.com.foxstudent102052.dao.exceptions.DAOException;
 import ua.com.foxstudent102052.dao.interfaces.GroupDao;
 import ua.com.foxstudent102052.model.dto.GroupDto;
+import ua.com.foxstudent102052.model.dto.StudentDto;
 import ua.com.foxstudent102052.model.entity.Group;
 import ua.com.foxstudent102052.model.entity.Student;
-import ua.com.foxstudent102052.model.mapper.GroupModelMapper;
-import ua.com.foxstudent102052.model.mapper.StudentModelMapper;
-import ua.com.foxstudent102052.service.exceptions.ServiceException;
+import ua.com.foxstudent102052.service.exceptions.ElementAlreadyExistException;
 import ua.com.foxstudent102052.service.interfaces.GroupService;
 
 import java.util.List;
@@ -21,6 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 class GroupServiceImplTest {
+    private final ModelMapper modelMapper = new ModelMapper();
     private GroupDao groupDao;
     private GroupService groupService;
 
@@ -31,10 +32,10 @@ class GroupServiceImplTest {
     }
 
     @Test
-    void MethodAddGroup_ShouldPassGroupToRepository() throws DAOException, ServiceException {
+    void MethodAddGroup_ShouldPassGroupToRepository() throws DAOException, ElementAlreadyExistException {
         // given
-        var group = Group.builder().groupName("SomeGroup").build();
-        var groupDto = GroupModelMapper.toGroupDto(group);
+        var group = Group.builder().name("SomeGroup").build();
+        var groupDto = modelMapper.map(group, GroupDto.class);
 
         // when
         groupService.addGroup(groupDto);
@@ -44,28 +45,15 @@ class GroupServiceImplTest {
     }
 
     @Test
-    void MethodAddGroup_ShouldThrowException_WhenRepositoryExceptionIsThrown() throws DAOException {
-        // given
-        var group = Group.builder().groupName("SomeGroup").build();
-        var groupDto = GroupModelMapper.toGroupDto(group);
-
-        // when
-        doThrow(DAOException.class).when(groupDao).addGroup(group);
-
-        // then
-        assertThrows(ServiceException.class, () -> groupService.addGroup(groupDto), "Group wasn`t added");
-    }
-
-    @Test
-    void MethodGetAllGroups_ShouldReturnAllGroupsFromDb() throws DAOException, ServiceException {
+    void MethodGetAllGroups_ShouldReturnAllGroupsFromDb() throws DAOException, ElementAlreadyExistException {
         // given
         var groups = List.of(
-            Group.builder().groupName("SomeGroup1").build(),
-            Group.builder().groupName("SomeGroup2").build(),
-            Group.builder().groupName("SomeGroup3").build());
+            Group.builder().name("SomeGroup1").build(),
+            Group.builder().name("SomeGroup2").build(),
+            Group.builder().name("SomeGroup3").build());
 
         var expected = groups.stream()
-            .map(GroupModelMapper::toGroupDto)
+            .map(group -> modelMapper.map(group, GroupDto.class))
             .toList();
 
         // when
@@ -78,20 +66,11 @@ class GroupServiceImplTest {
     }
 
     @Test
-    void MethodGetAllGroups_ShouldThrowException_WhenRepositoryExceptionIsThrown() throws DAOException {
-        // when
-        doThrow(DAOException.class).when(groupDao).getGroups();
-
-        // then
-        assertThrows(ServiceException.class, () -> groupService.getGroups(), "Groups weren`t received");
-    }
-
-    @Test
-    void MethodGetGroupById_ShouldReturnGroupFromDb() throws DAOException, ServiceException {
-        var optionalGroup = Optional.of(Group.builder().groupName("SomeGroup").build());
+    void MethodGetGroupById_ShouldReturnGroupFromDb() throws DAOException, ElementAlreadyExistException {
+        var optionalGroup = Optional.of(Group.builder().name("SomeGroup").build());
         when(groupDao.getGroup(1)).thenReturn(optionalGroup);
 
-        var expected = GroupDto.builder().name("SomeGroup").studentList(List.of()).build();
+        var expected = optionalGroup.map(group -> modelMapper.map(group, GroupDto.class)).orElseThrow();
 
         var actual = groupService.getGroup(1);
 
@@ -99,18 +78,11 @@ class GroupServiceImplTest {
     }
 
     @Test
-    void MethodGetGroupById_ShouldThrowException_WhenRepositoryExceptionIsThrown() throws DAOException {
-        doThrow(DAOException.class).when(groupDao).getGroup(1);
-
-        assertThrows(ServiceException.class, () -> groupService.getGroup(1), "Group wasn`t received");
-    }
-
-    @Test
-    void MethodGetGroupByName_ShouldReturnGroupFromDb() throws DAOException, ServiceException {
-        var optionalGroup = Optional.of(Group.builder().groupName("SomeGroup").build());
+    void MethodGetGroupByName_ShouldReturnGroupFromDb() throws DAOException, ElementAlreadyExistException {
+        var optionalGroup = Optional.of(Group.builder().name("SomeGroup").build());
         when(groupDao.getGroup("SomeGroup")).thenReturn(optionalGroup);
 
-        var expected = GroupDto.builder().name("SomeGroup").studentList(List.of()).build();
+        var expected = optionalGroup.map(group -> modelMapper.map(group, GroupDto.class)).orElseThrow();
 
         var actual = groupService.getGroup("SomeGroup");
 
@@ -118,22 +90,15 @@ class GroupServiceImplTest {
     }
 
     @Test
-    void MethodGetGroupByName_ShouldThrowException_WhenRepositoryExceptionIsThrown() throws DAOException {
-        doThrow(DAOException.class).when(groupDao).getGroup("SomeGroup");
-
-        assertThrows(ServiceException.class, () -> groupService.getGroup("SomeGroup"), "Group wasn`t received");
-    }
-
-    @Test
-    void MethodGetGroupsSmallerThen_ShouldReturnGroupsFromDb() throws DAOException, ServiceException {
+    void MethodGetGroupsSmallerThen_ShouldReturnGroupsFromDb() throws DAOException, ElementAlreadyExistException {
         // given
         var groups = List.of(
-            Group.builder().groupName("SomeGroup1").build(),
-            Group.builder().groupName("SomeGroup2").build(),
-            Group.builder().groupName("SomeGroup3").build());
+            Group.builder().name("SomeGroup1").build(),
+            Group.builder().name("SomeGroup2").build(),
+            Group.builder().name("SomeGroup3").build());
 
         var expected = groups.stream()
-            .map(GroupModelMapper::toGroupDto)
+            .map(group -> modelMapper.map(group, GroupDto.class))
             .toList();
 
         // when
@@ -146,16 +111,7 @@ class GroupServiceImplTest {
     }
 
     @Test
-    void MethodGetGroupsSmallerThen_ShouldThrowException_WhenRepositoryExceptionIsThrown() throws DAOException {
-        // when
-        doThrow(DAOException.class).when(groupDao).getGroupsLessThen(3);
-
-        // then
-        assertThrows(ServiceException.class, () -> groupService.getGroupsLessThen(3), "Groups weren`t received");
-    }
-
-    @Test
-    void MethodGetStudentsByGroup_ShouldReturnStudentsFromDb() throws DAOException, ServiceException {
+    void MethodGetStudentsByGroup_ShouldReturnStudentsFromDb() throws DAOException, ElementAlreadyExistException {
         // given
         var studentList = List.of(
             Student.builder().groupId(1).firstName("SomeName1").lastName("SomeLastName1").build(),
@@ -163,11 +119,11 @@ class GroupServiceImplTest {
             Student.builder().groupId(1).firstName("SomeName3").lastName("SomeLastName3").build());
 
         int groupId = 1;
-        var group = Group.builder().groupId(groupId).groupName("SomeGroup").build();
-        var groupDto = GroupModelMapper.toGroupDto(group);
+        var group = Group.builder().id(groupId).name("SomeGroup").build();
+        var groupDto = modelMapper.map(group, GroupDto.class);
 
         var expected = studentList.stream()
-            .map(StudentModelMapper::toStudentDto)
+            .map(student1 -> modelMapper.map(student1, StudentDto.class))
             .toList();
         expected.forEach(student -> student.setGroup(groupDto));
 

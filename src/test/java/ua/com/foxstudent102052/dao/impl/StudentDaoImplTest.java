@@ -39,7 +39,7 @@ class StudentDaoImplTest {
     void MethodAddStudent_ShouldAddStudentToDb() throws DAOException {
         // given
         var newStudent = Student.builder()
-            .studentId(1)
+            .id(1)
             .groupId(1)
             .firstName("John")
             .lastName("Doe")
@@ -72,7 +72,7 @@ class StudentDaoImplTest {
     void MethodAddStudentToCourse_ShouldAddStudentToNewCourse() throws DAOException {
         // given
         var expected = Student.builder()
-            .studentId(1)
+            .id(1)
             .groupId(1)
             .firstName("Leia")
             .lastName("Organa")
@@ -87,7 +87,7 @@ class StudentDaoImplTest {
     }
 
     @Test
-    void MethodAddStudentToCourse_ShouldThrowAnException_IfStudentIdIsInvalid() throws SQLException {
+    void MethodAddStudentToCourse_ShouldThrowAnException_IfidIsInvalid() throws SQLException {
         // given
         customDataSource = mock(H2CustomDataSource.class);
         studentDao = new StudentDaoImpl(customDataSource);
@@ -114,37 +114,37 @@ class StudentDaoImplTest {
     void MethodGetStudentsByCourseId_ShouldReturnStudentByCourseId() throws DAOException {
         var expected = List.of(
             Student.builder()
-                .studentId(1)
+                .id(1)
                 .groupId(1)
                 .firstName("Leia")
                 .lastName("Organa")
                 .build(),
             Student.builder()
-                .studentId(2)
+                .id(2)
                 .groupId(1)
                 .firstName("Luke")
                 .lastName("Skywalker")
                 .build(),
             Student.builder()
-                .studentId(4)
+                .id(4)
                 .groupId(1)
                 .firstName("Padme")
                 .lastName("Amidala")
                 .build(),
             Student.builder()
-                .studentId(5)
+                .id(5)
                 .groupId(2)
                 .firstName("Dart")
                 .lastName("Maul")
                 .build(),
             Student.builder()
-                .studentId(9)
+                .id(9)
                 .groupId(2)
                 .firstName("Dart")
                 .lastName("Vader")
                 .build(),
             Student.builder()
-                .studentId(10)
+                .id(10)
                 .groupId(3)
                 .firstName("Jah Jah")
                 .lastName("Binks")
@@ -174,13 +174,13 @@ class StudentDaoImplTest {
     void MethodGetStudentsByNameAndCourse_ShouldReturnListOfStudents_ByStudentNameAndCourseId() throws DAOException {
         var expected = List.of(
             Student.builder()
-                .studentId(5)
+                .id(5)
                 .groupId(2)
                 .firstName("Dart")
                 .lastName("Maul")
                 .build(),
             Student.builder()
-                .studentId(9)
+                .id(9)
                 .groupId(2)
                 .firstName("Dart")
                 .lastName("Vader")
@@ -238,7 +238,7 @@ class StudentDaoImplTest {
     void MethodGetStudentById_ShouldReturnStudentFromDb() throws DAOException {
         // given
         var expected = Student.builder()
-            .studentId(1)
+            .id(1)
             .groupId(1)
             .firstName("Leia")
             .lastName("Organa")

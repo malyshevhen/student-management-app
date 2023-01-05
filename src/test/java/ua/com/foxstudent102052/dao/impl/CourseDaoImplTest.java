@@ -38,8 +38,8 @@ class CourseDaoImplTest {
     void MethodAddCourse_ShouldAddCourseToDb() throws DAOException {
         // given
         var course = Course.builder()
-            .courseName("Course 4")
-            .courseDescription("Some description for course 4")
+            .name("Course 4")
+            .description("Some description for course 4")
             .build();
 
         // when
@@ -92,9 +92,9 @@ class CourseDaoImplTest {
     void MethodGetCourse_ById_ShouldReturnCourseFromDb() throws DAOException {
         // given
         var expected = Course.builder()
-            .courseId(1)
-            .courseName("Course 1")
-            .courseDescription("Some description for course 1")
+            .id(1)
+            .name("Course 1")
+            .description("Some description for course 1")
             .build();
 
         // when
@@ -123,14 +123,14 @@ class CourseDaoImplTest {
         // given
         var expected = List.of(
             Course.builder()
-                .courseId(1)
-                .courseName("Course 1")
-                .courseDescription("Some description for course 1")
+                .id(1)
+                .name("Course 1")
+                .description("Some description for course 1")
                 .build(),
             Course.builder()
-                .courseId(2)
-                .courseName("Course 2")
-                .courseDescription("Some description for course 2")
+                .id(2)
+                .name("Course 2")
+                .description("Some description for course 2")
                 .build()
             );
 
