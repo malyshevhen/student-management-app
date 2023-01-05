@@ -2,10 +2,11 @@ package ua.com.foxstudent102052.service.impl;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
 import ua.com.foxstudent102052.dao.exceptions.DAOException;
 import ua.com.foxstudent102052.dao.interfaces.StudentDao;
 import ua.com.foxstudent102052.model.dto.StudentDto;
-import ua.com.foxstudent102052.model.mapper.StudentModelMapper;
+import ua.com.foxstudent102052.model.entity.Student;
 import ua.com.foxstudent102052.service.interfaces.StudentService;
 
 import java.util.List;
@@ -15,10 +16,11 @@ import java.util.NoSuchElementException;
 @AllArgsConstructor
 public class StudentServiceImpl implements StudentService {
     private final StudentDao studentDao;
+    private final ModelMapper modelMapper = new ModelMapper();
 
     @Override
     public void addStudent(StudentDto studentDto) throws DAOException {
-        var student = StudentModelMapper.toStudent(studentDto);
+        var student = modelMapper.map(studentDto, Student.class);
         studentDao.addStudent(student);
     }
 
@@ -57,7 +59,7 @@ public class StudentServiceImpl implements StudentService {
     public List<StudentDto> getStudents() throws DAOException {
         var studentDtoList = studentDao.getStudents()
             .stream()
-            .map(StudentModelMapper::toStudentDto)
+            .map(student -> modelMapper.map(student, StudentDto.class))
             .toList();
 
         if (studentDtoList.isEmpty()) {
@@ -71,7 +73,7 @@ public class StudentServiceImpl implements StudentService {
     public List<StudentDto> getStudents(int courseId) throws DAOException {
         var studentDtoList = studentDao.getStudents(courseId)
             .stream()
-            .map(StudentModelMapper::toStudentDto)
+            .map(student -> modelMapper.map(student, StudentDto.class))
             .toList();
 
         if (studentDtoList.isEmpty()) {
@@ -85,7 +87,7 @@ public class StudentServiceImpl implements StudentService {
     public List<StudentDto> getStudents(String studentName, Integer courseId) throws DAOException {
         var studentDtoList = studentDao.getStudents(studentName, courseId)
             .stream()
-            .map(StudentModelMapper::toStudentDto)
+            .map(student -> modelMapper.map(student, StudentDto.class))
             .toList();
 
         if (studentDtoList.isEmpty()) {

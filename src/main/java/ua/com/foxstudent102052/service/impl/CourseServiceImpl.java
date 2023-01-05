@@ -2,10 +2,11 @@ package ua.com.foxstudent102052.service.impl;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
 import ua.com.foxstudent102052.dao.exceptions.DAOException;
 import ua.com.foxstudent102052.dao.interfaces.CourseDao;
 import ua.com.foxstudent102052.model.dto.CourseDto;
-import ua.com.foxstudent102052.model.mapper.CourseModelMapper;
+import ua.com.foxstudent102052.model.entity.Course;
 import ua.com.foxstudent102052.service.exceptions.ElementAlreadyExistException;
 import ua.com.foxstudent102052.service.interfaces.CourseService;
 
@@ -16,15 +17,16 @@ import java.util.NoSuchElementException;
 @AllArgsConstructor
 public class CourseServiceImpl implements CourseService {
     private final CourseDao courseDao;
+    private final ModelMapper modelMapper = new ModelMapper();
 
     @Override
-    public void addCourse(CourseDto course) throws DAOException {
-        var courseName = course.getName();
+    public void addCourse(CourseDto courseDto) throws DAOException {
+        var courseName = courseDto.getName();
 
         if (courseDao.getCourse(courseName).isEmpty()) {
-            courseDao.addCourse(CourseModelMapper.toCourse(course));
+            courseDao.addCourse(modelMapper.map(courseDto, Course.class));
         } else {
-            throw new ElementAlreadyExistException(String.format("Course with id %d already exist", course.getId()));
+            throw new ElementAlreadyExistException(String.format("Course with id %d already exist", courseDto.getId()));
         }
     }
 
@@ -32,7 +34,7 @@ public class CourseServiceImpl implements CourseService {
     public CourseDto getCourse(int courseId) throws DAOException {
         var course = courseDao.getCourse(courseId).orElseThrow();
 
-        return CourseModelMapper.toCourseDto(course);
+        return modelMapper.map(course, CourseDto.class);
     }
 
     @Override
@@ -42,7 +44,7 @@ public class CourseServiceImpl implements CourseService {
         } else {
             return courseDao.getCourses()
                 .stream()
-                .map(CourseModelMapper::toCourseDto)
+                .map(course -> modelMapper.map(course, CourseDto.class))
                 .toList();
         }
     }
@@ -54,7 +56,7 @@ public class CourseServiceImpl implements CourseService {
         } else {
             return courseDao.getCourses(studentId)
                 .stream()
-                .map(CourseModelMapper::toCourseDto)
+                .map(course -> modelMapper.map(course, CourseDto.class))
                 .toList();
         }
     }
