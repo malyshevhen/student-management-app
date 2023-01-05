@@ -15,6 +15,11 @@ import java.util.Optional;
 
 @Slf4j
 public class GroupDaoImpl implements GroupDao {
+    public static final String TABLE_NAME = "groups";
+    public static final String TABLE_COLUMN_1 = "group_id";
+    public static final String TABLE_COLUMN_2 = "group_name";
+    public static final String SECOND_TABLE_NAME = "students";
+    public static final String SECOND_TABLE_COLUMN_2 = "group_id";
     private final CustomDataSource dataSource;
 
     public GroupDaoImpl(CustomDataSource customDataSource) {
@@ -26,8 +31,11 @@ public class GroupDaoImpl implements GroupDao {
         var query =
             """
                 INSERT
-                INTO groups (group_name)
+                INTO $table_name ($col2)
                     values (?);""";
+
+        query = query.replace("$table_name", TABLE_NAME);
+        query = query.replace("$col2", TABLE_COLUMN_2);
 
         try (var connection = dataSource.getConnection();
              var statement = connection.prepareStatement(query)) {
@@ -46,8 +54,11 @@ public class GroupDaoImpl implements GroupDao {
         var query =
             """
                 SELECT *
-                FROM groups
-                WHERE group_id = ?;""";
+                FROM $table_name
+                WHERE $table_col1 = ?;""";
+
+        query = query.replace("$table_name", TABLE_NAME);
+        query = query.replace("$table_col1", TABLE_COLUMN_1);
 
         try (var connection = dataSource.getConnection();
              var statement = connection.prepareStatement(query)) {
@@ -74,8 +85,11 @@ public class GroupDaoImpl implements GroupDao {
         var query =
             """
                 SELECT *
-                FROM groups
-                WHERE group_name = ?;""";
+                FROM $table_name
+                WHERE $col2 = ?;""";
+
+        query = query.replace("$table_name", TABLE_NAME);
+        query = query.replace("$col2", TABLE_COLUMN_2);
 
         try (var connection = dataSource.getConnection();
              var statement = connection.prepareStatement(query)) {
@@ -99,7 +113,9 @@ public class GroupDaoImpl implements GroupDao {
 
     @Override
     public List<Group> getGroups() {
-        var query = "SELECT * FROM groups;";
+        var query = "SELECT * FROM $table_name;";
+
+        query = query.replace("$table_name", TABLE_NAME);
 
         try (var connection = dataSource.getConnection();
              var statement = connection.createStatement()) {
@@ -118,20 +134,25 @@ public class GroupDaoImpl implements GroupDao {
         var query =
             """
                 SELECT *
-                FROM groups
-                WHERE group_id
+                FROM %table_name
+                WHERE %table_column1
                 NOT IN(
-                    SELECT group_id
-                    FROM students
-                    WHERE group_id
+                    SELECT %second_table_column2
+                    FROM %second_table_name
+                    WHERE %second_table_column2
                     IS NOT NULL)
-                OR group_id IN(
-                    SELECT group_id
-                    FROM students
-                    WHERE group_id
+                OR %table_column1 IN(
+                    SELECT %second_table_column2
+                    FROM %second_table_name
+                    WHERE %second_table_column2
                     IS NOT NULL
-                    GROUP BY group_id
-                    HAVING COUNT(group_id) <= ?);""";
+                    GROUP BY %second_table_column2
+                    HAVING COUNT(%second_table_column2) <= ?);""";
+
+        query = query.replace("%table_name", TABLE_NAME);
+        query = query.replace("%second_table_name", SECOND_TABLE_NAME);
+        query = query.replace("%table_column1", TABLE_COLUMN_1);
+        query = query.replace("%second_table_column2", SECOND_TABLE_COLUMN_2);
 
         try (var connection = dataSource.getConnection();
              var statement = connection.prepareStatement(query)) {
@@ -151,8 +172,11 @@ public class GroupDaoImpl implements GroupDao {
         var query =
             """
                 SELECT *
-                FROM students
-                WHERE group_id = ?;""";
+                FROM %second_table_name
+                WHERE %second_table_column2 = ?;""";
+
+        query = query.replace("%second_table_name", SECOND_TABLE_NAME);
+        query = query.replace("%second_table_column2", SECOND_TABLE_COLUMN_2);
 
         try (var connection = dataSource.getConnection();
              var statement = connection.prepareStatement(query)) {

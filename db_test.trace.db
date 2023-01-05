@@ -1,0 +1,81 @@
+2023-01-05 15:45:09 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "INSERT\000aINTO [*]? (?, ?)\000aVALUES (?, ?);"; expected "identifier"; SQL statement:
+INSERT
+INTO ? (?, ?)
+VALUES (?, ?); [42001-214]
+2023-01-05 15:45:09 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "SELECT *\000aFROM [*]?\000aWHERE ? = ?;"; expected "identifier"; SQL statement:
+SELECT *
+FROM ?
+WHERE ? = ?; [42001-214]
+2023-01-05 15:45:09 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "SELECT *\000aFROM [*]?\000aWHERE ?\000aIN (\000a    SELECT ?\000a    FROM ?\000a    WHERE ? = ?);"; expected "identifier"; SQL statement:
+SELECT *
+FROM ?
+WHERE ?
+IN (
+    SELECT ?
+    FROM ?
+    WHERE ? = ?); [42001-214]
+2023-01-05 15:45:09 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "SELECT * FROM [*]?;"; expected "identifier"; SQL statement:
+SELECT * FROM ?; [42001-214]
+2023-01-05 15:49:39 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "INSERT\000aINTO [*]? (?, ?)\000aVALUES (?, ?);"; expected "identifier"; SQL statement:
+INSERT
+INTO ? (?, ?)
+VALUES (?, ?); [42001-214]
+2023-01-05 15:49:39 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "SELECT *\000aFROM [*]?\000aWHERE ? = ?;"; expected "identifier"; SQL statement:
+SELECT *
+FROM ?
+WHERE ? = ?; [42001-214]
+2023-01-05 15:49:39 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "SELECT *\000aFROM [*]?\000aWHERE ?\000aIN (\000a    SELECT ?\000a    FROM ?\000a    WHERE ? = ?);"; expected "identifier"; SQL statement:
+SELECT *
+FROM ?
+WHERE ?
+IN (
+    SELECT ?
+    FROM ?
+    WHERE ? = ?); [42001-214]
+2023-01-05 15:49:39 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "SELECT * FROM [*]?;"; expected "identifier"; SQL statement:
+SELECT * FROM ?; [42001-214]
+2023-01-05 16:06:12 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "INSERT\000aINTO [*]? (course_name, course_description)\000aVALUES (?, ?);"; expected "identifier"; SQL statement:
+INSERT
+INTO ? (course_name, course_description)
+VALUES (?, ?); [42001-214]
+2023-01-05 16:07:34 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "INSERT\000aINTO courses ([*]?, ?)\000aVALUES (?, ?);"; expected "identifier"; SQL statement:
+INSERT
+INTO courses (?, ?)
+VALUES (?, ?); [42001-214]
+2023-01-05 16:38:10 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "COURSES2" not found; SQL statement:
+SELECT *
+FROM courses
+WHERE course_id
+IN (
+    SELECT course_id
+    FROM courses2
+    WHERE student_id = ?); [42102-214]
+2023-01-05 17:30:31 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLDataException: Data conversion error converting "Dart"; SQL statement:
+SELECT *
+FROM students
+WHERE student_id IN (
+    SELECT student_id
+    FROM students_courses
+    WHERE course_id = ?)
+AND group_id = ? [22018-214]
+2023-01-05 17:30:32 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLDataException: Data conversion error converting "Leia"; SQL statement:
+SELECT *
+FROM students
+WHERE student_id IN (
+    SELECT student_id
+    FROM students_courses
+    WHERE course_id = ?)
+AND group_id = ? [22018-214]
