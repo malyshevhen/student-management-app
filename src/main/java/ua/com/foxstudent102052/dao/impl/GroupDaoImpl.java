@@ -34,8 +34,8 @@ public class GroupDaoImpl implements GroupDao {
                 INTO $table_name ($col2)
                     values (?);""";
 
-        query = query.replace("$table_name", TABLE_NAME);
-        query = query.replace("$col2", TABLE_COLUMN_2);
+        query = query.replace("$table_name", TABLE_NAME)
+            .replace("$col2", TABLE_COLUMN_2);
 
         try (var connection = dataSource.getConnection();
              var statement = connection.prepareStatement(query)) {
@@ -57,8 +57,8 @@ public class GroupDaoImpl implements GroupDao {
                 FROM $table_name
                 WHERE $table_col1 = ?;""";
 
-        query = query.replace("$table_name", TABLE_NAME);
-        query = query.replace("$table_col1", TABLE_COLUMN_1);
+        query = query.replace("$table_name", TABLE_NAME)
+            .replace("$table_col1", TABLE_COLUMN_1);
 
         try (var connection = dataSource.getConnection();
              var statement = connection.prepareStatement(query)) {
@@ -88,8 +88,8 @@ public class GroupDaoImpl implements GroupDao {
                 FROM $table_name
                 WHERE $col2 = ?;""";
 
-        query = query.replace("$table_name", TABLE_NAME);
-        query = query.replace("$col2", TABLE_COLUMN_2);
+        query = query.replace("$table_name", TABLE_NAME)
+            .replace("$col2", TABLE_COLUMN_2);
 
         try (var connection = dataSource.getConnection();
              var statement = connection.prepareStatement(query)) {
@@ -149,10 +149,10 @@ public class GroupDaoImpl implements GroupDao {
                     GROUP BY %second_table_column2
                     HAVING COUNT(%second_table_column2) <= ?);""";
 
-        query = query.replace("%table_name", TABLE_NAME);
-        query = query.replace("%second_table_name", SECOND_TABLE_NAME);
-        query = query.replace("%table_column1", TABLE_COLUMN_1);
-        query = query.replace("%second_table_column2", SECOND_TABLE_COLUMN_2);
+        query = query.replace("%table_name", TABLE_NAME)
+            .replace("%second_table_name", SECOND_TABLE_NAME)
+            .replace("%table_column1", TABLE_COLUMN_1)
+            .replace("%second_table_column2", SECOND_TABLE_COLUMN_2);
 
         try (var connection = dataSource.getConnection();
              var statement = connection.prepareStatement(query)) {
@@ -175,8 +175,8 @@ public class GroupDaoImpl implements GroupDao {
                 FROM %second_table_name
                 WHERE %second_table_column2 = ?;""";
 
-        query = query.replace("%second_table_name", SECOND_TABLE_NAME);
-        query = query.replace("%second_table_column2", SECOND_TABLE_COLUMN_2);
+        query = query.replace("%second_table_name", SECOND_TABLE_NAME)
+            .replace("%second_table_column2", SECOND_TABLE_COLUMN_2);
 
         try (var connection = dataSource.getConnection();
              var statement = connection.prepareStatement(query)) {

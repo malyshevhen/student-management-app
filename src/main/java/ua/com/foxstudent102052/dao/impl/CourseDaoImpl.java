@@ -33,9 +33,9 @@ public class CourseDaoImpl implements CourseDao {
             INTO $table_name ($col2, $col3)
             VALUES (?, ?);""";
 
-        query = query.replace("$table_name", TABLE_NAME);
-        query = query.replace("$col2", TABLE_COLUMN_2);
-        query = query.replace("$col3", TABLE_COLUMN_3);
+        query = query.replace("$table_name", TABLE_NAME)
+            .replace("$col2", TABLE_COLUMN_2)
+            .replace("$col3", TABLE_COLUMN_3);
 
 
         try (var connection = dataSource.getConnection();
@@ -58,8 +58,8 @@ public class CourseDaoImpl implements CourseDao {
             FROM $table_name
             WHERE $col1 = ?;""";
 
-        query = query.replace("$table_name", TABLE_NAME);
-        query = query.replace("$col1", TABLE_COLUMN_1);
+        query = query.replace("$table_name", TABLE_NAME)
+            .replace("$col1", TABLE_COLUMN_1);
 
         try (var connection = dataSource.getConnection();
              var statement = connection.prepareStatement(query)) {
@@ -87,8 +87,8 @@ public class CourseDaoImpl implements CourseDao {
             FROM $table_name
             WHERE $col2 = ?;""";
 
-        query = query.replace("$table_name", TABLE_NAME);
-        query = query.replace("$col2", TABLE_COLUMN_2);
+        query = query.replace("$table_name", TABLE_NAME)
+            .replace("$col2", TABLE_COLUMN_2);
 
         try (var connection = dataSource.getConnection();
              var statement = connection.prepareStatement(query)) {
@@ -138,10 +138,10 @@ public class CourseDaoImpl implements CourseDao {
                 FROM $join_table_name
                 WHERE $join_col1 = ?);""";
 
-        query = query.replace("$table_name", TABLE_NAME);
-        query = query.replace("$col1", TABLE_COLUMN_1);
-        query = query.replace("$join_table_name", JOIN_TABLE_NAME);
-        query = query.replace("$join_col1", JOIN_TABLE_COLUMN_1);
+        query = query.replace("$table_name", TABLE_NAME)
+            .replace("$col1", TABLE_COLUMN_1)
+            .replace("$join_table_name", JOIN_TABLE_NAME)
+            .replace("$join_col1", JOIN_TABLE_COLUMN_1);
 
         try (var connection = dataSource.getConnection();
              var statement = connection.prepareStatement(query)) {
