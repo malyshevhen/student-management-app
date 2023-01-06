@@ -1,9 +1,8 @@
 package ua.com.foxstudent102052.utils;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import ua.com.foxstudent102052.dao.datasource.impl.PooledDataSource;
+
+import java.io.*;
 
 public class FileUtils {
     private FileUtils() {
@@ -24,6 +23,17 @@ public class FileUtils {
             }
 
             return stringBuilder.toString();
+        }
+    }
+
+    public static InputStream getFileFromResourceAsStream(String filename) {
+        ClassLoader classLoader = PooledDataSource.class.getClassLoader();
+        InputStream inputStream = classLoader.getResourceAsStream(filename);
+
+        if (inputStream == null) {
+            throw new IllegalArgumentException("File not found:" + filename);
+        } else {
+            return inputStream;
         }
     }
 }

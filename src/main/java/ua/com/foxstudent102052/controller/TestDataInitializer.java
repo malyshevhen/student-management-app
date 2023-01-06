@@ -1,7 +1,7 @@
 package ua.com.foxstudent102052.controller;
 
 import lombok.extern.slf4j.Slf4j;
-import ua.com.foxstudent102052.dao.datasource.impl.PostgresPooledDataSource;
+import ua.com.foxstudent102052.dao.datasource.impl.PooledDataSource;
 import ua.com.foxstudent102052.dao.exceptions.DAOException;
 import ua.com.foxstudent102052.dao.impl.CourseDaoImpl;
 import ua.com.foxstudent102052.dao.impl.GroupDaoImpl;
@@ -33,7 +33,7 @@ public class TestDataInitializer {
     public static final QueryPostService queryPostService;
 
     static {
-        var customDataSource = PostgresPooledDataSource.getInstance();
+        var customDataSource = PooledDataSource.getInstance();
         var studentRepository = new StudentDaoImpl(customDataSource);
         var courseRepository = new CourseDaoImpl(customDataSource);
         var groupRepository = new GroupDaoImpl(customDataSource);

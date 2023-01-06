@@ -49,6 +49,7 @@ public class StudentDaoImpl implements StudentDao {
             statement.setInt(1, student.getGroupId());
             statement.setString(2, student.getFirstName());
             statement.setString(3, student.getLastName());
+
             statement.executeUpdate();
         } catch (SQLException e) {
             log.error(e.getMessage());
@@ -75,6 +76,7 @@ public class StudentDaoImpl implements StudentDao {
              var statement = connection.prepareStatement(query)) {
             statement.setInt(1, studentId);
             statement.setInt(2, studentId);
+
             statement.executeUpdate();
         } catch (SQLException e) {
             log.error(e.getMessage());
@@ -100,6 +102,7 @@ public class StudentDaoImpl implements StudentDao {
              var statement = connection.prepareStatement(query)) {
             statement.setInt(1, studentId);
             statement.setInt(2, courseId);
+
             statement.executeUpdate();
         } catch (SQLException e) {
             log.error("Student with id {} was not added to Course with id {}", studentId, courseId);
@@ -126,6 +129,7 @@ public class StudentDaoImpl implements StudentDao {
              var statement = connection.prepareStatement(query)) {
             statement.setInt(1, studentId);
             statement.setInt(2, courseId);
+
             statement.executeUpdate();
         } catch (SQLException e) {
             log.error(e.getMessage());
@@ -148,6 +152,7 @@ public class StudentDaoImpl implements StudentDao {
         try (var connection = dataSource.getConnection();
              var statement = connection.prepareStatement(query)) {
             statement.setInt(1, id);
+
             var studentsResultSet = statement.executeQuery();
 
             if (studentsResultSet.next()) {
@@ -235,6 +240,7 @@ public class StudentDaoImpl implements StudentDao {
              var statement = connection.prepareStatement(query)) {
             statement.setInt(1, courseId);
             statement.setString(2, studentName);
+
             var studentsResultSet = statement.executeQuery();
 
             return StudentDaoMapper.mapToStudents(studentsResultSet);

@@ -2,7 +2,7 @@ package ua.com.foxstudent102052.dao.impl;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import ua.com.foxstudent102052.dao.datasource.impl.H2CustomDataSource;
+import ua.com.foxstudent102052.dao.datasource.impl.PooledDataSource;
 import ua.com.foxstudent102052.dao.datasource.interfaces.CustomDataSource;
 import ua.com.foxstudent102052.dao.exceptions.DAOException;
 import ua.com.foxstudent102052.dao.interfaces.GroupDao;
@@ -25,7 +25,7 @@ class GroupDaoImplTest {
 
     @BeforeEach
     public void setUp() throws IOException, DAOException {
-        customDataSource = H2CustomDataSource.getInstance();
+        customDataSource = PooledDataSource.getInstance();
         groupDao = new GroupDaoImpl(customDataSource);
         postDAO = new PostDAOImpl(customDataSource);
         var ddlScript = FileUtils.readTextFile("src/test/resources/scripts/ddl/testDB.sql");
@@ -50,7 +50,7 @@ class GroupDaoImplTest {
     @Test
     void MethodAddGroup_ShouldThrowException_WhenDAOExceptionThrown() throws SQLException {
         // given
-        customDataSource = mock(H2CustomDataSource.class);
+        customDataSource = mock(CustomDataSource.class);
         groupDao = new GroupDaoImpl(customDataSource);
 
         // when
@@ -73,7 +73,7 @@ class GroupDaoImplTest {
     @Test
     void MethodGetGroups_ShouldThrowException_WhenDAOExceptionThrown() throws SQLException {
         // given
-        customDataSource = mock(H2CustomDataSource.class);
+        customDataSource = mock(CustomDataSource.class);
         groupDao = new GroupDaoImpl(customDataSource);
 
         // when
@@ -99,7 +99,7 @@ class GroupDaoImplTest {
     @Test
     void MethodGetGroup_ById_ShouldThrowException_WhenDAOExceptionThrown() throws SQLException {
         // given
-        customDataSource = mock(H2CustomDataSource.class);
+        customDataSource = mock(CustomDataSource.class);
         groupDao = new GroupDaoImpl(customDataSource);
 
         // when
@@ -125,7 +125,7 @@ class GroupDaoImplTest {
     @Test
     void MethodGetGroup_ByName_ShouldThrowException_WhenDAOExceptionThrown() throws SQLException {
         // given
-        customDataSource = mock(H2CustomDataSource.class);
+        customDataSource = mock(CustomDataSource.class);
         groupDao = new GroupDaoImpl(customDataSource);
 
         // when
@@ -148,7 +148,7 @@ class GroupDaoImplTest {
     void MethodGetGroupsLessThen_ShouldThrowException_WhenDAOExceptionThrown() throws SQLException {
 
         // given
-        customDataSource = mock(H2CustomDataSource.class);
+        customDataSource = mock(CustomDataSource.class);
         groupDao = new GroupDaoImpl(customDataSource);
 
         // when
@@ -169,7 +169,7 @@ class GroupDaoImplTest {
     @Test
     void MethodGetStudents_ByGroupShouldThrowException_WhenDAOExceptionThrown() throws SQLException {
         // given
-        customDataSource = mock(H2CustomDataSource.class);
+        customDataSource = mock(CustomDataSource.class);
         groupDao = new GroupDaoImpl(customDataSource);
 
         // when

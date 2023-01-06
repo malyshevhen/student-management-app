@@ -42,6 +42,7 @@ public class CourseDaoImpl implements CourseDao {
              var statement = connection.prepareStatement(query)) {
             statement.setString(1, course.getName());
             statement.setString(2, course.getDescription());
+
             statement.executeUpdate();
 
         } catch (SQLException e) {
@@ -64,6 +65,7 @@ public class CourseDaoImpl implements CourseDao {
         try (var connection = dataSource.getConnection();
              var statement = connection.prepareStatement(query)) {
             statement.setInt(1, courseId);
+
             var courseResultSet = statement.executeQuery();
 
             if (courseResultSet.next()) {
@@ -93,6 +95,7 @@ public class CourseDaoImpl implements CourseDao {
         try (var connection = dataSource.getConnection();
              var statement = connection.prepareStatement(query)) {
             statement.setString(1, courseName);
+
             var courseResultSet = statement.executeQuery();
 
             if (courseResultSet.next()) {
@@ -146,6 +149,7 @@ public class CourseDaoImpl implements CourseDao {
         try (var connection = dataSource.getConnection();
              var statement = connection.prepareStatement(query)) {
             statement.setInt(1, studentId);
+
             var coursesResultSet = statement.executeQuery();
 
             return CourseDaoMapper.mapToCourses(coursesResultSet);

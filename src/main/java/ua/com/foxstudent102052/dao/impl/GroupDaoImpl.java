@@ -157,6 +157,7 @@ public class GroupDaoImpl implements GroupDao {
         try (var connection = dataSource.getConnection();
              var statement = connection.prepareStatement(query)) {
             statement.setInt(1, numberOfStudents);
+
             var groupResultSet = statement.executeQuery();
 
             return GroupDaoMapper.mapToGroups(groupResultSet);
@@ -181,6 +182,7 @@ public class GroupDaoImpl implements GroupDao {
         try (var connection = dataSource.getConnection();
              var statement = connection.prepareStatement(query)) {
             statement.setInt(1, groupId);
+
             var studentResultSet = statement.executeQuery();
 
             return StudentDaoMapper.mapToStudents(studentResultSet);

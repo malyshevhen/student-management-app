@@ -3,7 +3,7 @@ package ua.com.foxstudent102052.client;
 import ua.com.foxstudent102052.controller.CourseController;
 import ua.com.foxstudent102052.controller.GroupController;
 import ua.com.foxstudent102052.controller.StudentController;
-import ua.com.foxstudent102052.dao.datasource.impl.PostgresPooledDataSource;
+import ua.com.foxstudent102052.dao.datasource.impl.PooledDataSource;
 import ua.com.foxstudent102052.dao.exceptions.DAOException;
 import ua.com.foxstudent102052.dao.impl.CourseDaoImpl;
 import ua.com.foxstudent102052.dao.impl.GroupDaoImpl;
@@ -58,7 +58,7 @@ public class ConsoleUI {
     private static final TableFactory tableFactory;
 
     static {
-        var customDataSource = PostgresPooledDataSource.getInstance();
+        var customDataSource = PooledDataSource.getInstance();
         var courseRepository = new CourseDaoImpl(customDataSource);
         var studentRepository = new StudentDaoImpl(customDataSource);
         var groupRepository = new GroupDaoImpl(customDataSource);

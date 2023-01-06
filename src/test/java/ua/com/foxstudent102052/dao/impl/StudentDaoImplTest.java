@@ -2,7 +2,7 @@ package ua.com.foxstudent102052.dao.impl;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import ua.com.foxstudent102052.dao.datasource.impl.H2CustomDataSource;
+import ua.com.foxstudent102052.dao.datasource.impl.PooledDataSource;
 import ua.com.foxstudent102052.dao.datasource.interfaces.CustomDataSource;
 import ua.com.foxstudent102052.dao.exceptions.DAOException;
 import ua.com.foxstudent102052.dao.interfaces.PostDAO;
@@ -26,7 +26,7 @@ class StudentDaoImplTest {
 
     @BeforeEach
     public void setUp() throws IOException, DAOException {
-        customDataSource = H2CustomDataSource.getInstance();
+        customDataSource = PooledDataSource.getInstance();
         studentDao = new StudentDaoImpl(customDataSource);
         postDAO = new PostDAOImpl(customDataSource);
         var ddlScript = FileUtils.readTextFile("src/test/resources/scripts/ddl/testDB.sql");
@@ -57,7 +57,7 @@ class StudentDaoImplTest {
     @Test
     void MethodAddStudent_ShouldThrowException_WhenDAOExceptionThrown() throws SQLException {
         // given
-        customDataSource = mock(H2CustomDataSource.class);
+        customDataSource = mock(CustomDataSource.class);
         studentDao = new StudentDaoImpl(customDataSource);
 
         // when
@@ -89,7 +89,7 @@ class StudentDaoImplTest {
     @Test
     void MethodAddStudentToCourse_ShouldThrowAnException_IfidIsInvalid() throws SQLException {
         // given
-        customDataSource = mock(H2CustomDataSource.class);
+        customDataSource = mock(CustomDataSource.class);
         studentDao = new StudentDaoImpl(customDataSource);
 
         // when
@@ -159,7 +159,7 @@ class StudentDaoImplTest {
     @Test
     void MethodGetStudentByCourseId_ShouldThrowAnException_IfCourseIdIsInvalid() throws SQLException {
         // given
-        customDataSource = mock(H2CustomDataSource.class);
+        customDataSource = mock(CustomDataSource.class);
         studentDao = new StudentDaoImpl(customDataSource);
 
         // when
@@ -195,7 +195,7 @@ class StudentDaoImplTest {
     @Test
     void MethodGetStudentsByNameAndCourse_ShouldThrowAnException_IfNoRelationFromThem() throws SQLException {
         // given
-        customDataSource = mock(H2CustomDataSource.class);
+        customDataSource = mock(CustomDataSource.class);
         studentDao = new StudentDaoImpl(customDataSource);
 
         // when
@@ -221,7 +221,7 @@ class StudentDaoImplTest {
     @Test
     void MethodRemoveStudent_ShouldThrowAnException_IfDAOExceptionWasThrown() throws SQLException {
         // given
-        customDataSource = mock(H2CustomDataSource.class);
+        customDataSource = mock(CustomDataSource.class);
         studentDao = new StudentDaoImpl(customDataSource);
 
         // when
@@ -254,7 +254,7 @@ class StudentDaoImplTest {
     @Test
     void MethodGetStudentById_ShouldThrowException_WhenStudentDoseNotExist() throws SQLException {
         // given
-        customDataSource = mock(H2CustomDataSource.class);
+        customDataSource = mock(CustomDataSource.class);
         studentDao = new StudentDaoImpl(customDataSource);
 
         // when
@@ -271,7 +271,7 @@ class StudentDaoImplTest {
     @Test
     void MethodGetStudentById_ShouldThrowException_IfDAOExceptionWasThrown() throws SQLException {
         // given
-        customDataSource = mock(H2CustomDataSource.class);
+        customDataSource = mock(CustomDataSource.class);
         studentDao = new StudentDaoImpl(customDataSource);
 
         // when
@@ -298,7 +298,7 @@ class StudentDaoImplTest {
     @Test
     void MethodRemoveStudentFromCourse_ShouldThrowAnException_IfDAOExceptionWasThrown() throws SQLException {
         // given
-        customDataSource = mock(H2CustomDataSource.class);
+        customDataSource = mock(CustomDataSource.class);
         studentDao = new StudentDaoImpl(customDataSource);
 
         // when

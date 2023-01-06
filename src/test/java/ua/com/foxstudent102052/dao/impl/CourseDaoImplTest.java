@@ -2,7 +2,8 @@ package ua.com.foxstudent102052.dao.impl;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import ua.com.foxstudent102052.dao.datasource.impl.H2CustomDataSource;
+import ua.com.foxstudent102052.dao.datasource.impl.PooledDataSource;
+import ua.com.foxstudent102052.dao.datasource.interfaces.CustomDataSource;
 import ua.com.foxstudent102052.dao.exceptions.DAOException;
 import ua.com.foxstudent102052.dao.interfaces.CourseDao;
 import ua.com.foxstudent102052.dao.interfaces.PostDAO;
@@ -19,13 +20,13 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 
 class CourseDaoImplTest {
-    private H2CustomDataSource customDataSource;
+    private CustomDataSource customDataSource;
     private CourseDao courseDao;
     private PostDAO postDAO;
 
     @BeforeEach
     public void setUp() throws IOException, DAOException {
-        customDataSource = H2CustomDataSource.getInstance();
+        customDataSource = PooledDataSource.getInstance();
         postDAO = new PostDAOImpl(customDataSource);
         courseDao = new CourseDaoImpl(customDataSource);
         var ddlScript = FileUtils.readTextFile("src/test/resources/scripts/ddl/testDB.sql");
@@ -54,7 +55,7 @@ class CourseDaoImplTest {
     @Test
     void MethodAddCourse_ShouldThrowException_WhenSQLExceptionThrown() throws SQLException {
         // given
-        customDataSource = mock(H2CustomDataSource.class);
+        customDataSource = mock(CustomDataSource.class);
         courseDao = new CourseDaoImpl(customDataSource);
 
         // when
@@ -77,7 +78,7 @@ class CourseDaoImplTest {
     @Test
     void MethodGetCourses_ShouldThrowException_WhenDAOExceptionThrown() throws SQLException {
         // given
-        customDataSource = mock(H2CustomDataSource.class);
+        customDataSource = mock(CustomDataSource.class);
         courseDao = new CourseDaoImpl(customDataSource);
 
         // when
@@ -107,7 +108,7 @@ class CourseDaoImplTest {
     @Test
     void MethodGetCourse_ById_ShouldThrowException_WhenDAOExceptionThrown() throws SQLException {
         // given
-        customDataSource = mock(H2CustomDataSource.class);
+        customDataSource = mock(CustomDataSource.class);
         courseDao = new CourseDaoImpl(customDataSource);
 
         // when
@@ -144,7 +145,7 @@ class CourseDaoImplTest {
     @Test
     void MethodGetCourses_ByStudentId_ShouldThrowException_WhenDAOExceptionThrown() throws SQLException {
         // given
-        customDataSource = mock(H2CustomDataSource.class);
+        customDataSource = mock(CustomDataSource.class);
         courseDao = new CourseDaoImpl(customDataSource);
 
         // when
