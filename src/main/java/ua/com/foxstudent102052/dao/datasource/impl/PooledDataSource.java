@@ -12,7 +12,8 @@ import java.util.Properties;
 
 public class PooledDataSource implements CustomDataSource {
     private static final String PROPERTIES_FILE_NAME = "datasource.properties";
-    private static final Properties properties = new Properties();;
+    private static final Properties properties = new Properties();
+    private static final FileUtils fileUtils = new FileUtils();
     private static final HikariConfig config;
     private static final HikariDataSource hikariDataSource;
 
@@ -42,7 +43,7 @@ public class PooledDataSource implements CustomDataSource {
 
     private static void loadPropertiesFromResources() {
         try {
-            properties.load(FileUtils.getFileFromResourceAsStream(PROPERTIES_FILE_NAME));
+            properties.load(fileUtils.getFileFromResourceAsStream(PROPERTIES_FILE_NAME));
         } catch (IOException e) {
             throw new IllegalArgumentException("File not found: " + PROPERTIES_FILE_NAME);
         }

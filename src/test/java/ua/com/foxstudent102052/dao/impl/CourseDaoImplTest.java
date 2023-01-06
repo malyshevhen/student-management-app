@@ -22,15 +22,17 @@ import static org.mockito.Mockito.mock;
 class CourseDaoImplTest {
     private CustomDataSource customDataSource;
     private CourseDao courseDao;
-    private PostDAO postDAO;
 
     @BeforeEach
     public void setUp() throws IOException, DAOException {
         customDataSource = PooledDataSource.getInstance();
-        postDAO = new PostDAOImpl(customDataSource);
         courseDao = new CourseDaoImpl(customDataSource);
-        var ddlScript = FileUtils.readTextFile("src/test/resources/scripts/ddl/testDB.sql");
-        var dmlScript = FileUtils.readTextFile("src/test/resources/scripts/dml/testDB_Data.sql");
+
+        FileUtils fileUtils = new FileUtils();
+        var ddlScript = fileUtils.readTextFile("src/test/resources/scripts/ddl/testDB.sql");
+        var dmlScript = fileUtils.readTextFile("src/test/resources/scripts/dml/testDB_Data.sql");
+
+        PostDAO postDAO = new PostDAOImpl(customDataSource);
         postDAO.doPost(ddlScript);
         postDAO.doPost(dmlScript);
     }
@@ -57,12 +59,13 @@ class CourseDaoImplTest {
         // given
         customDataSource = mock(CustomDataSource.class);
         courseDao = new CourseDaoImpl(customDataSource);
+        var course = new Course(0, " ", " ");
 
         // when
         doThrow(SQLException.class).when(customDataSource).getConnection();
 
         // then
-        assertThrows(DAOException.class, () -> courseDao.addCourse(new Course(0, " ", " ")),
+        assertThrows(DAOException.class, () -> courseDao.addCourse(course),
             "Error while adding student to the database");
     }
 

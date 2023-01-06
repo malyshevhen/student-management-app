@@ -1,15 +1,9 @@
 package ua.com.foxstudent102052.utils;
 
-import ua.com.foxstudent102052.dao.datasource.impl.PooledDataSource;
-
 import java.io.*;
 
 public class FileUtils {
-    private FileUtils() {
-        throw new IllegalStateException("Utility class");
-    }
-
-    public static String readTextFile(String filePath) throws IOException {
+    public String readTextFile(String filePath) throws IOException {
         var file = new File(filePath);
         var fileReader = new FileReader(file);
 
@@ -26,8 +20,8 @@ public class FileUtils {
         }
     }
 
-    public static InputStream getFileFromResourceAsStream(String filename) {
-        ClassLoader classLoader = PooledDataSource.class.getClassLoader();
+    public InputStream getFileFromResourceAsStream(String filename) {
+        ClassLoader classLoader = getClass().getClassLoader();
         InputStream inputStream = classLoader.getResourceAsStream(filename);
 
         if (inputStream == null) {

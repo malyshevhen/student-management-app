@@ -21,15 +21,17 @@ import static org.mockito.Mockito.mock;
 class GroupDaoImplTest {
     private CustomDataSource customDataSource;
     private GroupDao groupDao;
-    private PostDAO postDAO;
 
     @BeforeEach
     public void setUp() throws IOException, DAOException {
         customDataSource = PooledDataSource.getInstance();
         groupDao = new GroupDaoImpl(customDataSource);
-        postDAO = new PostDAOImpl(customDataSource);
-        var ddlScript = FileUtils.readTextFile("src/test/resources/scripts/ddl/testDB.sql");
-        var dmlScript = FileUtils.readTextFile("src/test/resources/scripts/dml/testDB_Data.sql");
+
+        FileUtils fileUtils = new FileUtils();
+        var ddlScript = fileUtils.readTextFile("src/test/resources/scripts/ddl/testDB.sql");
+        var dmlScript = fileUtils.readTextFile("src/test/resources/scripts/dml/testDB_Data.sql");
+
+        PostDAO postDAO = new PostDAOImpl(customDataSource);
         postDAO.doPost(ddlScript);
         postDAO.doPost(dmlScript);
     }
@@ -52,12 +54,13 @@ class GroupDaoImplTest {
         // given
         customDataSource = mock(CustomDataSource.class);
         groupDao = new GroupDaoImpl(customDataSource);
+        var group = Group.builder().build();
 
         // when
         doThrow(SQLException.class).when(customDataSource).getConnection();
 
         // then
-        assertThrows(DAOException.class, () -> groupDao.addGroup(Group.builder().build()),
+        assertThrows(DAOException.class, () -> groupDao.addGroup(group),
             "Group wasn`t added");
     }
 

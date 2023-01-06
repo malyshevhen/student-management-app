@@ -22,15 +22,17 @@ import static org.mockito.Mockito.mock;
 class StudentDaoImplTest {
     private CustomDataSource customDataSource;
     private StudentDao studentDao;
-    private PostDAO postDAO;
 
     @BeforeEach
     public void setUp() throws IOException, DAOException {
         customDataSource = PooledDataSource.getInstance();
         studentDao = new StudentDaoImpl(customDataSource);
-        postDAO = new PostDAOImpl(customDataSource);
-        var ddlScript = FileUtils.readTextFile("src/test/resources/scripts/ddl/testDB.sql");
-        var dmlScript = FileUtils.readTextFile("src/test/resources/scripts/dml/testDB_Data.sql");
+
+        FileUtils fileUtils = new FileUtils();
+        var ddlScript = fileUtils.readTextFile("src/test/resources/scripts/ddl/testDB.sql");
+        var dmlScript = fileUtils.readTextFile("src/test/resources/scripts/dml/testDB_Data.sql");
+
+        PostDAO postDAO = new PostDAOImpl(customDataSource);
         postDAO.doPost(ddlScript);
         postDAO.doPost(dmlScript);
     }
@@ -59,12 +61,13 @@ class StudentDaoImplTest {
         // given
         customDataSource = mock(CustomDataSource.class);
         studentDao = new StudentDaoImpl(customDataSource);
+        var student = new Student(0, 0, "", "");
 
         // when
         doThrow(SQLException.class).when(customDataSource).getConnection();
 
         // then
-        assertThrows(DAOException.class, () -> studentDao.addStudent(new Student(0, 0, "", "")),
+        assertThrows(DAOException.class, () -> studentDao.addStudent(student),
             "Error while adding student to the database");
     }
 
@@ -87,7 +90,7 @@ class StudentDaoImplTest {
     }
 
     @Test
-    void MethodAddStudentToCourse_ShouldThrowAnException_IfidIsInvalid() throws SQLException {
+    void MethodAddStudentToCourse_ShouldThrowAnException_IfIdIsInvalid() throws SQLException {
         // given
         customDataSource = mock(CustomDataSource.class);
         studentDao = new StudentDaoImpl(customDataSource);
@@ -207,7 +210,7 @@ class StudentDaoImplTest {
     }
 
     @Test
-    void MethodRemoveStudent_ShouldRemoveStudent_IfItInDataBase() throws DAOException, DAOException {
+    void MethodRemoveStudent_ShouldRemoveStudent_IfItInDataBase() throws DAOException {
         // when
         studentDao.removeStudent(1);
 

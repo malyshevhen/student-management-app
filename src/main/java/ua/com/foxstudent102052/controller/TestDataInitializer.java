@@ -27,6 +27,7 @@ public class TestDataInitializer {
     public static final int STUDENTS_COUNT = 200;
     public static final int MAX_COUNT_OF_COURSES = 3;
 
+    private static final FileUtils fileUtils = new FileUtils();
     private static final StudentService studentService;
     private static final CourseService courseService;
     private static final GroupService groupService;
@@ -54,7 +55,7 @@ public class TestDataInitializer {
 
     private void runDdlScript() {
         try {
-            var query = FileUtils.readTextFile("src/main/resources/scripts/ddl/Table_creation.sql");
+            var query = fileUtils.readTextFile("src/main/resources/scripts/ddl/Table_creation.sql");
 
             queryPostService.executeQuery(query);
         } catch (IOException | DAOException e) {
