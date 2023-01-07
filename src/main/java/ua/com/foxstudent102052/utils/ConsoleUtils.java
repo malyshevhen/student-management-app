@@ -8,11 +8,7 @@ import java.io.InputStreamReader;
 
 @Slf4j
 public class ConsoleUtils {
-    private ConsoleUtils() {
-        throw new IllegalStateException("Utility class");
-    }
-
-    public static String getInputString(String messageToPrint) {
+    public String getInputString(String messageToPrint) {
         print(messageToPrint);
 
         String inputString;
@@ -43,7 +39,7 @@ public class ConsoleUtils {
         }
     }
 
-    public static Integer getInputInt(String messageToPrint) {
+    public Integer getInputInt(String messageToPrint) {
         print(messageToPrint);
 
         int inputDigit;
@@ -84,7 +80,7 @@ public class ConsoleUtils {
         return inputDigit;
     }
 
-    public static void print(String userMsg) {
+    public void print(String userMsg) {
         System.out.println(userMsg);
     }
 }

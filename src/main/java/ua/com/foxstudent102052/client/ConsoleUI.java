@@ -51,7 +51,7 @@ public class ConsoleUI {
     private static final String ENTER_OPTION_NUMBER = "Enter option number: ";
     private static final String WRONG_INPUT_MESSAGE = "Wrong input.";
 
-
+    private static final ConsoleUtils consoleUtils = new ConsoleUtils();
     private static final GroupController groupController;
     private static final CourseController courseController;
     private static final StudentController studentController;
@@ -72,13 +72,9 @@ public class ConsoleUI {
         tableFactory = new TableFactory();
     }
 
-    private ConsoleUI() {
-        throw new IllegalStateException("Utility class");
-    }
-
-    public static void callMainMenu() {
+    public void callMainMenu() {
         while (true) {
-            int selectedMenuOption = ConsoleUtils.getInputInt(STUDENT_MENU);
+            int selectedMenuOption = consoleUtils.getInputInt(STUDENT_MENU);
 
             try {
                 if (selectedMenuOption == 1) {
@@ -98,32 +94,32 @@ public class ConsoleUI {
                 } else if (selectedMenuOption == 0) {
                     break;
                 } else {
-                    ConsoleUtils.print(WRONG_INPUT_MESSAGE);
+                    consoleUtils.print(WRONG_INPUT_MESSAGE);
                 }
             } catch (NoSuchElementException | IllegalArgumentException e) {
-                ConsoleUtils.print(e.getMessage());
+                consoleUtils.print(e.getMessage());
             }
         }
-        ConsoleUtils.print("Thank you for using Student Management Application!");
+        consoleUtils.print("Thank you for using Student Management Application!");
     }
 
-    private static void callAddStudentMenu() {
-        var firstName = ConsoleUtils.getInputString(ENTER_STUDENT_NAME);
-        var lastName = ConsoleUtils.getInputString(ENTER_STUDENT_SURNAME);
+    private void callAddStudentMenu() {
+        var firstName = consoleUtils.getInputString(ENTER_STUDENT_NAME);
+        var lastName = consoleUtils.getInputString(ENTER_STUDENT_SURNAME);
 
-        ConsoleUtils.print("Choose students group from list:");
+        consoleUtils.print("Choose students group from list:");
 
         try {
             var allGroups = groupController.getAllGroups();
 
             var groupTable = tableFactory.buildTable(allGroups, new ReducedGroupTableBuilder());
 
-            ConsoleUtils.print(groupTable);
+            consoleUtils.print(groupTable);
         } catch (DAOException | NoSuchElementException e) {
-            ConsoleUtils.print(e.getMessage());
+            consoleUtils.print(e.getMessage());
         }
 
-        int groupId = ConsoleUtils.getInputInt(ENTER_OPTION_NUMBER);
+        int groupId = consoleUtils.getInputInt(ENTER_OPTION_NUMBER);
         var chosenGroup = GroupDto.builder()
             .id(groupId)
             .build();
@@ -136,99 +132,99 @@ public class ConsoleUI {
         try {
             studentController.addStudent(studentDto);
 
-            ConsoleUtils.print("Student added successfully");
+            consoleUtils.print("Student added successfully");
         } catch (DAOException | NoSuchElementException e) {
-            ConsoleUtils.print(e.getMessage());
+            consoleUtils.print(e.getMessage());
         }
     }
 
-    private static void callRemoveStudentMenu() {
-        int studentId = ConsoleUtils.getInputInt(ENTER_STUDENT_ID);
+    private void callRemoveStudentMenu() {
+        int studentId = consoleUtils.getInputInt(ENTER_STUDENT_ID);
 
         try {
             studentController.removeStudent(studentId);
 
-            ConsoleUtils.print("Student removed successfully");
+            consoleUtils.print("Student removed successfully");
         } catch (DAOException | NoSuchElementException e) {
-            ConsoleUtils.print(e.getMessage());
+            consoleUtils.print(e.getMessage());
         }
     }
 
-    private static void callAddStudentToCourseMenu() {
-        int studentId = ConsoleUtils.getInputInt(ENTER_STUDENT_ID);
+    private void callAddStudentToCourseMenu() {
+        int studentId = consoleUtils.getInputInt(ENTER_STUDENT_ID);
 
         try {
             var allCourses = courseController.getAllCourses();
 
             var courseTable = tableFactory.buildTable(allCourses, new ReducedCourseTableBuilder());
-            ConsoleUtils.print(courseTable);
+            consoleUtils.print(courseTable);
 
-            int courseId = ConsoleUtils.getInputInt(ENTER_COURSE_ID);
+            int courseId = consoleUtils.getInputInt(ENTER_COURSE_ID);
             studentController.addStudentToCourse(studentId, courseId);
 
-            ConsoleUtils.print("Student added to course successfully");
+            consoleUtils.print("Student added to course successfully");
         } catch (DAOException | NoSuchElementException e) {
-            ConsoleUtils.print(e.getMessage());
+            consoleUtils.print(e.getMessage());
         }
     }
 
-    private static void callRemoveStudentFromCourseMenu() {
-        int studentId = ConsoleUtils.getInputInt(ENTER_STUDENT_ID);
+    private void callRemoveStudentFromCourseMenu() {
+        int studentId = consoleUtils.getInputInt(ENTER_STUDENT_ID);
 
-        ConsoleUtils.print("Choose course to remove from:");
+        consoleUtils.print("Choose course to remove from:");
 
         try {
             var allCourses = courseController.getAllCourses();
 
-            ConsoleUtils.print(tableFactory.buildTable(allCourses, new ReducedCourseTableBuilder()));
-            int courseId = ConsoleUtils.getInputInt(ENTER_COURSE_ID);
+            consoleUtils.print(tableFactory.buildTable(allCourses, new ReducedCourseTableBuilder()));
+            int courseId = consoleUtils.getInputInt(ENTER_COURSE_ID);
             studentController.removeStudentFromCourse(studentId, courseId);
 
-            ConsoleUtils.print("Student removed from course successfully");
+            consoleUtils.print("Student removed from course successfully");
         } catch (DAOException | NoSuchElementException e) {
-            ConsoleUtils.print(e.getMessage());
+            consoleUtils.print(e.getMessage());
         }
     }
 
-    private static void callFindGroupsMenu() {
-        int numberOfStudents = ConsoleUtils.getInputInt("Enter minimum number of students: ");
+    private void callFindGroupsMenu() {
+        int numberOfStudents = consoleUtils.getInputInt("Enter minimum number of students: ");
 
         try {
             var groupsSmallerThen = groupController.getGroupsSmallerThen(numberOfStudents);
             var groupTable = tableFactory.buildTable(groupsSmallerThen, new ExpandedGroupTableBuilder());
 
-            ConsoleUtils.print(groupTable);
+            consoleUtils.print(groupTable);
         } catch (DAOException | NoSuchElementException e) {
-            ConsoleUtils.print(e.getMessage());
+            consoleUtils.print(e.getMessage());
         }
     }
 
-    private static void callFindStudentMenu() {
+    private void callFindStudentMenu() {
         try {
-            var studentName = ConsoleUtils.getInputString(ENTER_STUDENT_NAME);
+            var studentName = consoleUtils.getInputString(ENTER_STUDENT_NAME);
             var courseTable = tableFactory.buildTable(courseController.getAllCourses(),
                 new ReducedCourseTableBuilder());
 
-            ConsoleUtils.print(courseTable);
-            var courseId = ConsoleUtils.getInputInt(ENTER_GROUP_ID);
+            consoleUtils.print(courseTable);
+            var courseId = consoleUtils.getInputInt(ENTER_GROUP_ID);
             var studentsByCourseNameAndGroupId = studentController
                 .getStudents(studentName, courseId);
             var studentTable = tableFactory.buildTable(studentsByCourseNameAndGroupId, new ExpandedStudentTableBuilder());
 
-            ConsoleUtils.print(studentTable);
+            consoleUtils.print(studentTable);
         } catch (DAOException | NoSuchElementException e) {
-            ConsoleUtils.print(e.getMessage());
+            consoleUtils.print(e.getMessage());
         }
     }
 
-    private static void callFindAllStudentsMenu() {
+    private void callFindAllStudentsMenu() {
         try {
             var allStudents = studentController.getAllStudents();
             var studentTable = tableFactory.buildTable(allStudents, new ExpandedStudentTableBuilder());
 
-            ConsoleUtils.print(studentTable);
+            consoleUtils.print(studentTable);
         } catch (DAOException | NoSuchElementException e) {
-            ConsoleUtils.print(e.getMessage());
+            consoleUtils.print(e.getMessage());
         }
     }
 }

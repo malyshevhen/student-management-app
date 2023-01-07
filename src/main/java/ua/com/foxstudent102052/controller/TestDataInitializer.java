@@ -18,12 +18,18 @@ import ua.com.foxstudent102052.service.interfaces.CourseService;
 import ua.com.foxstudent102052.service.interfaces.GroupService;
 import ua.com.foxstudent102052.service.interfaces.StudentService;
 import ua.com.foxstudent102052.utils.FileUtils;
+import ua.com.foxstudent102052.utils.RandomModelCreator;
 
-import java.io.IOException;
-import java.util.*;
+import java.util.List;
+import java.util.NoSuchElementException;
 
 @Slf4j
 public class TestDataInitializer {
+    public static final String SCRIPTS_DDL_TABLE_CREATION = "scripts/ddl/Table_creation.sql";
+    public static final String COURSES_CSV = "csv/courses.csv";
+    public static final String GROUPS_CSV = "csv/groups.csv";
+    public static final String STUDENT_NAMES_CSV = "csv/student_names.csv";
+    public static final String STUDENT_SURNAMES_CSV = "csv/student_surnames.csv";
     public static final int STUDENTS_COUNT = 200;
     public static final int MAX_COUNT_OF_COURSES = 3;
 
@@ -46,26 +52,39 @@ public class TestDataInitializer {
     }
 
     public void initTestDada() {
+        var coursesNamesAndDescriptions = fileUtils.readCsvFileFromResources(COURSES_CSV);
+        var groupNames = fileUtils.readCsvFileFromResources(GROUPS_CSV).stream()
+            .map(s -> s[0])
+            .toList();
+        var studentNames = fileUtils.readCsvFileFromResources(STUDENT_NAMES_CSV).stream()
+            .map(s -> s[0])
+            .toList();
+        var studentSurnames = fileUtils.readCsvFileFromResources(STUDENT_SURNAMES_CSV).stream()
+            .map(s -> s[0])
+            .toList();
+
+        var courses = RandomModelCreator.getCourses(coursesNamesAndDescriptions);
+        var groups = RandomModelCreator.getGroups(groupNames);
+        var students = RandomModelCreator.getStudents(studentNames, studentSurnames, groups.size(), STUDENTS_COUNT);
+
         runDdlScript();
-        addCourses();
-        addGroups();
-        addStudents();
+        addCourses(courses);
+        addGroups(groups);
+        addStudents(students);
         addStudentsToCourses();
     }
 
     private void runDdlScript() {
         try {
-            var query = fileUtils.readTextFile("src/main/resources/scripts/ddl/Table_creation.sql");
+            var query = fileUtils.readFileFromResourcesAsString(SCRIPTS_DDL_TABLE_CREATION);
 
             queryPostService.executeQuery(query);
-        } catch (IOException | DAOException e) {
+        } catch (DAOException e) {
             log.error(e.getMessage());
         }
     }
 
-    private void addCourses() {
-        var courses = RandomData.getCourses();
-
+    private void addCourses(List<CourseDto> courses) {
         for (var course : courses) {
             try {
                 courseService.addCourse(course);
@@ -75,8 +94,7 @@ public class TestDataInitializer {
         }
     }
 
-    private void addGroups() {
-        var groups = RandomData.getGroups();
+    private void addGroups(List<GroupDto> groups) {
         for (var group : groups) {
             try {
                 groupService.addGroup(group);
@@ -86,10 +104,10 @@ public class TestDataInitializer {
         }
     }
 
-    public void addStudents() {
-        for (int i = 0; i < STUDENTS_COUNT; i++) {
+    public void addStudents(List<StudentDto> students) {
+        for (var student : students) {
             try {
-                studentService.addStudent(RandomData.getStudent());
+                studentService.addStudent(student);
             } catch (DAOException e) {
                 log.error("Error while adding students", e);
             }
@@ -97,7 +115,7 @@ public class TestDataInitializer {
     }
 
     public void addStudentsToCourses() {
-        var relationMap = RandomData.getStudentCoursesRelations();
+        var relationMap = RandomModelCreator.getStudentsCoursesRelations(STUDENTS_COUNT, MAX_COUNT_OF_COURSES);
 
         for (var relation : relationMap.entrySet()) {
             int studentId = relation.getKey();
@@ -113,142 +131,4 @@ public class TestDataInitializer {
         }
     }
 
-    static class RandomData {
-        private static final String[] firstNames = {
-            "John", "Jack", "Bob", "Mike", "Tom",
-            "Alex", "Nick", "Sam", "Bill", "George",
-            "Kate", "Liza", "Ann", "Jane", "Marry",
-            "Linda", "Sara", "Kate", "Liza", "Ann"
-        };
-        private static final String[] lastNames = {
-            "Smith", "Johnson", "Williams", "Brown", "Jones",
-            "Miller", "Davis", "Garcia", "Rodriguez", "Wilson",
-            "Martinez", "Anderson", "Taylor", "Thomas", "Hernandez",
-            "Moore", "Martin", "Jackson", "Thompson", "White"
-        };
-        private static final String[] groupNames = {
-            "GR-001", "GR-002", "GR-003", "GR-004", "GR-005",
-            "GR-006", "GR-007", "GR-008", "GR-009", "GR-010"
-        };
-        private static final String[] courseNames = {
-            "Mathematics", "Biology", "Chemistry", "Physics", "English",
-            "History", "Geography", "Literature", "Art", "Music"
-        };
-        private static final String[] courseDescriptions = {
-            """
-                    Mathematics, the science of structure, order,
-                     and relation that has evolved from counting,
-                     measuring, and describing the shapes of objects.
-                    """,
-            """
-                    Biology is the natural science that studies life and living organisms,
-                     including their physical structure, chemical processes,
-                     molecular interactions, physiological mechanisms, development and evolution.
-                    """,
-            """
-                    Chemistry is a branch of physical science that studies the composition,
-                     structure, properties and change of matter.
-                    """,
-            """
-                    Physics is the natural science that involves the study of matter and its
-                     motion through space and time,
-                     along with related concepts such as energy and force.
-                    """,
-            """
-                    English is a West Germanic language that was first spoken in early
-                     medieval England and eventually became a global lingua franca.
-                    """,
-            """
-                    History is the study of the past as it is described in written documents.
-                     Events occurring before written record are considered prehistory.
-                    """,
-            """
-                    Geography is a field of science devoted to the study of the lands,
-                     the features, the inhabitants, and the phenomena of Earth.
-                    """,
-            """
-                    Literature is a body of written works.
-                     The name has traditionally been applied to those imaginative
-                     works of poetry and prose distinguished by the intentions of their authors.
-                    """,
-            """
-                    Art is a diverse range of human activities in creating visual,
-                     auditory or performing artworks,
-                     expressing the authors imaginative or technical skill,
-                     intended to be appreciated for their beauty or emotional power.""",
-            """
-                    Music is an art form and cultural activity whose medium is sound organized in time.
-                     General definitions of music include common elements such as pitch,
-                     rhythm, dynamics, and the sonic qualities of timbre and texture."""
-        };
-
-        private static final Random random = new Random();
-
-        private RandomData() {
-        }
-
-        static List<GroupDto> getGroups() {
-            var groupList = new ArrayList<GroupDto>();
-
-            for (String groupName : groupNames) {
-                var group = GroupDto.builder()
-                    .name(groupName)
-                    .build();
-                groupList.add(group);
-            }
-
-            return groupList;
-        }
-
-        static List<CourseDto> getCourses() {
-            int coursesCount = courseNames.length;
-
-            var courses = new ArrayList<CourseDto>();
-
-            for (int i = 0; i < coursesCount; i++) {
-                var course = CourseDto.builder()
-                    .name(courseNames[i])
-                    .description(courseDescriptions[i])
-                    .build();
-                courses.add(course);
-            }
-
-            return courses;
-        }
-
-        static StudentDto getStudent() {
-            int uniqueStudentsNameCount = 20;
-
-            var group = GroupDto.builder()
-                .id(random.nextInt(groupNames.length + 1))
-                .build();
-
-            return StudentDto.builder()
-                .group(group)
-                .firstName(firstNames[random.nextInt(uniqueStudentsNameCount)])
-                .lastName(lastNames[random.nextInt(uniqueStudentsNameCount)])
-                .build();
-        }
-
-        static Map<Integer, Set<Integer>> getStudentCoursesRelations() {
-            int coursesCount = courseNames.length;
-
-            var studentCourseMap = new HashMap<Integer, Set<Integer>>();
-
-            for (int i = 1; i <= STUDENTS_COUNT; i++) {
-                var courses = new HashSet<Integer>();
-
-                for (int j = 1; j <= MAX_COUNT_OF_COURSES; j++) {
-                    int courseId = random.nextInt(coursesCount) + 1;
-
-                    if (Boolean.FALSE.equals(courses.contains(courseId)) && courseId < coursesCount) {
-                        courses.add(courseId);
-                    }
-                }
-                studentCourseMap.put(i, courses);
-            }
-
-            return studentCourseMap;
-        }
-    }
 }
