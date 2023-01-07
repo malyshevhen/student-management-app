@@ -10,7 +10,6 @@ import ua.com.foxstudent102052.dao.interfaces.PostDAO;
 import ua.com.foxstudent102052.model.entity.Course;
 import ua.com.foxstudent102052.utils.FileUtils;
 
-import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -24,13 +23,13 @@ class CourseDaoImplTest {
     private CourseDao courseDao;
 
     @BeforeEach
-    public void setUp() throws IOException, DAOException {
+    public void setUp() throws DAOException {
         customDataSource = PooledDataSource.getInstance();
         courseDao = new CourseDaoImpl(customDataSource);
 
         FileUtils fileUtils = new FileUtils();
-        var ddlScript = fileUtils.readTextFile("src/test/resources/scripts/ddl/testDB.sql");
-        var dmlScript = fileUtils.readTextFile("src/test/resources/scripts/dml/testDB_Data.sql");
+        var ddlScript = fileUtils.readFileFromResourcesAsString("scripts/ddl/testDB.sql");
+        var dmlScript = fileUtils.readFileFromResourcesAsString("scripts/dml/testDB_Data.sql");
 
         PostDAO postDAO = new PostDAOImpl(customDataSource);
         postDAO.doPost(ddlScript);
