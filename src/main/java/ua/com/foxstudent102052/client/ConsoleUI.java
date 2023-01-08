@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import ua.com.foxstudent102052.controller.CourseController;
 import ua.com.foxstudent102052.controller.GroupController;
 import ua.com.foxstudent102052.controller.StudentController;
-import ua.com.foxstudent102052.dao.datasource.impl.PooledDataSource;
 import ua.com.foxstudent102052.dao.exceptions.DAOException;
 import ua.com.foxstudent102052.model.dto.GroupDto;
 import ua.com.foxstudent102052.model.dto.StudentDto;
