@@ -12,17 +12,8 @@ import ua.com.foxstudent102052.dao.impl.StudentDaoImpl;
 import ua.com.foxstudent102052.service.impl.CourseServiceImpl;
 import ua.com.foxstudent102052.service.impl.GroupServiceImpl;
 import ua.com.foxstudent102052.service.impl.StudentServiceImpl;
-import ua.com.foxstudent102052.service.interfaces.CourseService;
-import ua.com.foxstudent102052.service.interfaces.GroupService;
-import ua.com.foxstudent102052.service.interfaces.StudentService;
 
 public class StudentManagementApp {
-    private static final GroupService groupService;
-    private static final StudentService studentService;
-    private static final CourseService courseService;
-    private static final GroupController groupController;
-    private static final CourseController courseController;
-    private static final StudentController studentController;
     private static final TestDataInitializer testDataInitializer;
     private static final ConsoleUI consoleUI;
 
@@ -33,13 +24,13 @@ public class StudentManagementApp {
         var studentRepository = new StudentDaoImpl(customDataSource);
         var groupRepository = new GroupDaoImpl(customDataSource);
 
-        courseService = new CourseServiceImpl(courseRepository);
-        studentService = new StudentServiceImpl(studentRepository);
-        groupService = new GroupServiceImpl(groupRepository);
+        var courseService = new CourseServiceImpl(courseRepository);
+        var studentService = new StudentServiceImpl(studentRepository);
+        var groupService = new GroupServiceImpl(groupRepository);
 
-        groupController = new GroupController(groupService);
-        courseController = new CourseController(courseService, studentService);
-        studentController = new StudentController(studentService, groupService, courseService);
+        var groupController = new GroupController(groupService);
+        var courseController = new CourseController(courseService, studentService);
+        var studentController = new StudentController(studentService, groupService, courseService);
 
         testDataInitializer = new TestDataInitializer(studentService, courseService, groupService);
         consoleUI = new ConsoleUI(groupController, courseController, studentController);
