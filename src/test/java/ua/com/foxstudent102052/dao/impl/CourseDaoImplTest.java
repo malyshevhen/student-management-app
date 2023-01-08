@@ -122,6 +122,36 @@ class CourseDaoImplTest {
     }
 
     @Test
+    void MethodGetCourse_ByName_ShouldReturnCourseFromDb() throws DAOException {
+        // given
+        var expected = Course.builder()
+            .id(1)
+            .name("Course 1")
+            .description("Some description for course 1")
+            .build();
+
+        // when
+        var actual = courseDao.getCourse(expected.getName()).get();
+
+        // then
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void MethodGetCourse_ByName_ShouldThrowException_WhenDAOExceptionThrown() throws SQLException {
+        // given
+        customDataSource = mock(CustomDataSource.class);
+        courseDao = new CourseDaoImpl(customDataSource);
+
+        // when
+        doThrow(SQLException.class).when(customDataSource).getConnection();
+
+        // then
+        assertThrows(DAOException.class, () -> courseDao.getCourse(""),
+            "Error while adding student to the database");
+    }
+
+    @Test
     void MethodGetCourses_ByStudentId_ShouldReturnCourseListFromDb() throws DAOException {
         // given
         var expected = List.of(
