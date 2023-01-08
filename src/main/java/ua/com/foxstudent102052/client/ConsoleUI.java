@@ -1,18 +1,13 @@
 package ua.com.foxstudent102052.client;
 
+import lombok.AllArgsConstructor;
 import ua.com.foxstudent102052.controller.CourseController;
 import ua.com.foxstudent102052.controller.GroupController;
 import ua.com.foxstudent102052.controller.StudentController;
 import ua.com.foxstudent102052.dao.datasource.impl.PooledDataSource;
 import ua.com.foxstudent102052.dao.exceptions.DAOException;
-import ua.com.foxstudent102052.dao.impl.CourseDaoImpl;
-import ua.com.foxstudent102052.dao.impl.GroupDaoImpl;
-import ua.com.foxstudent102052.dao.impl.StudentDaoImpl;
 import ua.com.foxstudent102052.model.dto.GroupDto;
 import ua.com.foxstudent102052.model.dto.StudentDto;
-import ua.com.foxstudent102052.service.impl.CourseServiceImpl;
-import ua.com.foxstudent102052.service.impl.GroupServiceImpl;
-import ua.com.foxstudent102052.service.impl.StudentServiceImpl;
 import ua.com.foxstudent102052.table.TableFactory;
 import ua.com.foxstudent102052.table.impl.ExpandedGroupTableBuilder;
 import ua.com.foxstudent102052.table.impl.ExpandedStudentTableBuilder;
@@ -22,7 +17,7 @@ import ua.com.foxstudent102052.utils.ConsoleUtils;
 
 import java.util.NoSuchElementException;
 
-
+@AllArgsConstructor
 public class ConsoleUI {
 
     private static final String ENTER_GROUP_ID = "Enter group id: ";
@@ -51,27 +46,11 @@ public class ConsoleUI {
     private static final String ENTER_OPTION_NUMBER = "Enter option number: ";
     private static final String WRONG_INPUT_MESSAGE = "Wrong input.";
 
-    private static final ConsoleUtils consoleUtils;
-    private static final TableFactory tableFactory;
-    private static final GroupController groupController;
-    private static final CourseController courseController;
-    private static final StudentController studentController;
-
-    static {
-        var customDataSource = PooledDataSource.getInstance();
-        var courseRepository = new CourseDaoImpl(customDataSource);
-        var studentRepository = new StudentDaoImpl(customDataSource);
-        var groupRepository = new GroupDaoImpl(customDataSource);
-        var courseService = new CourseServiceImpl(courseRepository);
-        var studentService = new StudentServiceImpl(studentRepository);
-        var groupService = new GroupServiceImpl(groupRepository);
-
-        consoleUtils = new ConsoleUtils();
-        groupController = new GroupController(groupService);
-        courseController = new CourseController(courseService, studentService);
-        studentController = new StudentController(studentService, groupService, courseService);
-        tableFactory = new TableFactory();
-    }
+    private static final ConsoleUtils consoleUtils = new ConsoleUtils();
+    private static final TableFactory tableFactory = new TableFactory();
+    private final GroupController groupController;
+    private final CourseController courseController;
+    private final StudentController studentController;
 
     public void callMainMenu() {
         while (true) {
