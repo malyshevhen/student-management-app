@@ -29,17 +29,6 @@ public class FileUtils {
         }
     }
 
-    public InputStream getFileFromResourceAsStream(String filename) {
-        var classLoader = getClass().getClassLoader();
-        var inputStream = classLoader.getResourceAsStream(filename);
-
-        if (inputStream == null) {
-            throw new IllegalArgumentException("File not found:" + filename);
-        } else {
-            return inputStream;
-        }
-    }
-
     public List<String[]> readCsvFileFromResources(String filePath) {
         try {
             var inputStream = getFileFromResourceAsStream(filePath);
@@ -49,6 +38,17 @@ public class FileUtils {
             return csvReader.readAll();
         } catch (IOException | CsvException e) {
             throw new IllegalArgumentException("File not found: " + filePath);
+        }
+    }
+
+    public InputStream getFileFromResourceAsStream(String filename) {
+        var classLoader = getClass().getClassLoader();
+        var inputStream = classLoader.getResourceAsStream(filename);
+
+        if (inputStream == null) {
+            throw new IllegalArgumentException("File not found:" + filename);
+        } else {
+            return inputStream;
         }
     }
 }

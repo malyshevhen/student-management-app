@@ -51,11 +51,11 @@ public class ConsoleUI {
     private static final String ENTER_OPTION_NUMBER = "Enter option number: ";
     private static final String WRONG_INPUT_MESSAGE = "Wrong input.";
 
-    private static final ConsoleUtils consoleUtils = new ConsoleUtils();
+    private static final ConsoleUtils consoleUtils;
+    private static final TableFactory tableFactory;
     private static final GroupController groupController;
     private static final CourseController courseController;
     private static final StudentController studentController;
-    private static final TableFactory tableFactory;
 
     static {
         var customDataSource = PooledDataSource.getInstance();
@@ -66,6 +66,7 @@ public class ConsoleUI {
         var studentService = new StudentServiceImpl(studentRepository);
         var groupService = new GroupServiceImpl(groupRepository);
 
+        consoleUtils = new ConsoleUtils();
         groupController = new GroupController(groupService);
         courseController = new CourseController(courseService, studentService);
         studentController = new StudentController(studentService, groupService, courseService);
@@ -103,7 +104,7 @@ public class ConsoleUI {
         consoleUtils.print("Thank you for using Student Management Application!");
     }
 
-    private void callAddStudentMenu() {
+    void callAddStudentMenu() {
         var firstName = consoleUtils.getInputString(ENTER_STUDENT_NAME);
         var lastName = consoleUtils.getInputString(ENTER_STUDENT_SURNAME);
 
@@ -138,7 +139,7 @@ public class ConsoleUI {
         }
     }
 
-    private void callRemoveStudentMenu() {
+    void callRemoveStudentMenu() {
         int studentId = consoleUtils.getInputInt(ENTER_STUDENT_ID);
 
         try {
@@ -150,7 +151,7 @@ public class ConsoleUI {
         }
     }
 
-    private void callAddStudentToCourseMenu() {
+    void callAddStudentToCourseMenu() {
         int studentId = consoleUtils.getInputInt(ENTER_STUDENT_ID);
 
         try {
@@ -168,7 +169,7 @@ public class ConsoleUI {
         }
     }
 
-    private void callRemoveStudentFromCourseMenu() {
+    void callRemoveStudentFromCourseMenu() {
         int studentId = consoleUtils.getInputInt(ENTER_STUDENT_ID);
 
         consoleUtils.print("Choose course to remove from:");
@@ -186,7 +187,7 @@ public class ConsoleUI {
         }
     }
 
-    private void callFindGroupsMenu() {
+    void callFindGroupsMenu() {
         int numberOfStudents = consoleUtils.getInputInt("Enter minimum number of students: ");
 
         try {
@@ -199,7 +200,7 @@ public class ConsoleUI {
         }
     }
 
-    private void callFindStudentMenu() {
+    void callFindStudentMenu() {
         try {
             var studentName = consoleUtils.getInputString(ENTER_STUDENT_NAME);
             var courseTable = tableFactory.buildTable(courseController.getAllCourses(),
@@ -217,7 +218,7 @@ public class ConsoleUI {
         }
     }
 
-    private void callFindAllStudentsMenu() {
+    void callFindAllStudentsMenu() {
         try {
             var allStudents = studentController.getAllStudents();
             var studentTable = tableFactory.buildTable(allStudents, new ExpandedStudentTableBuilder());

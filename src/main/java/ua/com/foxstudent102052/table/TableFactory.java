@@ -4,15 +4,8 @@ import ua.com.foxstudent102052.table.interfaces.TableBuilder;
 
 import java.util.List;
 
-public class TableFactory {
-    private TableBuilder tableBuilder;
-
-    public <T> String buildTable(List<T> entityList, TableBuilder<T> tableBuilder) {
-        setTableBuilder(tableBuilder);
-        return tableBuilder.buildTable(entityList);
-    }
-
-    private <T> void setTableBuilder(TableBuilder<T> tableBuilder) {
-        this.tableBuilder = tableBuilder;
+public class TableFactory<T> {
+    public String buildTable(List<T> dtoList, TableBuilder<T> tableBuilder) {
+        return tableBuilder.buildTable(dtoList);
     }
 }
