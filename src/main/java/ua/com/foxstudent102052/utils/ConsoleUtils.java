@@ -4,15 +4,15 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.Reader;
 
 @Slf4j
 public class ConsoleUtils {
-    public String getInputString(String messageToPrint) {
+    public String getInputString(String messageToPrint, Reader in) {
         print(messageToPrint);
 
         String inputString;
-        var reader = new BufferedReader(new InputStreamReader(System.in));
+        var reader = new BufferedReader(in);
 
         try {
             inputString = reader.readLine();
@@ -22,7 +22,7 @@ public class ConsoleUtils {
 
                 log.info("User entered an empty string");
 
-                return getInputString(messageToPrint);
+                return getInputString(messageToPrint, in);
             } else {
                 log.info("User entered: {}", inputString);
 
@@ -35,15 +35,15 @@ public class ConsoleUtils {
 
             log.error(msg, e);
 
-            return getInputString(messageToPrint);
+            return getInputString(messageToPrint, in);
         }
     }
 
-    public Integer getInputInt(String messageToPrint) {
+    public Integer getInputInt(String messageToPrint, Reader in) {
         print(messageToPrint);
 
         int inputDigit;
-        var reader = new BufferedReader(new InputStreamReader(System.in));
+        var reader = new BufferedReader(in);
 
         try {
             var readLine = reader.readLine();
@@ -54,7 +54,7 @@ public class ConsoleUtils {
 
                 log.info("User entered an empty string");
 
-                return getInputInt(messageToPrint);
+                return getInputInt(messageToPrint, in);
             } else {
                 inputDigit = Integer.parseInt(readLine);
 
@@ -67,14 +67,14 @@ public class ConsoleUtils {
 
             log.error(msg, e);
 
-            return getInputInt(messageToPrint);
+            return getInputInt(messageToPrint, in);
         } catch (NumberFormatException e) {
 
             print("You entered not number, try again:");
 
             log.info("User entered not number");
 
-            return getInputInt(messageToPrint);
+            return getInputInt(messageToPrint, in);
         }
 
         return inputDigit;

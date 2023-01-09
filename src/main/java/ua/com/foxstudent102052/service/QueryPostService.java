@@ -1,18 +1,16 @@
 package ua.com.foxstudent102052.service;
 
-import ua.com.foxstudent102052.dao.datasource.interfaces.CustomDataSource;
 import ua.com.foxstudent102052.dao.exceptions.DAOException;
-import ua.com.foxstudent102052.dao.impl.PostDAOImpl;
 import ua.com.foxstudent102052.dao.interfaces.PostDAO;
 
 public class QueryPostService {
-    private final PostDAO daoFactory;
+    private final PostDAO postDAO;
 
-    public QueryPostService(CustomDataSource customDataSource) {
-        daoFactory = new PostDAOImpl(customDataSource);
+    public QueryPostService(PostDAO postDAO) {
+        this.postDAO = postDAO;
     }
 
     public void executeQuery(String query) throws DAOException {
-        daoFactory.doPost(query);
+        postDAO.doPost(query);
     }
 }

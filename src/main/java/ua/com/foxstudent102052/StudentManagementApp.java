@@ -8,6 +8,7 @@ import ua.com.foxstudent102052.controller.TestDataInitializer;
 import ua.com.foxstudent102052.dao.datasource.impl.PooledDataSource;
 import ua.com.foxstudent102052.dao.impl.CourseDaoImpl;
 import ua.com.foxstudent102052.dao.impl.GroupDaoImpl;
+import ua.com.foxstudent102052.dao.impl.PostDAOImpl;
 import ua.com.foxstudent102052.dao.impl.StudentDaoImpl;
 import ua.com.foxstudent102052.service.QueryPostService;
 import ua.com.foxstudent102052.service.impl.CourseServiceImpl;
@@ -30,11 +31,12 @@ public class StudentManagementApp {
         var courseRepository = new CourseDaoImpl(customDataSource);
         var studentRepository = new StudentDaoImpl(customDataSource);
         var groupRepository = new GroupDaoImpl(customDataSource);
+        var postDAO = new PostDAOImpl(customDataSource);
 
         var courseService = new CourseServiceImpl(courseRepository);
         var studentService = new StudentServiceImpl(studentRepository);
         var groupService = new GroupServiceImpl(groupRepository);
-        var queryPostService = new QueryPostService(customDataSource);
+        var queryPostService = new QueryPostService(postDAO);
 
         var groupController = new GroupController(groupService);
         var courseController = new CourseController(courseService, studentService);

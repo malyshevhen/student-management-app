@@ -1,6 +1,6 @@
 package ua.com.foxstudent102052.client;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import ua.com.foxstudent102052.controller.CourseController;
 import ua.com.foxstudent102052.controller.GroupController;
 import ua.com.foxstudent102052.controller.StudentController;
@@ -14,9 +14,10 @@ import ua.com.foxstudent102052.table.impl.ReducedCourseTableBuilder;
 import ua.com.foxstudent102052.table.impl.ReducedGroupTableBuilder;
 import ua.com.foxstudent102052.utils.ConsoleUtils;
 
+import java.io.InputStreamReader;
 import java.util.NoSuchElementException;
 
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class ConsoleUI {
     private static final String STUDENT_MENU = """
         +----------------------------------------------------------------+
@@ -48,44 +49,47 @@ public class ConsoleUI {
     private final ConsoleUtils consoleUtils;
     private final TableFactory tableFactory;
 
-    public void callMainMenu() {
-            int selectedMenuOption = consoleUtils.getInputInt(STUDENT_MENU);
+    private InputStreamReader reader;
 
-            try {
-                if (selectedMenuOption == 1) {
-                    callAddStudentMenu();
-                } else if (selectedMenuOption == 2) {
-                    callRemoveStudentMenu();
-                } else if (selectedMenuOption == 3) {
-                    callAddStudentToCourseMenu();
-                } else if (selectedMenuOption == 4) {
-                    callRemoveStudentFromCourseMenu();
-                } else if (selectedMenuOption == 5) {
-                    callFindGroupsMenu();
-                } else if (selectedMenuOption == 6) {
-                    callFindStudentMenu();
-                } else if (selectedMenuOption == 7) {
-                    callFindAllStudentsMenu();
-                } else if (selectedMenuOption == 0) {
-                    consoleUtils.print("Thank you for using Student Management Application!");
-                } else {
-                    consoleUtils.print(WRONG_INPUT_MESSAGE);
-                    callMainMenu();
-                }
-            } catch (NoSuchElementException | IllegalArgumentException e) {
-                consoleUtils.print(e.getMessage());
+    public void callMainMenu() {
+        reader = new InputStreamReader(System.in);
+        int selectedMenuOption = consoleUtils.getInputInt(STUDENT_MENU, reader);
+
+        try {
+            if (selectedMenuOption == 1) {
+                callAddStudentMenu();
+            } else if (selectedMenuOption == 2) {
+                callRemoveStudentMenu();
+            } else if (selectedMenuOption == 3) {
+                callAddStudentToCourseMenu();
+            } else if (selectedMenuOption == 4) {
+                callRemoveStudentFromCourseMenu();
+            } else if (selectedMenuOption == 5) {
+                callFindGroupsMenu();
+            } else if (selectedMenuOption == 6) {
+                callFindStudentMenu();
+            } else if (selectedMenuOption == 7) {
+                callFindAllStudentsMenu();
+            } else if (selectedMenuOption == 0) {
+                consoleUtils.print("Thank you for using Student Management Application!");
+            } else {
+                consoleUtils.print(WRONG_INPUT_MESSAGE);
+                callMainMenu();
             }
+        } catch (NoSuchElementException | IllegalArgumentException e) {
+            consoleUtils.print(e.getMessage());
+        }
     }
 
     private void callAddStudentMenu() {
-        var firstName = consoleUtils.getInputString(ENTER_STUDENT_NAME);
-        var lastName = consoleUtils.getInputString(ENTER_STUDENT_SURNAME);
+        reader = new InputStreamReader(System.in);
+        var firstName = consoleUtils.getInputString(ENTER_STUDENT_NAME, reader);
+        var lastName = consoleUtils.getInputString(ENTER_STUDENT_SURNAME, reader);
 
         consoleUtils.print("Choose students group from list:");
 
         try {
             var allGroups = groupController.getAllGroups();
-
             var groupTable = tableFactory.buildTable(allGroups, new ReducedGroupTableBuilder());
 
             consoleUtils.print(groupTable);
@@ -93,7 +97,7 @@ public class ConsoleUI {
             consoleUtils.print(e.getMessage());
         }
 
-        int groupId = consoleUtils.getInputInt(ENTER_OPTION_NUMBER);
+        int groupId = consoleUtils.getInputInt(ENTER_OPTION_NUMBER, reader);
         var chosenGroup = GroupDto.builder()
             .id(groupId)
             .build();
@@ -115,7 +119,8 @@ public class ConsoleUI {
     }
 
     private void callRemoveStudentMenu() {
-        int studentId = consoleUtils.getInputInt(ENTER_STUDENT_ID);
+        reader = new InputStreamReader(System.in);
+        int studentId = consoleUtils.getInputInt(ENTER_STUDENT_ID, reader);
 
         try {
             studentController.removeStudent(studentId);
@@ -129,7 +134,8 @@ public class ConsoleUI {
     }
 
     private void callAddStudentToCourseMenu() {
-        int studentId = consoleUtils.getInputInt(ENTER_STUDENT_ID);
+        reader = new InputStreamReader(System.in);
+        int studentId = consoleUtils.getInputInt(ENTER_STUDENT_ID, reader);
 
         try {
             var allCourses = courseController.getAllCourses();
@@ -137,7 +143,7 @@ public class ConsoleUI {
             var courseTable = tableFactory.buildTable(allCourses, new ReducedCourseTableBuilder());
             consoleUtils.print(courseTable);
 
-            int courseId = consoleUtils.getInputInt(ENTER_COURSE_ID);
+            int courseId = consoleUtils.getInputInt(ENTER_COURSE_ID, reader);
             studentController.addStudentToCourse(studentId, courseId);
 
             consoleUtils.print("Student added to course successfully");
@@ -150,7 +156,8 @@ public class ConsoleUI {
     }
 
     private void callRemoveStudentFromCourseMenu() {
-        int studentId = consoleUtils.getInputInt(ENTER_STUDENT_ID);
+        reader = new InputStreamReader(System.in);
+        int studentId = consoleUtils.getInputInt(ENTER_STUDENT_ID, reader);
 
         consoleUtils.print("Choose course to remove from:");
 
@@ -158,7 +165,7 @@ public class ConsoleUI {
             var allCourses = courseController.getAllCourses();
 
             consoleUtils.print(tableFactory.buildTable(allCourses, new ReducedCourseTableBuilder()));
-            int courseId = consoleUtils.getInputInt(ENTER_COURSE_ID);
+            int courseId = consoleUtils.getInputInt(ENTER_COURSE_ID, reader);
             studentController.removeStudentFromCourse(studentId, courseId);
 
             consoleUtils.print("Student removed from course successfully");
@@ -170,7 +177,8 @@ public class ConsoleUI {
     }
 
     private void callFindGroupsMenu() {
-        int numberOfStudents = consoleUtils.getInputInt("Enter minimum number of students: ");
+        reader = new InputStreamReader(System.in);
+        int numberOfStudents = consoleUtils.getInputInt("Enter minimum number of students: ", reader);
 
         try {
             var groupsSmallerThen = groupController.getGroupsSmallerThen(numberOfStudents);
@@ -185,17 +193,20 @@ public class ConsoleUI {
     }
 
     private void callFindStudentMenu() {
+        reader = new InputStreamReader(System.in);
+
         try {
-            var studentName = consoleUtils.getInputString(ENTER_STUDENT_NAME);
+            var studentName = consoleUtils.getInputString(ENTER_STUDENT_NAME, reader);
             var allCourses = courseController.getAllCourses();
             var courseTable = tableFactory.buildTable(allCourses,
                 new ReducedCourseTableBuilder());
 
             consoleUtils.print(courseTable);
-            var courseId = consoleUtils.getInputInt(ENTER_GROUP_ID);
+            var courseId = consoleUtils.getInputInt(ENTER_GROUP_ID, reader);
             var studentsByCourseNameAndGroupId = studentController
                 .getStudents(studentName, courseId);
-            var studentTable = tableFactory.buildTable(studentsByCourseNameAndGroupId, new ExpandedStudentTableBuilder());
+            var studentTable = tableFactory.buildTable(studentsByCourseNameAndGroupId,
+                new ExpandedStudentTableBuilder());
 
             consoleUtils.print(studentTable);
         } catch (DAOException | NoSuchElementException e) {
@@ -206,6 +217,8 @@ public class ConsoleUI {
     }
 
     private void callFindAllStudentsMenu() {
+        reader = new InputStreamReader(System.in);
+
         try {
             var allStudents = studentController.getAllStudents();
             var studentTable = tableFactory.buildTable(allStudents, new ExpandedStudentTableBuilder());
