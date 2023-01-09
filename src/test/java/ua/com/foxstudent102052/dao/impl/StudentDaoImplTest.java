@@ -28,7 +28,7 @@ class StudentDaoImplTest {
         studentDao = new StudentDaoImpl(customDataSource);
 
         FileUtils fileUtils = new FileUtils();
-        var ddlScript = fileUtils.readFileFromResourcesAsString("scripts/ddl/testDB.sql");
+        var ddlScript = fileUtils.readFileFromResourcesAsString("scripts/ddl/Table_creation.sql");
         var dmlScript = fileUtils.readFileFromResourcesAsString("scripts/dml/testDB_Data.sql");
 
         PostDAO postDAO = new PostDAOImpl(customDataSource);
