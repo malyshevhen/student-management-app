@@ -11,12 +11,9 @@ import ua.com.foxstudent102052.model.dto.StudentDto;
 import ua.com.foxstudent102052.table.TableFactory;
 import ua.com.foxstudent102052.utils.ConsoleUtils;
 
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.anyInt;
-import static org.mockito.Mockito.anyString;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import java.io.InputStreamReader;
+
+import static org.mockito.Mockito.*;
 
 class ConsoleUITest {
     private static GroupController groupController;
@@ -31,14 +28,14 @@ class ConsoleUITest {
         courseController = mock(CourseController.class);
         studentController = mock(StudentController.class);
         consoleUtils = mock(ConsoleUtils.class);
-        TableFactory tableFactory = mock(TableFactory.class);
+        var tableFactory = mock(TableFactory.class);
         consoleUI = new ConsoleUI(groupController, courseController, studentController, consoleUtils, tableFactory);
     }
 
     @ParameterizedTest
     @ValueSource(ints = {3, 4, 6})
     void Method_callMainMenu_shouldCallCourseControllerMethod_getAllCourses(int number) {
-        when(consoleUtils.getInputInt(anyString())).thenReturn(number).thenReturn(0);
+        when(consoleUtils.getInputInt(anyString(), any(InputStreamReader.class))).thenReturn(number).thenReturn(0);
 
         consoleUI.callMainMenu();
 
@@ -47,7 +44,7 @@ class ConsoleUITest {
 
     @Test
     void Method_callMainMenu_shouldCallGroupControllerMethod_GetAllGroups() {
-        when(consoleUtils.getInputInt(anyString())).thenReturn(1).thenReturn(0);
+        when(consoleUtils.getInputInt(anyString(), any(InputStreamReader.class))).thenReturn(1).thenReturn(0);
 
         consoleUI.callMainMenu();
 
@@ -56,7 +53,7 @@ class ConsoleUITest {
 
     @Test
     void Method_callMainMenu_shouldCallStudentControllerMethod_addStudent() {
-        when(consoleUtils.getInputInt(anyString())).thenReturn(1).thenReturn(0);
+        when(consoleUtils.getInputInt(anyString(), any(InputStreamReader.class))).thenReturn(1).thenReturn(0);
 
         consoleUI.callMainMenu();
 
@@ -65,7 +62,7 @@ class ConsoleUITest {
 
     @Test
     void Method_callMainMenu_shouldCallStudentControllerMethod_removeStudent() {
-        when(consoleUtils.getInputInt(anyString())).thenReturn(2).thenReturn(0);
+        when(consoleUtils.getInputInt(anyString(), any(InputStreamReader.class))).thenReturn(2).thenReturn(0);
 
         consoleUI.callMainMenu();
 
@@ -74,7 +71,7 @@ class ConsoleUITest {
 
     @Test
     void Method_callMainMenu_shouldCallStudentControllerMethod_addStudentToCourse() {
-        when(consoleUtils.getInputInt(anyString())).thenReturn(3).thenReturn(0);
+        when(consoleUtils.getInputInt(anyString(), any(InputStreamReader.class))).thenReturn(3).thenReturn(0);
 
         consoleUI.callMainMenu();
 
@@ -83,7 +80,7 @@ class ConsoleUITest {
 
     @Test
     void Method_callMainMenu_shouldCallStudentControllerMethod_removeStudentFromCourse() {
-        when(consoleUtils.getInputInt(anyString())).thenReturn(4).thenReturn(0);
+        when(consoleUtils.getInputInt(anyString(), any(InputStreamReader.class))).thenReturn(4).thenReturn(0);
 
         consoleUI.callMainMenu();
 
@@ -92,7 +89,7 @@ class ConsoleUITest {
 
     @Test
     void Method_callMainMenu_shouldCallGroupControllerMethod_getGroupsSmallerThen() {
-        when(consoleUtils.getInputInt(anyString())).thenReturn(5).thenReturn(0);
+        when(consoleUtils.getInputInt(anyString(), any(InputStreamReader.class))).thenReturn(5).thenReturn(0);
 
         consoleUI.callMainMenu();
 
@@ -101,8 +98,8 @@ class ConsoleUITest {
 
     @Test
     void Method_callMainMenu_shouldCallStudentControllerMethod_getStudentsByNameAndCourseId() {
-        when(consoleUtils.getInputInt(anyString())).thenReturn(6).thenReturn(1).thenReturn(0);
-        when(consoleUtils.getInputString(anyString())).thenReturn("Name");
+        when(consoleUtils.getInputInt(anyString(), any(InputStreamReader.class))).thenReturn(6).thenReturn(1).thenReturn(0);
+        when(consoleUtils.getInputString(anyString(), any(InputStreamReader.class))).thenReturn("Name");
 
         consoleUI.callMainMenu();
 
@@ -111,7 +108,7 @@ class ConsoleUITest {
 
     @Test
     void Method_callMainMenu_shouldCallStudentControllerMethod_getAllStudents() {
-        when(consoleUtils.getInputInt(anyString())).thenReturn(7).thenReturn(0);
+        when(consoleUtils.getInputInt(anyString(), any(InputStreamReader.class))).thenReturn(7).thenReturn(0);
 
         consoleUI.callMainMenu();
 
