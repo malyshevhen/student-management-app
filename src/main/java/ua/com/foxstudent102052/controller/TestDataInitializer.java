@@ -2,7 +2,6 @@ package ua.com.foxstudent102052.controller;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import ua.com.foxstudent102052.dao.datasource.impl.PooledDataSource;
 import ua.com.foxstudent102052.dao.exceptions.DAOException;
 import ua.com.foxstudent102052.model.dto.CourseDto;
 import ua.com.foxstudent102052.model.dto.GroupDto;
@@ -29,10 +28,11 @@ public class TestDataInitializer {
     public static final int STUDENTS_COUNT = 200;
     public static final int MAX_COUNT_OF_COURSES = 3;
 
-    private static final FileUtils fileUtils = new FileUtils();
     private final StudentService studentService;
     private final CourseService courseService;
     private final GroupService groupService;
+    private final QueryPostService queryPostService;
+    private final FileUtils fileUtils;
 
     public void initTestDada() {
         var coursesNamesAndDescriptions = fileUtils.readCsvFileFromResources(COURSES_CSV);
@@ -49,8 +49,6 @@ public class TestDataInitializer {
         var courses = RandomModelCreator.getCourses(coursesNamesAndDescriptions);
         var groups = RandomModelCreator.getGroups(groupNames);
         var students = RandomModelCreator.getStudents(studentNames, studentSurnames, groups.size(), STUDENTS_COUNT);
-
-        var queryPostService = new QueryPostService(PooledDataSource.getInstance());
 
         runDdlScript(queryPostService);
         addCourses(courses);
@@ -89,7 +87,7 @@ public class TestDataInitializer {
         }
     }
 
-    public void addStudents(List<StudentDto> students) {
+    private void addStudents(List<StudentDto> students) {
         for (var student : students) {
             try {
                 studentService.addStudent(student);
@@ -99,7 +97,7 @@ public class TestDataInitializer {
         }
     }
 
-    public void addStudentsToCourses() {
+    private void addStudentsToCourses() {
         var relationMap = RandomModelCreator.getStudentsCoursesRelations(STUDENTS_COUNT, MAX_COUNT_OF_COURSES);
 
         for (var relation : relationMap.entrySet()) {

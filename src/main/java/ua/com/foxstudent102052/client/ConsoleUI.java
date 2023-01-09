@@ -18,9 +18,6 @@ import java.util.NoSuchElementException;
 
 @AllArgsConstructor
 public class ConsoleUI {
-
-    private static final String ENTER_GROUP_ID = "Enter group id: ";
-
     private static final String STUDENT_MENU = """
         +----------------------------------------------------------------+
         |********************* STUDENTS MANAGEMENT **********************|
@@ -37,22 +34,21 @@ public class ConsoleUI {
         |0. Exit.                                                        |
         +----------------------------------------------------------------+
         """;
-
     private static final String ENTER_STUDENT_ID = "Enter student id: ";
+    private static final String ENTER_GROUP_ID = "Enter group id: ";
+    private static final String ENTER_COURSE_ID = "Enter course id: ";
     private static final String ENTER_STUDENT_NAME = "Enter student name: ";
     private static final String ENTER_STUDENT_SURNAME = "Enter student surname: ";
-    private static final String ENTER_COURSE_ID = "Enter course id: ";
     private static final String ENTER_OPTION_NUMBER = "Enter option number: ";
     private static final String WRONG_INPUT_MESSAGE = "Wrong input.";
 
-    private static final ConsoleUtils consoleUtils = new ConsoleUtils();
-    private static final TableFactory tableFactory = new TableFactory();
     private final GroupController groupController;
     private final CourseController courseController;
     private final StudentController studentController;
+    private final ConsoleUtils consoleUtils;
+    private final TableFactory tableFactory;
 
     public void callMainMenu() {
-        while (true) {
             int selectedMenuOption = consoleUtils.getInputInt(STUDENT_MENU);
 
             try {
@@ -71,18 +67,17 @@ public class ConsoleUI {
                 } else if (selectedMenuOption == 7) {
                     callFindAllStudentsMenu();
                 } else if (selectedMenuOption == 0) {
-                    break;
+                    consoleUtils.print("Thank you for using Student Management Application!");
                 } else {
                     consoleUtils.print(WRONG_INPUT_MESSAGE);
+                    callMainMenu();
                 }
             } catch (NoSuchElementException | IllegalArgumentException e) {
                 consoleUtils.print(e.getMessage());
             }
-        }
-        consoleUtils.print("Thank you for using Student Management Application!");
     }
 
-    void callAddStudentMenu() {
+    private void callAddStudentMenu() {
         var firstName = consoleUtils.getInputString(ENTER_STUDENT_NAME);
         var lastName = consoleUtils.getInputString(ENTER_STUDENT_SURNAME);
 
@@ -114,10 +109,12 @@ public class ConsoleUI {
             consoleUtils.print("Student added successfully");
         } catch (DAOException | NoSuchElementException e) {
             consoleUtils.print(e.getMessage());
+        } finally {
+            callMainMenu();
         }
     }
 
-    void callRemoveStudentMenu() {
+    private void callRemoveStudentMenu() {
         int studentId = consoleUtils.getInputInt(ENTER_STUDENT_ID);
 
         try {
@@ -126,10 +123,12 @@ public class ConsoleUI {
             consoleUtils.print("Student removed successfully");
         } catch (DAOException | NoSuchElementException e) {
             consoleUtils.print(e.getMessage());
+        } finally {
+            callMainMenu();
         }
     }
 
-    void callAddStudentToCourseMenu() {
+    private void callAddStudentToCourseMenu() {
         int studentId = consoleUtils.getInputInt(ENTER_STUDENT_ID);
 
         try {
@@ -144,10 +143,13 @@ public class ConsoleUI {
             consoleUtils.print("Student added to course successfully");
         } catch (DAOException | NoSuchElementException e) {
             consoleUtils.print(e.getMessage());
+        } finally {
+            callMainMenu();
         }
+
     }
 
-    void callRemoveStudentFromCourseMenu() {
+    private void callRemoveStudentFromCourseMenu() {
         int studentId = consoleUtils.getInputInt(ENTER_STUDENT_ID);
 
         consoleUtils.print("Choose course to remove from:");
@@ -162,10 +164,12 @@ public class ConsoleUI {
             consoleUtils.print("Student removed from course successfully");
         } catch (DAOException | NoSuchElementException e) {
             consoleUtils.print(e.getMessage());
+        } finally {
+            callMainMenu();
         }
     }
 
-    void callFindGroupsMenu() {
+    private void callFindGroupsMenu() {
         int numberOfStudents = consoleUtils.getInputInt("Enter minimum number of students: ");
 
         try {
@@ -175,13 +179,16 @@ public class ConsoleUI {
             consoleUtils.print(groupTable);
         } catch (DAOException | NoSuchElementException e) {
             consoleUtils.print(e.getMessage());
+        } finally {
+            callMainMenu();
         }
     }
 
-    void callFindStudentMenu() {
+    private void callFindStudentMenu() {
         try {
             var studentName = consoleUtils.getInputString(ENTER_STUDENT_NAME);
-            var courseTable = tableFactory.buildTable(courseController.getAllCourses(),
+            var allCourses = courseController.getAllCourses();
+            var courseTable = tableFactory.buildTable(allCourses,
                 new ReducedCourseTableBuilder());
 
             consoleUtils.print(courseTable);
@@ -193,10 +200,12 @@ public class ConsoleUI {
             consoleUtils.print(studentTable);
         } catch (DAOException | NoSuchElementException e) {
             consoleUtils.print(e.getMessage());
+        } finally {
+            callMainMenu();
         }
     }
 
-    void callFindAllStudentsMenu() {
+    private void callFindAllStudentsMenu() {
         try {
             var allStudents = studentController.getAllStudents();
             var studentTable = tableFactory.buildTable(allStudents, new ExpandedStudentTableBuilder());
@@ -204,6 +213,8 @@ public class ConsoleUI {
             consoleUtils.print(studentTable);
         } catch (DAOException | NoSuchElementException e) {
             consoleUtils.print(e.getMessage());
+        } finally {
+            callMainMenu();
         }
     }
 }
