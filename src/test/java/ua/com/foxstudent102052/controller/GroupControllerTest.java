@@ -6,6 +6,7 @@ import ua.com.foxstudent102052.model.dto.GroupDto;
 import ua.com.foxstudent102052.model.dto.StudentDto;
 import ua.com.foxstudent102052.service.exceptions.ElementAlreadyExistException;
 import ua.com.foxstudent102052.service.interfaces.GroupService;
+import ua.com.foxstudent102052.service.interfaces.StudentService;
 
 import java.util.List;
 
@@ -14,12 +15,14 @@ import static org.mockito.Mockito.*;
 
 class GroupControllerTest {
     private GroupService groupService;
+    private StudentService studentService;
     private GroupController groupController;
 
     @BeforeEach
     void setUp() {
         groupService = mock(GroupService.class);
-        groupController = new GroupController(groupService);
+        studentService = mock(StudentService.class);
+        groupController = new GroupController(groupService, studentService);
     }
 
     @Test
