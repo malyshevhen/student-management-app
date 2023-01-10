@@ -186,4 +186,14 @@ class StudentServiceImplTest {
         // then
         verify(studentDao).getStudents("John", 1);
     }
+
+    @Test
+    void MethodGetStudentsByGropShould_ReturnListOfStudents_ByCourseId() throws ElementAlreadyExistException, DAOException {
+        // when
+        when(studentDao.getStudentsByGroup(anyInt())).thenReturn(List.of(new Student(0, 0, "", "")));
+        studentService.getStudentsByGroup(1);
+
+        // then
+        verify(studentDao).getStudentsByGroup(1);
+    }
 }

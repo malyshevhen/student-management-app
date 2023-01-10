@@ -13,8 +13,6 @@ import java.util.Random;
 import java.util.Set;
 
 public class RandomModelCreator {
-
-
     private static final Random random = new Random();
 
     private RandomModelCreator() {
