@@ -15,14 +15,17 @@ abstract class DtoTableBuilderImpl<T> implements TableBuilder<T> {
         } else {
             var tableBuilder = new StringBuilder();
             tableBuilder.append(getHeather())
-                .append(System.lineSeparator());
+                .append("\n");
 
             for (T dto : dtoList) {
                 tableBuilder.append(buildInfoBlock(dto));
             }
 
-            return tableBuilder.append(getFooter())
-                .append(System.lineSeparator()).toString();
+            return tableBuilder
+                .replace(tableBuilder.length() - getFooter().length() - 1,
+                    tableBuilder.length() - 1,
+                    getFooter())
+                .toString();
         }
     }
 
