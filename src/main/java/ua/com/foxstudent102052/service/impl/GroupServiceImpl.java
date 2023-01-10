@@ -5,7 +5,6 @@ import org.modelmapper.ModelMapper;
 import ua.com.foxstudent102052.dao.exceptions.DAOException;
 import ua.com.foxstudent102052.dao.interfaces.GroupDao;
 import ua.com.foxstudent102052.model.dto.GroupDto;
-import ua.com.foxstudent102052.model.dto.StudentDto;
 import ua.com.foxstudent102052.model.entity.Group;
 import ua.com.foxstudent102052.service.exceptions.ElementAlreadyExistException;
 import ua.com.foxstudent102052.service.interfaces.GroupService;
@@ -68,25 +67,6 @@ public class GroupServiceImpl implements GroupService {
                 String.format("There are no groups with number of students less then %d", numberOfStudents));
         } else {
             return groupList;
-        }
-    }
-
-    @Override
-    public List<StudentDto> getStudentsByGroup(int groupId) throws DAOException {
-        var group = groupDao.getGroup(groupId)
-            .orElseThrow(() -> new NoSuchElementException(GROUP_DOES_NOT_EXIST));
-        var groupDto = modelMapper.map(group, GroupDto.class);
-
-        var studentDtoList = groupDao.getStudents(groupId)
-            .stream()
-            .map(student -> modelMapper.map(student, StudentDto.class))
-            .peek(studentDto -> studentDto.setGroup(groupDto))
-            .toList();
-
-        if (studentDtoList.isEmpty()) {
-            throw new NoSuchElementException(String.format("There are no students in group with id %d", groupId));
-        } else {
-            return studentDtoList;
         }
     }
 }

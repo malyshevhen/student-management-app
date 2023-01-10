@@ -1,19 +1,19 @@
 package ua.com.foxstudent102052.controller;
 
 import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import ua.com.foxstudent102052.dao.exceptions.DAOException;
 import ua.com.foxstudent102052.model.dto.GroupDto;
 import ua.com.foxstudent102052.service.exceptions.ElementAlreadyExistException;
 import ua.com.foxstudent102052.service.interfaces.GroupService;
+import ua.com.foxstudent102052.service.interfaces.StudentService;
 
 import java.util.List;
 import java.util.NoSuchElementException;
 
-@Slf4j
 @AllArgsConstructor
 public class GroupController {
     private final GroupService groupService;
+    private final StudentService studentService;
 
     public List<GroupDto> getAllGroups() throws NoSuchElementException, ElementAlreadyExistException {
         return groupService.getGroups().stream()
@@ -29,7 +29,7 @@ public class GroupController {
 
     private GroupDto setStudentsToGroups(GroupDto groupDto) {
         try {
-            var result = groupService.getStudentsByGroup(groupDto.getId());
+            var result = studentService.getStudentsByGroup(groupDto.getId());
             groupDto.setStudentList(result);
 
             return groupDto;

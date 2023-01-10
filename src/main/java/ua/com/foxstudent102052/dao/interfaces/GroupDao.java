@@ -1,7 +1,6 @@
 package ua.com.foxstudent102052.dao.interfaces;
 
 import ua.com.foxstudent102052.model.entity.Group;
-import ua.com.foxstudent102052.model.entity.Student;
 
 import java.util.List;
 import java.util.Optional;
@@ -16,6 +15,4 @@ public interface GroupDao {
     Optional<Group> getGroup(String groupName);
 
     List<Group> getGroupsLessThen(int numberOfStudents);
-
-    List<Student> getStudents(int groupId);
 }

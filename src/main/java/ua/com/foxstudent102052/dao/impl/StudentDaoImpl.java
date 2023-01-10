@@ -13,16 +13,6 @@ import java.util.Optional;
 
 @Slf4j
 public class StudentDaoImpl implements StudentDao {
-    private static final String TABLE_NAME = "students";
-    private static final String TABLE_COLUMN_1 = "student_id";
-    private static final String TABLE_COLUMN_2 = "group_id";
-    private static final String TABLE_COLUMN_3 = "first_name";
-    private static final String TABLE_COLUMN_4 = "last_name";
-    private static final String JOIN_TABLE_NAME = "students_courses";
-    private static final String JOIN_TABLE_COLUMN_1 = "student_id";
-    private static final String JOIN_TABLE_COLUMN_2 = "course_id";
-
-
     private final CustomDataSource dataSource;
 
     public StudentDaoImpl(CustomDataSource customDataSource) {
@@ -33,16 +23,9 @@ public class StudentDaoImpl implements StudentDao {
     public void addStudent(Student student) {
         var query =
             """
-                INSERT INTO %table_name (
-                    %table_column2,
-                    %table_column3,
-                    %table_column4)
+                INSERT INTO students (
+                    group_id, first_name, last_name)
                 VALUES (?, ?, ?);""";
-
-        query = query.replace("%table_name", TABLE_NAME)
-            .replace("%table_column2", TABLE_COLUMN_2)
-            .replace("%table_column3", TABLE_COLUMN_3)
-            .replace("%table_column4", TABLE_COLUMN_4);
 
         try (var connection = dataSource.getConnection();
              var statement = connection.prepareStatement(query)) {
@@ -62,15 +45,11 @@ public class StudentDaoImpl implements StudentDao {
     public void removeStudent(int studentId) {
         var query =
             """
-                DELETE FROM %join_table_name
-                WHERE %join_column1 = ?;
+                DELETE FROM students_courses
+                WHERE student_id = ?;
                 DELETE
-                FROM %table_name
-                WHERE %join_column1 = ?;""";
-
-        query = query.replace("%table_name", TABLE_NAME)
-            .replace("%join_table_name", JOIN_TABLE_NAME)
-            .replace("%join_column1", JOIN_TABLE_COLUMN_1);
+                FROM students
+                WHERE student_id = ?;""";
 
         try (var connection = dataSource.getConnection();
              var statement = connection.prepareStatement(query)) {
@@ -89,14 +68,10 @@ public class StudentDaoImpl implements StudentDao {
     public void addStudentToCourse(int studentId, int courseId) {
         var query =
             """
-                INSERT INTO %join_table_name (
-                    %join_column1,
-                    %join_column2)
+                INSERT INTO students_courses (
+                    student_id,
+                    course_id)
                 VALUES (?, ?);""";
-
-        query = query.replace("%join_table_name", JOIN_TABLE_NAME)
-            .replace("%join_column1", JOIN_TABLE_COLUMN_1)
-            .replace("%join_column2", JOIN_TABLE_COLUMN_2);
 
         try (var connection = dataSource.getConnection();
              var statement = connection.prepareStatement(query)) {
@@ -117,13 +92,9 @@ public class StudentDaoImpl implements StudentDao {
         var query =
             """
                 DELETE
-                FROM %join_table_name
-                WHERE %join_column1 = ?
-                AND %join_column2 = ?;""";
-
-        query = query.replace("%join_table_name", JOIN_TABLE_NAME)
-            .replace("%join_column1", JOIN_TABLE_COLUMN_1)
-            .replace("%join_column2", JOIN_TABLE_COLUMN_2);
+                FROM students_courses
+                WHERE student_id = ?
+                AND course_id = ?;""";
 
         try (var connection = dataSource.getConnection();
              var statement = connection.prepareStatement(query)) {
@@ -142,12 +113,9 @@ public class StudentDaoImpl implements StudentDao {
     public Optional<Student> getStudent(int id) {
         var query =
             """
-                SELECT *
-                FROM %table_name
-                WHERE %table_column1 = ?;""";
-
-        query = query.replace("%table_name", TABLE_NAME)
-            .replace("%table_column1", TABLE_COLUMN_1);
+                SELECT student_id, group_id, first_name, last_name
+                FROM students
+                WHERE student_id = ?;""";
 
         try (var connection = dataSource.getConnection();
              var statement = connection.prepareStatement(query)) {
@@ -171,9 +139,9 @@ public class StudentDaoImpl implements StudentDao {
 
     @Override
     public List<Student> getStudents() {
-        var query = "SELECT * FROM %table_name;";
-
-        query = query.replace("%table_name", TABLE_NAME);
+        var query = """
+            SELECT student_id, group_id, first_name, last_name
+            FROM students;""";
 
         try (var connection = dataSource.getConnection();
              var statement = connection.createStatement();
@@ -188,21 +156,15 @@ public class StudentDaoImpl implements StudentDao {
     }
 
     @Override
-    public List<Student> getStudents(int courseId) {
+    public List<Student> getStudentsByCourse(int courseId) {
         var query =
             """
-                SELECT *
-                FROM %table_name
-                WHERE %table_column1 IN (
-                    SELECT %join_column1
-                    FROM %join_table_name
-                    WHERE %join_column2 = ?);""";
-
-        query = query.replace("%table_name", TABLE_NAME)
-            .replace("%table_column1", TABLE_COLUMN_1)
-            .replace("%join_table_name", JOIN_TABLE_NAME)
-            .replace("%join_column1", JOIN_TABLE_COLUMN_1)
-            .replace("%join_column2", JOIN_TABLE_COLUMN_2);
+                SELECT student_id, group_id, first_name, last_name
+                FROM students
+                WHERE student_id IN (
+                    SELECT student_id
+                    FROM students_courses
+                    WHERE course_id = ?);""";
 
         try (var connection = dataSource.getConnection();
              var statement = connection.prepareStatement(query)) {
@@ -218,23 +180,37 @@ public class StudentDaoImpl implements StudentDao {
     }
 
     @Override
-    public List<Student> getStudents(String studentName, Integer courseId) {
+    public List<Student> getStudentsByGroup(int groupId) {
         var query =
             """
-                SELECT *
-                FROM %table_name
-                WHERE %table_column1 IN (
-                    SELECT %join_column1
-                    FROM %join_table_name
-                    WHERE %join_column2 = ?)
-                AND %table_column3 = ?;""";
+                SELECT student_id, group_id, first_name, last_name
+                FROM students
+                WHERE group_id = ? ;""";
 
-        query = query.replace("%table_name", TABLE_NAME)
-            .replace("%table_column1", TABLE_COLUMN_1)
-            .replace("%table_column3", TABLE_COLUMN_3)
-            .replace("%join_table_name", JOIN_TABLE_NAME)
-            .replace("%join_column1", JOIN_TABLE_COLUMN_1)
-            .replace("%join_column2", JOIN_TABLE_COLUMN_2);
+        try (var connection = dataSource.getConnection();
+             var statement = connection.prepareStatement(query)) {
+            statement.setInt(1, groupId);
+            var studentsResultSet = statement.executeQuery();
+
+            return StudentDaoMapper.mapToStudents(studentsResultSet);
+        } catch (SQLException e) {
+            log.error(e.getMessage());
+
+            throw new DAOException(e);
+        }
+    }
+
+    @Override
+    public List<Student> getStudents(String studentName, int courseId) {
+        var query =
+            """
+                SELECT student_id, group_id, first_name, last_name
+                FROM students
+                WHERE student_id IN (
+                    SELECT student_id
+                    FROM students_courses
+                    WHERE course_id = ?)
+                AND first_name = ?;""";
 
         try (var connection = dataSource.getConnection();
              var statement = connection.prepareStatement(query)) {

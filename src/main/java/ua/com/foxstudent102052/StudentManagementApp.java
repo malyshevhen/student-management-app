@@ -38,7 +38,7 @@ public class StudentManagementApp {
         var groupService = new GroupServiceImpl(groupRepository);
         var queryPostService = new QueryPostService(postDAO);
 
-        var groupController = new GroupController(groupService);
+        var groupController = new GroupController(groupService, studentService);
         var courseController = new CourseController(courseService, studentService);
         var studentController = new StudentController(studentService, groupService, courseService);
 
