@@ -69,7 +69,7 @@ class CourseServiceImplTest {
         when(courseDao.getCourse(1)).thenReturn(Optional.of(course));
 
         // then
-        var expected = CourseDto.builder().name("Java").description("Java course").studentsList(List.of()).build();
+        var expected = CourseDto.builder().name("Java").description("Java course").studentList(List.of()).build();
         var actual = courseService.getCourse(1);
 
         assertEquals(expected, actual);
@@ -84,7 +84,7 @@ class CourseServiceImplTest {
         when(courseDao.getCourses(1)).thenReturn(List.of(course));
 
         // then
-        var expected = List.of(CourseDto.builder().name("Java").description("Java course").studentsList(List.of()).build());
+        var expected = List.of(CourseDto.builder().name("Java").description("Java course").studentList(List.of()).build());
         var actual = courseService.getCourses(1);
 
         assertEquals(expected, actual);

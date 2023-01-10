@@ -148,7 +148,7 @@ class StudentServiceImplTest {
         var student = new Student(studentId, groupId, "", "");
 
         // when
-        when(studentDao.getStudents(groupId)).thenReturn(List.of(student));
+        when(studentDao.getStudentsByCourse(groupId)).thenReturn(List.of(student));
         studentService.removeStudentFromCourse(studentId, groupId);
 
         // then
@@ -169,11 +169,11 @@ class StudentServiceImplTest {
     @Test
     void MethodGetStudentsByCourseShould_ReturnListOfStudents_ByCourseId() throws ElementAlreadyExistException, DAOException {
         // when
-        when(studentDao.getStudents(anyInt())).thenReturn(List.of(new Student(0, 0, "", "")));
-        studentService.getStudents(1);
+        when(studentDao.getStudentsByCourse(anyInt())).thenReturn(List.of(new Student(0, 0, "", "")));
+        studentService.getStudentsByCourse(1);
 
         // then
-        verify(studentDao).getStudents(1);
+        verify(studentDao).getStudentsByCourse(1);
     }
 
     @Test
