@@ -25,24 +25,24 @@ public class ExpandedStudentTableBuilder extends DtoTableBuilderImpl<StudentDto>
 
         if (courses.isEmpty()) {
             return studentBlockBuilder.append(String.format(ROW, id, group, firstName, lastName, "No courses"))
-                .append(System.lineSeparator())
+                .append("\n")
                 .append(SEMI_FOOTER)
-                .append(System.lineSeparator()).toString();
+                .append("\n").toString();
         } else {
             for (int i = 0; i < courses.size(); i++) {
                 if (i == 0) {
                     studentBlockBuilder.append(String.format(ROW, id, group, firstName, lastName,
                             courses.get(i).getName()))
-                        .append(System.lineSeparator());
+                        .append("\n");
                 } else {
                     studentBlockBuilder
                         .append(String.format(ROW, " ", " ", " ", " ", courses.get(i).getName()))
-                        .append(System.lineSeparator());
+                        .append("\n");
                 }
             }
 
             return studentBlockBuilder.append(SEMI_FOOTER)
-                .append(System.lineSeparator()).toString();
+                .append("\n").toString();
         }
     }
 

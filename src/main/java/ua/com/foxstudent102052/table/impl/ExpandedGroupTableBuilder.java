@@ -20,21 +20,23 @@ public class ExpandedGroupTableBuilder extends DtoTableBuilderImpl<GroupDto> {
 
         if (students.isEmpty()) {
             return infoBlockBuilder.append(String.format(ROW, id, name, "No students"))
-                .append(System.lineSeparator()).toString();
+                .append("\n")
+                .append(SEMI_FOOTER)
+                .append("\n").toString();
         } else {
             for (int i = 0; i < students.size(); i++) {
                 if (i == 0) {
                     infoBlockBuilder.append(String.format(ROW, id, name,
                             students.get(i).getFirstName() + " " + students.get(i).getLastName()))
-                        .append(System.lineSeparator());
+                        .append("\n");
                 } else {
                     infoBlockBuilder.append(String.format(ROW, " ", " ",
                             students.get(i).getFirstName() + " " + students.get(i).getLastName()))
-                        .append(System.lineSeparator());
+                        .append("\n");
                 }
             }
             return infoBlockBuilder.append(SEMI_FOOTER)
-                .append(System.lineSeparator()).toString();
+                .append("\n").toString();
         }
     }
 
