@@ -1,6 +1,5 @@
 package ua.com.foxstudent102052;
 
-import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import ua.com.foxstudent102052.client.ConsoleUI;
 import ua.com.foxstudent102052.controller.CourseController;
@@ -52,7 +51,5 @@ public class StudentManagementApp {
     public static void main(String[] args) {
         testDataInitializer.initTestDada();
         consoleUI.callMainMenu();
-
-        SpringApplication.run(StudentManagementApp.class, args);
     }
 }
