@@ -1,5 +1,7 @@
 package ua.com.foxstudent102052;
 
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 import ua.com.foxstudent102052.client.ConsoleUI;
 import ua.com.foxstudent102052.controller.CourseController;
 import ua.com.foxstudent102052.controller.GroupController;
@@ -18,6 +20,7 @@ import ua.com.foxstudent102052.table.TableFactory;
 import ua.com.foxstudent102052.utils.ConsoleUtils;
 import ua.com.foxstudent102052.utils.FileUtils;
 
+@SpringBootApplication
 public class StudentManagementApp {
     private static final TestDataInitializer testDataInitializer;
     private static final ConsoleUI consoleUI;
@@ -49,5 +52,7 @@ public class StudentManagementApp {
     public static void main(String[] args) {
         testDataInitializer.initTestDada();
         consoleUI.callMainMenu();
+
+        SpringApplication.run(StudentManagementApp.class, args);
     }
 }
