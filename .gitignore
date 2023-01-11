@@ -42,3 +42,4 @@ local.properties
 ## H2 ##
 *.mv.db
 db_test
+*.trace.db

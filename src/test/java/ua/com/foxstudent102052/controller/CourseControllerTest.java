@@ -35,9 +35,9 @@ class CourseControllerTest {
             StudentDto.builder().id(3).firstName("Jack").lastName("Doe").build()
         );
         var expected = List.of(
-            CourseDto.builder().id(1).name("Java").description("Java course").studentsList(studentDtoList).build(),
-            CourseDto.builder().id(2).name("C++").description("C# course").studentsList(studentDtoList).build(),
-            CourseDto.builder().id(3).name("Python").description("Python course").studentsList(studentDtoList).build()
+            CourseDto.builder().id(1).name("Java").description("Java course").studentList(studentDtoList).build(),
+            CourseDto.builder().id(2).name("C++").description("C# course").studentList(studentDtoList).build(),
+            CourseDto.builder().id(3).name("Python").description("Python course").studentList(studentDtoList).build()
         );
 
         // when

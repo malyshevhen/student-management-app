@@ -13,13 +13,6 @@ import java.util.Optional;
 
 @Slf4j
 public class CourseDaoImpl implements CourseDao {
-    public static final String TABLE_NAME = "courses";
-    public static final String JOIN_TABLE_NAME = "students_courses";
-    public static final String TABLE_COLUMN_1 = "course_id";
-    public static final String TABLE_COLUMN_2 = "course_name";
-    public static final String TABLE_COLUMN_3 = "course_description";
-    public static final String JOIN_TABLE_COLUMN_1 = "student_id";
-
     private final CustomDataSource dataSource;
 
     public CourseDaoImpl(CustomDataSource customDataSource) {
@@ -30,13 +23,8 @@ public class CourseDaoImpl implements CourseDao {
     public void addCourse(Course course) {
         var query = """
             INSERT
-            INTO $table_name ($col2, $col3)
+            INTO courses (course_name, course_description)
             VALUES (?, ?);""";
-
-        query = query.replace("$table_name", TABLE_NAME)
-            .replace("$col2", TABLE_COLUMN_2)
-            .replace("$col3", TABLE_COLUMN_3);
-
 
         try (var connection = dataSource.getConnection();
              var statement = connection.prepareStatement(query)) {
@@ -55,12 +43,9 @@ public class CourseDaoImpl implements CourseDao {
     @Override
     public Optional<Course> getCourse(int courseId) {
         var query = """
-            SELECT *
-            FROM $table_name
-            WHERE $col1 = ?;""";
-
-        query = query.replace("$table_name", TABLE_NAME)
-            .replace("$col1", TABLE_COLUMN_1);
+            SELECT course_id, course_name, course_description
+            FROM courses
+            WHERE course_id = ?;""";
 
         try (var connection = dataSource.getConnection();
              var statement = connection.prepareStatement(query)) {
@@ -85,12 +70,9 @@ public class CourseDaoImpl implements CourseDao {
     @Override
     public Optional<Course> getCourse(String courseName) {
         var query = """
-            SELECT *
-            FROM $table_name
-            WHERE $col2 = ?;""";
-
-        query = query.replace("$table_name", TABLE_NAME)
-            .replace("$col2", TABLE_COLUMN_2);
+            SELECT course_id, course_name, course_description
+            FROM courses
+            WHERE course_name = ?;""";
 
         try (var connection = dataSource.getConnection();
              var statement = connection.prepareStatement(query)) {
@@ -114,9 +96,9 @@ public class CourseDaoImpl implements CourseDao {
 
     @Override
     public List<Course> getCourses() {
-        var query = "SELECT * FROM $table_name;";
-
-        query = query.replace("$table_name", TABLE_NAME);
+        var query = """
+            SELECT course_id, course_name, course_description
+            FROM courses;""";
 
         try (var connection = dataSource.getConnection();
              var statement = connection.createStatement();
@@ -133,18 +115,13 @@ public class CourseDaoImpl implements CourseDao {
     @Override
     public List<Course> getCourses(int studentId) {
         var query = """
-            SELECT *
-            FROM $table_name
-            WHERE $col1
+            SELECT course_id, course_name, course_description
+            FROM courses
+            WHERE course_id
             IN (
-                SELECT $col1
-                FROM $join_table_name
-                WHERE $join_col1 = ?);""";
-
-        query = query.replace("$table_name", TABLE_NAME)
-            .replace("$col1", TABLE_COLUMN_1)
-            .replace("$join_table_name", JOIN_TABLE_NAME)
-            .replace("$join_col1", JOIN_TABLE_COLUMN_1);
+                SELECT course_id
+                FROM students_courses
+                WHERE student_id = ?);""";
 
         try (var connection = dataSource.getConnection();
              var statement = connection.prepareStatement(query)) {

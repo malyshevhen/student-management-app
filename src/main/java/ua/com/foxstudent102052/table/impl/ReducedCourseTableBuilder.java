@@ -18,9 +18,9 @@ public class ReducedCourseTableBuilder extends DtoTableBuilderImpl<CourseDto> {
         var name = course.getName();
 
         return courseBlockBuilder.append(String.format(ROW, id, name))
-            .append(System.lineSeparator())
+            .append("\n")
             .append(SEMI_FOOTER)
-            .append(System.lineSeparator())
+            .append("\n")
             .toString();
     }
 

@@ -1,7 +1,6 @@
 package ua.com.foxstudent102052.controller;
 
 import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import ua.com.foxstudent102052.dao.exceptions.DAOException;
 import ua.com.foxstudent102052.model.dto.StudentDto;
 import ua.com.foxstudent102052.service.interfaces.CourseService;
@@ -11,7 +10,6 @@ import ua.com.foxstudent102052.service.interfaces.StudentService;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-@Slf4j
 @AllArgsConstructor
 public class StudentController {
     private final StudentService studentService;

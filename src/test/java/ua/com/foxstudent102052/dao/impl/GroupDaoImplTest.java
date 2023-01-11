@@ -160,25 +160,4 @@ class GroupDaoImplTest {
         assertThrows(DAOException.class, () -> groupDao.getGroupsLessThen(2),
             "Groups weren`t received");
     }
-
-    @Test
-    void MethodGetStudents_ByGroup_ShouldReturnListOfStudentsRelatedToGivenGroup() throws DAOException {
-        var actual = groupDao.getStudents(2);
-
-        assertEquals(5, actual.size());
-    }
-
-    @Test
-    void MethodGetStudents_ByGroupShouldThrowException_WhenDAOExceptionThrown() throws SQLException {
-        // given
-        customDataSource = mock(CustomDataSource.class);
-        groupDao = new GroupDaoImpl(customDataSource);
-
-        // when
-        doThrow(SQLException.class).when(customDataSource).getConnection();
-
-        // then
-        assertThrows(DAOException.class, () -> groupDao.getStudents(1),
-            "Students weren`t received");
-    }
 }

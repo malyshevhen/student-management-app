@@ -17,9 +17,11 @@ public interface StudentDao {
 
     List<Student> getStudents();
 
-    List<Student> getStudents(int course);
+    List<Student> getStudentsByCourse(int courseId);
 
-    List<Student> getStudents(String studentName, Integer courseId);
+    List<Student> getStudentsByGroup(int groupId);
+
+    List<Student> getStudents(String studentName, int courseId);
 
     Optional<Student> getStudent(int i);
 }

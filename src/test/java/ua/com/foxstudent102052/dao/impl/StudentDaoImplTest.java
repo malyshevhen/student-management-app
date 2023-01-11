@@ -82,7 +82,7 @@ class StudentDaoImplTest {
 
         // when
         studentDao.addStudentToCourse(1, 2);
-        var actual = studentDao.getStudents(1).get(0);
+        var actual = studentDao.getStudentsByCourse(1).get(0);
 
         // then
         assertEquals(expected, actual);
@@ -128,6 +128,54 @@ class StudentDaoImplTest {
                 .lastName("Skywalker")
                 .build(),
             Student.builder()
+                .id(3)
+                .groupId(1)
+                .firstName("Han")
+                .lastName("Solo")
+                .build(),
+            Student.builder()
+                .id(4)
+                .groupId(1)
+                .firstName("Padme")
+                .lastName("Amidala")
+                .build()
+        );
+
+        var actual = studentDao.getStudentsByGroup(1);
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void MethodGetStudentByCourseId_ShouldThrowAnException_IfCourseIdIsInvalid() throws SQLException {
+        // given
+        customDataSource = mock(CustomDataSource.class);
+        studentDao = new StudentDaoImpl(customDataSource);
+
+        // when
+        doThrow(SQLException.class).when(customDataSource).getConnection();
+
+        // then
+        assertThrows(DAOException.class, () -> studentDao.getStudentsByCourse(1),
+            "Error while adding student to the database");
+    }
+
+    @Test
+    void MethodGetStudentsByGroup_ShouldReturnStudentByGroupId() throws DAOException {
+        var expected = List.of(
+            Student.builder()
+                .id(1)
+                .groupId(1)
+                .firstName("Leia")
+                .lastName("Organa")
+                .build(),
+            Student.builder()
+                .id(2)
+                .groupId(1)
+                .firstName("Luke")
+                .lastName("Skywalker")
+                .build(),
+            Student.builder()
                 .id(4)
                 .groupId(1)
                 .firstName("Padme")
@@ -153,13 +201,13 @@ class StudentDaoImplTest {
                 .build()
         );
 
-        var actual = studentDao.getStudents(1);
+        var actual = studentDao.getStudentsByCourse(1);
 
         assertEquals(expected, actual);
     }
 
     @Test
-    void MethodGetStudentByCourseId_ShouldThrowAnException_IfCourseIdIsInvalid() throws SQLException {
+    void MethodGetStudentByGroup_ShouldThrowAnException_IfCourseIdIsInvalid() throws SQLException {
         // given
         customDataSource = mock(CustomDataSource.class);
         studentDao = new StudentDaoImpl(customDataSource);
@@ -168,7 +216,7 @@ class StudentDaoImplTest {
         doThrow(SQLException.class).when(customDataSource).getConnection();
 
         // then
-        assertThrows(DAOException.class, () -> studentDao.getStudents(1),
+        assertThrows(DAOException.class, () -> studentDao.getStudentsByGroup(1),
             "Error while adding student to the database");
     }
 

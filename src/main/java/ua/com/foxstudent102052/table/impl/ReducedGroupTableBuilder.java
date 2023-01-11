@@ -18,9 +18,9 @@ public class ReducedGroupTableBuilder extends DtoTableBuilderImpl<GroupDto>{
         var name = group.getName();
 
         return groupTableBlockBuilder.append(String.format(ROW, id, name))
-            .append(System.lineSeparator())
+            .append("\n")
             .append(SEMI_FOOTER)
-            .append(System.lineSeparator()).toString();
+            .append("\n").toString();
     }
 
     @Override

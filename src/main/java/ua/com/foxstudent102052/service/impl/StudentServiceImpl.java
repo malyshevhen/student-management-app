@@ -1,7 +1,6 @@
 package ua.com.foxstudent102052.service.impl;
 
 import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import ua.com.foxstudent102052.dao.exceptions.DAOException;
 import ua.com.foxstudent102052.dao.interfaces.StudentDao;
@@ -12,7 +11,6 @@ import ua.com.foxstudent102052.service.interfaces.StudentService;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-@Slf4j
 @AllArgsConstructor
 public class StudentServiceImpl implements StudentService {
     private final StudentDao studentDao;
@@ -44,7 +42,7 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public void removeStudentFromCourse(int studentId, int courseId) throws DAOException {
-        boolean studentPresentInCourse = studentDao.getStudents(courseId)
+        boolean studentPresentInCourse = studentDao.getStudentsByCourse(courseId)
             .stream()
             .anyMatch(student -> student.getId() == studentId);
 
@@ -70,8 +68,22 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public List<StudentDto> getStudents(int courseId) throws DAOException {
-        var studentDtoList = studentDao.getStudents(courseId)
+    public List<StudentDto> getStudentsByCourse(int courseId) throws DAOException {
+        var studentDtoList = studentDao.getStudentsByCourse(courseId)
+            .stream()
+            .map(student -> modelMapper.map(student, StudentDto.class))
+            .toList();
+
+        if (studentDtoList.isEmpty()) {
+            throw new NoSuchElementException("There are no students on course");
+        } else {
+            return studentDtoList;
+        }
+    }
+
+    @Override
+    public List<StudentDto> getStudentsByGroup(int groupId) throws DAOException {
+        var studentDtoList = studentDao.getStudentsByGroup(groupId)
             .stream()
             .map(student -> modelMapper.map(student, StudentDto.class))
             .toList();

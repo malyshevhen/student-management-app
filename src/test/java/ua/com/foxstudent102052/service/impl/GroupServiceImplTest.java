@@ -6,18 +6,14 @@ import org.modelmapper.ModelMapper;
 import ua.com.foxstudent102052.dao.exceptions.DAOException;
 import ua.com.foxstudent102052.dao.interfaces.GroupDao;
 import ua.com.foxstudent102052.model.dto.GroupDto;
-import ua.com.foxstudent102052.model.dto.StudentDto;
 import ua.com.foxstudent102052.model.entity.Group;
-import ua.com.foxstudent102052.model.entity.Student;
 import ua.com.foxstudent102052.service.exceptions.ElementAlreadyExistException;
 import ua.com.foxstudent102052.service.interfaces.GroupService;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 class GroupServiceImplTest {
@@ -108,39 +104,5 @@ class GroupServiceImplTest {
 
         // then
         assertEquals(expected, actual);
-    }
-
-    @Test
-    void MethodGetStudentsByGroup_ShouldReturnStudentsFromDb() throws DAOException, ElementAlreadyExistException {
-        // given
-        var studentList = List.of(
-            Student.builder().groupId(1).firstName("SomeName1").lastName("SomeLastName1").build(),
-            Student.builder().groupId(1).firstName("SomeName2").lastName("SomeLastName2").build(),
-            Student.builder().groupId(1).firstName("SomeName3").lastName("SomeLastName3").build());
-
-        int groupId = 1;
-        var group = Group.builder().id(groupId).name("SomeGroup").build();
-        var groupDto = modelMapper.map(group, GroupDto.class);
-
-        var expected = studentList.stream()
-            .map(student1 -> modelMapper.map(student1, StudentDto.class))
-            .toList();
-        expected.forEach(student -> student.setGroup(groupDto));
-
-        // when
-        when(groupDao.getGroup(groupId)).thenReturn(Optional.of(group));
-        when(groupDao.getStudents(groupId)).thenReturn(studentList);
-
-        var actual = groupService.getStudentsByGroup(groupId);
-
-        // then
-        assertEquals(expected, actual);
-    }
-
-    @Test
-    void MethodGetStudentsByGroupShould_TrowException_WhenRepositoryExceptionIsThrown() throws DAOException {
-        doThrow(DAOException.class).when(groupDao).getStudents(1);
-
-        assertThrows(NoSuchElementException.class, () -> groupService.getStudentsByGroup(1), "Students weren`t received");
     }
 }

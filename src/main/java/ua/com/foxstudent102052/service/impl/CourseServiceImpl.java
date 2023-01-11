@@ -1,7 +1,6 @@
 package ua.com.foxstudent102052.service.impl;
 
 import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import ua.com.foxstudent102052.dao.exceptions.DAOException;
 import ua.com.foxstudent102052.dao.interfaces.CourseDao;
@@ -13,7 +12,6 @@ import ua.com.foxstudent102052.service.interfaces.CourseService;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-@Slf4j
 @AllArgsConstructor
 public class CourseServiceImpl implements CourseService {
     private final CourseDao courseDao;
