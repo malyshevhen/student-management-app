@@ -3,7 +3,7 @@ package ua.com.foxstudent102052.dao.impl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 import ua.com.foxstudent102052.dao.datasource.interfaces.CustomDataSource;
 import ua.com.foxstudent102052.dao.exceptions.DAOException;
 import ua.com.foxstudent102052.dao.interfaces.StudentDao;
@@ -14,8 +14,8 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
+@Repository
 @Slf4j
-@Component
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class StudentDaoImpl implements StudentDao {
     private final CustomDataSource dataSource;

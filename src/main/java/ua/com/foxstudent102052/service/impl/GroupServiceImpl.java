@@ -3,7 +3,7 @@ package ua.com.foxstudent102052.service.impl;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import ua.com.foxstudent102052.dao.exceptions.DAOException;
 import ua.com.foxstudent102052.dao.interfaces.GroupDao;
 import ua.com.foxstudent102052.model.dto.GroupDto;
@@ -14,7 +14,7 @@ import ua.com.foxstudent102052.service.interfaces.GroupService;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-@Component
+@Service
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class GroupServiceImpl implements GroupService {
     public static final String GROUP_DOES_NOT_EXIST = "This group does not exist in DB";

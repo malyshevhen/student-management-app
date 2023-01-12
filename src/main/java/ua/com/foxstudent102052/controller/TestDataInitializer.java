@@ -3,7 +3,7 @@ package ua.com.foxstudent102052.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Controller;
 import ua.com.foxstudent102052.dao.exceptions.DAOException;
 import ua.com.foxstudent102052.model.dto.CourseDto;
 import ua.com.foxstudent102052.model.dto.GroupDto;
@@ -19,7 +19,7 @@ import ua.com.foxstudent102052.utils.RandomModelCreator;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-@Component
+@Controller
 @Slf4j
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class TestDataInitializer {

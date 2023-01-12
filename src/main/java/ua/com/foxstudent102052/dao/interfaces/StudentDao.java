@@ -23,5 +23,5 @@ public interface StudentDao {
 
     List<Student> getStudents(String studentName, int courseId);
 
-    Optional<Student> getStudent(int i);
+    Optional<Student> getStudent(int id);
 }
