@@ -1,7 +1,9 @@
 package ua.com.foxstudent102052.controller;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import ua.com.foxstudent102052.dao.exceptions.DAOException;
 import ua.com.foxstudent102052.model.dto.CourseDto;
 import ua.com.foxstudent102052.model.dto.GroupDto;
@@ -17,8 +19,9 @@ import ua.com.foxstudent102052.utils.RandomModelCreator;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+@Component
 @Slf4j
-@AllArgsConstructor
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class TestDataInitializer {
     public static final String SCRIPTS_DDL_TABLE_CREATION = "scripts/ddl/Table_creation.sql";
     public static final String COURSES_CSV = "csv/courses.csv";
@@ -113,5 +116,4 @@ public class TestDataInitializer {
             }
         }
     }
-
 }

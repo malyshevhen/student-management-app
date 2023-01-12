@@ -1,6 +1,9 @@
 package ua.com.foxstudent102052.dao.impl;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import ua.com.foxstudent102052.dao.datasource.interfaces.CustomDataSource;
 import ua.com.foxstudent102052.dao.exceptions.DAOException;
 import ua.com.foxstudent102052.dao.interfaces.CourseDao;
@@ -11,13 +14,11 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
+@Component
 @Slf4j
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class CourseDaoImpl implements CourseDao {
     private final CustomDataSource dataSource;
-
-    public CourseDaoImpl(CustomDataSource customDataSource) {
-        this.dataSource = customDataSource;
-    }
 
     @Override
     public void addCourse(Course course) {

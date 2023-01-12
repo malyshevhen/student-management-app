@@ -1,6 +1,8 @@
 package ua.com.foxstudent102052.controller;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import ua.com.foxstudent102052.dao.exceptions.DAOException;
 import ua.com.foxstudent102052.model.dto.CourseDto;
 import ua.com.foxstudent102052.service.interfaces.CourseService;
@@ -9,7 +11,8 @@ import ua.com.foxstudent102052.service.interfaces.StudentService;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-@AllArgsConstructor
+@Component
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class CourseController {
     private final CourseService courseService;
     private final StudentService studentService;

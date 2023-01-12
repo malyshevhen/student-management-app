@@ -1,6 +1,8 @@
 package ua.com.foxstudent102052.client;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import ua.com.foxstudent102052.controller.CourseController;
 import ua.com.foxstudent102052.controller.GroupController;
 import ua.com.foxstudent102052.controller.StudentController;
@@ -17,7 +19,8 @@ import ua.com.foxstudent102052.utils.ConsoleUtils;
 import java.io.InputStreamReader;
 import java.util.NoSuchElementException;
 
-@RequiredArgsConstructor
+@Component
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class ConsoleUI {
     private static final String STUDENT_MENU = """
         +----------------------------------------------------------------+

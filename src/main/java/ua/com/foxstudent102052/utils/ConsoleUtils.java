@@ -1,11 +1,13 @@
 package ua.com.foxstudent102052.utils;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Reader;
 
+@Component
 @Slf4j
 public class ConsoleUtils {
     public String getInputString(String messageToPrint, Reader in) {

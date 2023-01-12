@@ -1,7 +1,9 @@
 package ua.com.foxstudent102052.service.impl;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import ua.com.foxstudent102052.dao.exceptions.DAOException;
 import ua.com.foxstudent102052.dao.interfaces.StudentDao;
 import ua.com.foxstudent102052.model.dto.StudentDto;
@@ -11,7 +13,8 @@ import ua.com.foxstudent102052.service.interfaces.StudentService;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-@AllArgsConstructor
+@Component
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class StudentServiceImpl implements StudentService {
     private final StudentDao studentDao;
     private final ModelMapper modelMapper = new ModelMapper();

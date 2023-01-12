@@ -2,6 +2,7 @@ package ua.com.foxstudent102052.dao.datasource.impl;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+import org.springframework.stereotype.Component;
 import ua.com.foxstudent102052.dao.datasource.interfaces.CustomDataSource;
 import ua.com.foxstudent102052.utils.FileUtils;
 
@@ -10,6 +11,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Properties;
 
+@Component
 public class PooledDataSource implements CustomDataSource {
     private static final String PROPERTIES_FILE_NAME = "datasource.properties";
     private static final Properties properties = new Properties();
