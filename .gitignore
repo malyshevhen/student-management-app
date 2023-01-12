@@ -43,3 +43,8 @@ local.properties
 *.mv.db
 db_test
 *.trace.db
+
+## mvn ##
+mvnw
+mvnw.cmd
+.mvn
