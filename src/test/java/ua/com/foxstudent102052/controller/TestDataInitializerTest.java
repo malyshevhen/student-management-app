@@ -1,8 +1,17 @@
 package ua.com.foxstudent102052.controller;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.Mockito.atLeast;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+
 import ua.com.foxstudent102052.model.dto.CourseDto;
 import ua.com.foxstudent102052.model.dto.GroupDto;
 import ua.com.foxstudent102052.model.dto.StudentDto;
@@ -12,24 +21,28 @@ import ua.com.foxstudent102052.service.interfaces.GroupService;
 import ua.com.foxstudent102052.service.interfaces.StudentService;
 import ua.com.foxstudent102052.utils.FileUtils;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
-
-@ExtendWith(org.mockito.junit.jupiter.MockitoExtension.class)
+@ExtendWith(MockitoExtension.class)
 class TestDataInitializerTest {
-    private static GroupService groupService;
-    private static StudentService studentService;
-    private static CourseService courseService;
+
+    @Mock
+    private GroupService groupService;
+
+    @Mock
+    private StudentService studentService;
+
+    @Mock
+    private CourseService courseService;
+
+    @Mock
+    private QueryPostService queryPostService;
+
     private static TestDataInitializer testDataInitializer;
 
     @BeforeEach
     void setUp() {
         var fileUtils = new FileUtils();
-        var queryPostService = mock(QueryPostService.class);
-        groupService = mock(GroupService.class);
-        studentService = mock(StudentService.class);
-        courseService = mock(CourseService.class);
-        testDataInitializer = new TestDataInitializer(studentService, courseService, groupService, queryPostService, fileUtils);
+        testDataInitializer = new TestDataInitializer(studentService, courseService, groupService, queryPostService,
+                fileUtils);
     }
 
     @Test

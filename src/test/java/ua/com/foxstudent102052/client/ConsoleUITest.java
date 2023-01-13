@@ -1,19 +1,25 @@
 package ua.com.foxstudent102052.client;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import java.io.InputStreamReader;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
+
 import ua.com.foxstudent102052.controller.CourseController;
 import ua.com.foxstudent102052.controller.GroupController;
 import ua.com.foxstudent102052.controller.StudentController;
 import ua.com.foxstudent102052.model.dto.StudentDto;
 import ua.com.foxstudent102052.table.TableFactory;
 import ua.com.foxstudent102052.utils.ConsoleUtils;
-
-import java.io.InputStreamReader;
-
-import static org.mockito.Mockito.*;
 
 class ConsoleUITest {
     private static GroupController groupController;
