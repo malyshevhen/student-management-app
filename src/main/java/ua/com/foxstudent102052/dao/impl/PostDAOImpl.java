@@ -1,6 +1,7 @@
 package ua.com.foxstudent102052.dao.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -13,7 +14,7 @@ public class PostDAOImpl implements ua.com.foxstudent102052.dao.interfaces.PostD
     private final JdbcTemplate jdbcTemplate;
 
     @Override
-    public void doPost(String query) {
+    public void doPost(String query) throws DataAccessException {
         jdbcTemplate.execute(query);
     }
 }

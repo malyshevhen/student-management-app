@@ -1,21 +1,27 @@
 package ua.com.foxstudent102052.dao.impl;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
-import java.util.List;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
-import ua.com.foxstudent102052.dao.exceptions.DAOException;
 import ua.com.foxstudent102052.dao.interfaces.StudentDao;
 import ua.com.foxstudent102052.model.entity.Student;
 
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 @JdbcTest
+@Testcontainers
+@ActiveProfiles("test-containers-flyway")
+@AutoConfigureTestDatabase(replace = Replace.NONE)
 @Sql({ "/scripts/ddl/Table_creation.sql", "/scripts/dml/testDB_Data.sql" })
 class StudentDaoImplTest {
 
@@ -29,7 +35,7 @@ class StudentDaoImplTest {
     }
 
     @Test
-    void MethodAddStudent_ShouldAddStudentToDb() throws DAOException {
+    void MethodAddStudent_ShouldAddStudentToDb() {
         // given
         var newStudent = Student.builder()
                 .id(1)
@@ -48,7 +54,7 @@ class StudentDaoImplTest {
     }
 
     @Test
-    void MethodAddStudentToCourse_ShouldAddStudentToNewCourse() throws DAOException {
+    void MethodAddStudentToCourse_ShouldAddStudentToNewCourse() {
         // given
         var expected = Student.builder()
                 .id(1)
@@ -66,7 +72,7 @@ class StudentDaoImplTest {
     }
 
     @Test
-    void MethodGetAllStudents_ShouldReturnAllStudents() throws DAOException {
+    void MethodGetAllStudents_ShouldReturnAllStudents() {
         // when
         var actual = studentDao.getAll().size();
 
@@ -75,7 +81,7 @@ class StudentDaoImplTest {
     }
 
     @Test
-    void MethodGetStudentsByCourseId_ShouldReturnStudentByCourseId() throws DAOException {
+    void MethodGetStudentsByCourseId_ShouldReturnStudentByCourseId() {
         var expected = List.of(
                 Student.builder()
                         .id(1)
@@ -108,7 +114,7 @@ class StudentDaoImplTest {
     }
 
     @Test
-    void MethodGetStudentsByGroup_ShouldReturnStudentByGroupId() throws DAOException {
+    void MethodGetStudentsByGroup_ShouldReturnStudentByGroupId() {
         var expected = List.of(
                 Student.builder()
                         .id(1)
@@ -153,7 +159,7 @@ class StudentDaoImplTest {
     }
 
     @Test
-    void MethodGetStudentsByNameAndCourse_ShouldReturnListOfStudents_ByStudentNameAndCourseId() throws DAOException {
+    void MethodGetStudentsByNameAndCourse_ShouldReturnListOfStudents_ByStudentNameAndCourseId() {
         var expected = List.of(
                 Student.builder()
                         .id(5)
@@ -174,7 +180,7 @@ class StudentDaoImplTest {
     }
 
     @Test
-    void MethodRemoveStudent_ShouldRemoveStudent_IfItInDataBase() throws DAOException {
+    void MethodRemoveStudent_ShouldRemoveStudent_IfItInDataBase() {
         // when
         studentDao.removeStudent(1);
 
@@ -186,7 +192,7 @@ class StudentDaoImplTest {
     }
 
     @Test
-    void MethodGetStudentById_ShouldReturnStudentFromDb() throws DAOException {
+    void MethodGetStudentById_ShouldReturnStudentFromDb() {
         // given
         var expected = Student.builder()
                 .id(1)
@@ -203,7 +209,7 @@ class StudentDaoImplTest {
     }
 
     @Test
-    void MethodRemoveStudentFromCourse_ShouldRemoveStudentCourseRelation_IfExist() throws DAOException {
+    void MethodRemoveStudentFromCourse_ShouldRemoveStudentCourseRelation_IfExist() {
         // given
         studentDao.removeStudentFromCourse(1, 1);
         var expected = List.of();

@@ -1,16 +1,16 @@
 package ua.com.foxstudent102052.dao.impl;
 
-import java.util.List;
-import java.util.Optional;
-
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
-
-import lombok.RequiredArgsConstructor;
 import ua.com.foxstudent102052.dao.interfaces.CourseDao;
 import ua.com.foxstudent102052.dao.mapper.CourseRowMapper;
 import ua.com.foxstudent102052.model.entity.Course;
+
+import java.util.List;
+import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
@@ -19,7 +19,7 @@ public class CourseDaoImpl implements CourseDao {
     private final JdbcTemplate jdbcTemplate;
 
     @Override
-    public void addCourse(Course course) {
+    public void addCourse(Course course) throws DataAccessException {
         var query = """
                 INSERT
                 INTO courses (course_name, course_description)
@@ -29,7 +29,7 @@ public class CourseDaoImpl implements CourseDao {
     }
 
     @Override
-    public Optional<Course> getCourseById(int courseId) {
+    public Optional<Course> getCourseById(int courseId) throws DataAccessException {
         var query = """
                 SELECT course_id, course_name, course_description
                 FROM courses
@@ -41,7 +41,7 @@ public class CourseDaoImpl implements CourseDao {
     }
 
     @Override
-    public Optional<Course> getCourseByName(String courseName) {
+    public Optional<Course> getCourseByName(String courseName) throws DataAccessException {
         var query = """
                 SELECT course_id, course_name, course_description
                 FROM courses
@@ -53,7 +53,7 @@ public class CourseDaoImpl implements CourseDao {
     }
 
     @Override
-    public List<Course> getAll() {
+    public List<Course> getAll() throws DataAccessException {
         var query = """
                 SELECT course_id, course_name, course_description
                 FROM courses;""";
@@ -62,7 +62,7 @@ public class CourseDaoImpl implements CourseDao {
     }
 
     @Override
-    public List<Course> getCoursesByStudentId(int studentId) {
+    public List<Course> getCoursesByStudentId(int studentId) throws DataAccessException {
         var query = """
                 SELECT course_id, course_name, course_description
                 FROM courses
