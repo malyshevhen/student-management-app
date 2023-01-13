@@ -15,13 +15,13 @@ public interface StudentDao {
 
     void removeStudentFromCourse(int studentId, int groupId);
 
-    List<Student> getStudents();
+    List<Student> getAll();
 
     List<Student> getStudentsByCourse(int courseId);
 
     List<Student> getStudentsByGroup(int groupId);
 
-    List<Student> getStudents(String studentName, int courseId);
+    List<Student> getStudentsByNameAndCourse(String studentName, int courseId);
 
     Optional<Student> getStudent(int id);
 }

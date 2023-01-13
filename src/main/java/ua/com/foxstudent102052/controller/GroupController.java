@@ -19,7 +19,7 @@ public class GroupController {
     private final StudentService studentService;
 
     public List<GroupDto> getAllGroups() throws NoSuchElementException, ElementAlreadyExistException {
-        return groupService.getGroups().stream()
+        return groupService.getAll().stream()
             .map(this::setStudentsToGroups)
             .toList();
     }

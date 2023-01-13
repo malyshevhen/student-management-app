@@ -36,7 +36,7 @@ public class StudentController {
     }
 
     public List<StudentDto> getAllStudents() throws NoSuchElementException, DAOException {
-        return studentService.getStudents()
+        return studentService.getAll()
             .stream()
             .map(this::setStudentsGroup)
             .map(this::setStudentsCourseList)
@@ -44,7 +44,7 @@ public class StudentController {
     }
 
     public List<StudentDto> getStudents(String studentName, Integer courseId) throws NoSuchElementException, DAOException {
-        return studentService.getStudents(studentName, courseId)
+        return studentService.getStudentsByNameAndCourse(studentName, courseId)
             .stream()
             .map(this::setStudentsGroup)
             .map(this::setStudentsCourseList)
@@ -54,7 +54,7 @@ public class StudentController {
     private StudentDto setStudentsCourseList(StudentDto studentDto) {
         try {
             int studentId = studentDto.getId();
-            var courseDtoList = courseService.getCourses(studentId);
+            var courseDtoList = courseService.getCoursesByStudent(studentId);
             studentDto.setCoursesList(courseDtoList);
 
             return studentDto;
@@ -66,7 +66,7 @@ public class StudentController {
     private StudentDto setStudentsGroup(StudentDto studentDto) {
         try {
             int groupId = studentDto.getGroup().getId();
-            var studentsGroup = groupService.getGroup(groupId);
+            var studentsGroup = groupService.getGroupById(groupId);
             studentDto.setGroup(studentsGroup);
 
             return studentDto;
