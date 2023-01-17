@@ -21,8 +21,7 @@ public class GroupDaoImpl implements GroupDao {
 
     @Override
     public void addGroup(Group group) {
-        var query =
-            """
+        var query ="""
                 INSERT
                 INTO groups (group_name)
                     values (?);""";
@@ -41,8 +40,7 @@ public class GroupDaoImpl implements GroupDao {
 
     @Override
     public Optional<Group> getGroup(int groupId) {
-        var query =
-            """
+        var query ="""
                 SELECT group_id, group_name
                 FROM groups
                 WHERE group_id = ?;""";
@@ -69,8 +67,7 @@ public class GroupDaoImpl implements GroupDao {
 
     @Override
     public Optional<Group> getGroup(String groupName) {
-        var query =
-            """
+        var query ="""
                 SELECT group_id, group_name
                 FROM groups
                 WHERE group_name = ?;""";
@@ -115,8 +112,7 @@ public class GroupDaoImpl implements GroupDao {
 
     @Override
     public List<Group> getGroupsLessThen(int numberOfStudents) {
-        var query =
-            """
+        var query ="""
                 SELECT group_id, group_name
                 FROM groups
                 WHERE group_id
