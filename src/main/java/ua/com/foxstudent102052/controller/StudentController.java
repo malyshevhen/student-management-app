@@ -23,7 +23,7 @@ public class StudentController {
         studentService.addStudent(studentDto);
     }
 
-    public void removeStudent(int studentId) throws NoSuchElementException, DAOException{
+    public void removeStudent(int studentId) throws NoSuchElementException, DAOException {
         studentService.removeStudent(studentId);
     }
 

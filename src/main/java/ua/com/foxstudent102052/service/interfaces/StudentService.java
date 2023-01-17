@@ -16,6 +16,7 @@ public interface StudentService {
     List<StudentDto> getAll();
 
     List<StudentDto> getStudentsByCourse(int courseId);
+
     List<StudentDto> getStudentsByGroup(int groupId);
 
     List<StudentDto> getStudentsByNameAndCourse(String studentName, Integer courseId);

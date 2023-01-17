@@ -8,7 +8,7 @@ import java.io.StringReader;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class ConsoleUtilsTest {
-    private ConsoleUtils consoleUtils = new ConsoleUtils();
+    private final ConsoleUtils consoleUtils = new ConsoleUtils();
 
     @Test
     void getInputString() {
@@ -23,7 +23,7 @@ class ConsoleUtilsTest {
     void getInputInt() {
         int expected = 1;
         var in = new BufferedReader(new StringReader(String.valueOf(expected)));
-        int actual = consoleUtils.getInputInt("Some message",in);
+        int actual = consoleUtils.getInputInt("Some message", in);
 
         assertEquals(expected, actual);
     }

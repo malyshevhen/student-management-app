@@ -20,9 +20,9 @@ public class StudentDaoImpl implements StudentDao {
     @Override
     public void addStudent(Student student) {
         var query = """
-                INSERT INTO students (
-                    group_id, first_name, last_name)
-                VALUES (?, ?, ?);""";
+            INSERT INTO students (
+                group_id, first_name, last_name)
+            VALUES (?, ?, ?);""";
 
         jdbcTemplate.update(query, student.getGroupId(), student.getFirstName(), student.getLastName());
     }
@@ -30,11 +30,11 @@ public class StudentDaoImpl implements StudentDao {
     @Override
     public void removeStudent(int studentId) {
         var query = """
-                DELETE FROM students_courses
-                WHERE student_id = ?;
-                DELETE
-                FROM students
-                WHERE student_id = ?;""";
+            DELETE FROM students_courses
+            WHERE student_id = ?;
+            DELETE
+            FROM students
+            WHERE student_id = ?;""";
 
         jdbcTemplate.update(query, studentId, studentId);
     }
@@ -42,10 +42,10 @@ public class StudentDaoImpl implements StudentDao {
     @Override
     public void addStudentToCourse(int studentId, int courseId) {
         var query = """
-                INSERT INTO students_courses (
-                    student_id,
-                    course_id)
-                VALUES (?, ?);""";
+            INSERT INTO students_courses (
+                student_id,
+                course_id)
+            VALUES (?, ?);""";
 
         jdbcTemplate.update(query, studentId, courseId);
     }
@@ -53,10 +53,10 @@ public class StudentDaoImpl implements StudentDao {
     @Override
     public void removeStudentFromCourse(int studentId, int courseId) {
         var query = """
-                DELETE
-                FROM students_courses
-                WHERE student_id = ?
-                AND course_id = ?;""";
+            DELETE
+            FROM students_courses
+            WHERE student_id = ?
+            AND course_id = ?;""";
 
         jdbcTemplate.update(query, studentId, courseId);
     }
@@ -64,20 +64,20 @@ public class StudentDaoImpl implements StudentDao {
     @Override
     public Optional<Student> getStudent(int id) {
         var query = """
-                SELECT student_id, group_id, first_name, last_name
-                FROM students
-                WHERE student_id = ?;""";
+            SELECT student_id, group_id, first_name, last_name
+            FROM students
+            WHERE student_id = ?;""";
 
         return jdbcTemplate.query(query, new StudentRowMapper(), id)
-                .stream()
-                .findFirst();
+            .stream()
+            .findFirst();
     }
 
     @Override
     public List<Student> getAll() {
         var query = """
-                SELECT student_id, group_id, first_name, last_name
-                FROM students;""";
+            SELECT student_id, group_id, first_name, last_name
+            FROM students;""";
 
         return jdbcTemplate.query(query, new StudentRowMapper());
     }
@@ -85,12 +85,12 @@ public class StudentDaoImpl implements StudentDao {
     @Override
     public List<Student> getStudentsByCourse(int courseId) {
         var query = """
-                SELECT student_id, group_id, first_name, last_name
-                FROM students
-                WHERE student_id IN (
-                    SELECT student_id
-                    FROM students_courses
-                    WHERE course_id = ?);""";
+            SELECT student_id, group_id, first_name, last_name
+            FROM students
+            WHERE student_id IN (
+                SELECT student_id
+                FROM students_courses
+                WHERE course_id = ?);""";
 
         return jdbcTemplate.query(query, new StudentRowMapper(), courseId);
     }
@@ -98,9 +98,9 @@ public class StudentDaoImpl implements StudentDao {
     @Override
     public List<Student> getStudentsByGroup(int groupId) {
         var query = """
-                SELECT student_id, group_id, first_name, last_name
-                FROM students
-                WHERE group_id = ? ;""";
+            SELECT student_id, group_id, first_name, last_name
+            FROM students
+            WHERE group_id = ? ;""";
 
         return jdbcTemplate.query(query, new StudentRowMapper(), groupId);
     }
@@ -108,13 +108,13 @@ public class StudentDaoImpl implements StudentDao {
     @Override
     public List<Student> getStudentsByNameAndCourse(String studentName, int courseId) {
         var query = """
-                SELECT student_id, group_id, first_name, last_name
-                FROM students
-                WHERE student_id IN (
-                    SELECT student_id
-                    FROM students_courses
-                    WHERE course_id = ?)
-                AND first_name = ?;""";
+            SELECT student_id, group_id, first_name, last_name
+            FROM students
+            WHERE student_id IN (
+                SELECT student_id
+                FROM students_courses
+                WHERE course_id = ?)
+            AND first_name = ?;""";
 
         return jdbcTemplate.query(query, new StudentRowMapper(), courseId, studentName);
     }
