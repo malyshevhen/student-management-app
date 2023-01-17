@@ -1,18 +1,17 @@
 package ua.com.foxstudent102052.service.impl;
 
-import java.util.List;
-import java.util.NoSuchElementException;
-
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
-
-import lombok.RequiredArgsConstructor;
 import ua.com.foxstudent102052.dao.interfaces.StudentDao;
 import ua.com.foxstudent102052.model.dto.StudentDto;
 import ua.com.foxstudent102052.model.entity.Student;
 import ua.com.foxstudent102052.service.interfaces.StudentService;
+
+import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
@@ -47,8 +46,8 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public void removeStudentFromCourse(int studentId, int courseId) throws DataAccessException {
         boolean studentPresentInCourse = studentDao.getStudentsByCourse(courseId)
-                .stream()
-                .anyMatch(student -> student.getId() == studentId);
+            .stream()
+            .anyMatch(student -> student.getId() == studentId);
 
         if (studentPresentInCourse) {
             studentDao.removeStudentFromCourse(studentId, courseId);
@@ -60,9 +59,9 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public List<StudentDto> getAll() throws DataAccessException {
         var studentDtoList = studentDao.getAll()
-                .stream()
-                .map(student -> modelMapper.map(student, StudentDto.class))
-                .toList();
+            .stream()
+            .map(student -> modelMapper.map(student, StudentDto.class))
+            .toList();
 
         if (studentDtoList.isEmpty()) {
             throw new NoSuchElementException("There are no students in DB");
@@ -74,9 +73,9 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public List<StudentDto> getStudentsByCourse(int courseId) throws DataAccessException {
         var studentDtoList = studentDao.getStudentsByCourse(courseId)
-                .stream()
-                .map(student -> modelMapper.map(student, StudentDto.class))
-                .toList();
+            .stream()
+            .map(student -> modelMapper.map(student, StudentDto.class))
+            .toList();
 
         if (studentDtoList.isEmpty()) {
             throw new NoSuchElementException("There are no students on course");
@@ -88,9 +87,9 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public List<StudentDto> getStudentsByGroup(int groupId) throws DataAccessException {
         var studentDtoList = studentDao.getStudentsByGroup(groupId)
-                .stream()
-                .map(student -> modelMapper.map(student, StudentDto.class))
-                .toList();
+            .stream()
+            .map(student -> modelMapper.map(student, StudentDto.class))
+            .toList();
 
         if (studentDtoList.isEmpty()) {
             throw new NoSuchElementException("There are no students on course");
@@ -101,16 +100,16 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public List<StudentDto> getStudentsByNameAndCourse(String studentName, Integer courseId)
-            throws DataAccessException {
+        throws DataAccessException {
         var studentDtoList = studentDao.getStudentsByNameAndCourse(studentName, courseId)
-                .stream()
-                .map(student -> modelMapper.map(student, StudentDto.class))
-                .toList();
+            .stream()
+            .map(student -> modelMapper.map(student, StudentDto.class))
+            .toList();
 
         if (studentDtoList.isEmpty()) {
             throw new NoSuchElementException(
-                    String.format("There are no students with name '%s' present on '%d' course", studentName,
-                            courseId));
+                String.format("There are no students with name '%s' present on '%d' course", studentName,
+                    courseId));
         } else {
             return studentDtoList;
         }

@@ -1,27 +1,24 @@
 package ua.com.foxstudent102052.service.impl;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
-
 import ua.com.foxstudent102052.dao.interfaces.StudentDao;
 import ua.com.foxstudent102052.model.dto.StudentDto;
 import ua.com.foxstudent102052.model.entity.Student;
 import ua.com.foxstudent102052.service.interfaces.StudentService;
+
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class StudentServiceImplTest {
@@ -41,9 +38,9 @@ class StudentServiceImplTest {
     void MethodAddStudent_ShouldPassNewStudentToRepository() {
         // given
         var studentDto = StudentDto.builder()
-                .firstName("John")
-                .lastName("Doe")
-                .build();
+            .firstName("John")
+            .lastName("Doe")
+            .build();
         var student = modelMapper.map(studentDto, Student.class);
 
         // when
@@ -78,8 +75,8 @@ class StudentServiceImplTest {
 
         // then
         assertThrows(NoSuchElementException.class,
-                () -> studentService.removeStudent(id),
-                "Student wasn`t removed");
+            () -> studentService.removeStudent(id),
+            "Student wasn`t removed");
     }
 
     @Test
@@ -115,7 +112,7 @@ class StudentServiceImplTest {
 
         // then
         assertThrows(NoSuchElementException.class, () -> studentService.removeStudent(studentId),
-                "Student wasn`t removed");
+            "Student wasn`t removed");
     }
 
     @Test

@@ -33,30 +33,30 @@ class RandomModelCreatorTest {
 
         coursesNamesAndDescriptions = fileUtils.readCsvFileFromResources(COURSES_CSV);
         groupNames = fileUtils.readCsvFileFromResources(GROUPS_CSV).stream()
-                .map(s -> s[0])
-                .toList();
+            .map(s -> s[0])
+            .toList();
         studentNames = fileUtils.readCsvFileFromResources(STUDENT_NAMES_CSV).stream()
-                .map(s -> s[0])
-                .toList();
+            .map(s -> s[0])
+            .toList();
         studentSurnames = fileUtils.readCsvFileFromResources(STUDENT_SURNAMES_CSV).stream()
-                .map(s -> s[0])
-                .toList();
+            .map(s -> s[0])
+            .toList();
         groups = List.of(
-                GroupDto.builder().id(1).name("Group1").build(),
-                GroupDto.builder().id(2).name("Group2").build(),
-                GroupDto.builder().id(3).name("Group3").build(),
-                GroupDto.builder().id(4).name("Group4").build());
+            GroupDto.builder().id(1).name("Group1").build(),
+            GroupDto.builder().id(2).name("Group2").build(),
+            GroupDto.builder().id(3).name("Group3").build(),
+            GroupDto.builder().id(4).name("Group4").build());
         students = List.of(
-                StudentDto.builder().id(0).build(),
-                StudentDto.builder().id(1).build(),
-                StudentDto.builder().id(2).build(),
-                StudentDto.builder().id(3).build(),
-                StudentDto.builder().id(4).build(),
-                StudentDto.builder().id(5).build());
+            StudentDto.builder().id(0).build(),
+            StudentDto.builder().id(1).build(),
+            StudentDto.builder().id(2).build(),
+            StudentDto.builder().id(3).build(),
+            StudentDto.builder().id(4).build(),
+            StudentDto.builder().id(5).build());
         courses = List.of(
-                CourseDto.builder().id(1).build(),
-                CourseDto.builder().id(2).build(),
-                CourseDto.builder().id(3).build());
+            CourseDto.builder().id(1).build(),
+            CourseDto.builder().id(2).build(),
+            CourseDto.builder().id(3).build());
     }
 
     @Test
@@ -66,8 +66,8 @@ class RandomModelCreatorTest {
 
         // when
         var actual = groups.stream()
-                .filter(group -> group.getName() == null)
-                .toList();
+            .filter(group -> group.getName() == null)
+            .toList();
 
         // then
         assertTrue(actual.isEmpty());
@@ -80,8 +80,8 @@ class RandomModelCreatorTest {
 
         // when
         var actual = courses.stream()
-                .filter(course -> course.getName() == null || course.getDescription() == null)
-                .toList();
+            .filter(course -> course.getName() == null || course.getDescription() == null)
+            .toList();
 
         // then
         assertTrue(actual.isEmpty());
@@ -94,9 +94,9 @@ class RandomModelCreatorTest {
 
         // when
         var actual = students.stream()
-                .filter(student -> student.getFirstName() == null || student.getLastName() == null
-                        || student.getGroup() == null)
-                .toList();
+            .filter(student -> student.getFirstName() == null || student.getLastName() == null
+                || student.getGroup() == null)
+            .toList();
 
         // then
         assertTrue(actual.isEmpty());
@@ -109,8 +109,8 @@ class RandomModelCreatorTest {
 
         // when
         var actual = students.stream()
-                .mapToInt(student -> student.getGroup().getId())
-                .anyMatch(id -> id < 0 || id > 10);
+            .mapToInt(student -> student.getGroup().getId())
+            .anyMatch(id -> id < 0 || id > 10);
 
         // then
         assertFalse(actual);
@@ -136,8 +136,8 @@ class RandomModelCreatorTest {
         // when
         var actual = randomModelCreator.getStudentsCoursesRelations(students, courses, coursesCount);
         boolean anyMatch = actual.values().stream()
-                .mapToInt(Set::size)
-                .anyMatch(size -> size <= 3 || size >= 1);
+            .mapToInt(Set::size)
+            .anyMatch(size -> size <= 3 || size >= 1);
 
         // then
         assertTrue(anyMatch);

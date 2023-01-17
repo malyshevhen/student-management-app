@@ -22,9 +22,9 @@ public abstract class AbstractTestContainerIT {
 
     static {
         postgreSQLContainer = new PostgreSQLContainer<>(POSTGRES_VERSION)
-                .withDatabaseName("tests-db")
-                .withUsername("sa")
-                .withPassword("sa");
+            .withDatabaseName("tests-db")
+            .withUsername("sa")
+            .withPassword("sa");
     }
 
     public static void start() {

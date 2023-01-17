@@ -1,16 +1,15 @@
 package ua.com.foxstudent102052.dao.impl;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
-
 import ua.com.foxstudent102052.dao.impl.config.AbstractTestContainerIT;
 import ua.com.foxstudent102052.dao.interfaces.GroupDao;
 import ua.com.foxstudent102052.model.entity.Group;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class GroupDaoImplTest extends AbstractTestContainerIT {
 

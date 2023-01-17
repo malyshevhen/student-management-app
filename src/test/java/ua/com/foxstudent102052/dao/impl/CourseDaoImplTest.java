@@ -1,18 +1,17 @@
 package ua.com.foxstudent102052.dao.impl;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
-import java.util.List;
-
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
-
 import ua.com.foxstudent102052.dao.impl.config.AbstractTestContainerIT;
 import ua.com.foxstudent102052.dao.interfaces.CourseDao;
 import ua.com.foxstudent102052.model.entity.Course;
+
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class CourseDaoImplTest extends AbstractTestContainerIT {
 
@@ -37,9 +36,9 @@ class CourseDaoImplTest extends AbstractTestContainerIT {
     void MethodAddCourse_ShouldAddCourseToDb() {
         // given
         var course = Course.builder()
-                .name("Course 4")
-                .description("Some description for course 4")
-                .build();
+            .name("Course 4")
+            .description("Some description for course 4")
+            .build();
 
         // when
         courseDao.addCourse(course);
@@ -63,10 +62,10 @@ class CourseDaoImplTest extends AbstractTestContainerIT {
     void MethodGetCourse_ById_ShouldReturnCourseFromDb() {
         // given
         var expected = Course.builder()
-                .id(1)
-                .name("Course 1")
-                .description("Some description for course 1")
-                .build();
+            .id(1)
+            .name("Course 1")
+            .description("Some description for course 1")
+            .build();
 
         // when
         var actual = courseDao.getCourseById(1).get();
@@ -79,10 +78,10 @@ class CourseDaoImplTest extends AbstractTestContainerIT {
     void MethodGetCourse_ByName_ShouldReturnCourseFromDb() {
         // given
         var expected = Course.builder()
-                .id(1)
-                .name("Course 1")
-                .description("Some description for course 1")
-                .build();
+            .id(1)
+            .name("Course 1")
+            .description("Some description for course 1")
+            .build();
 
         // when
         var actual = courseDao.getCourseByName(expected.getName()).get();
@@ -95,16 +94,16 @@ class CourseDaoImplTest extends AbstractTestContainerIT {
     void MethodGetCourses_ByStudentId_ShouldReturnCourseListFromDb() {
         // given
         var expected = List.of(
-                Course.builder()
-                        .id(1)
-                        .name("Course 1")
-                        .description("Some description for course 1")
-                        .build(),
-                Course.builder()
-                        .id(2)
-                        .name("Course 2")
-                        .description("Some description for course 2")
-                        .build());
+            Course.builder()
+                .id(1)
+                .name("Course 1")
+                .description("Some description for course 1")
+                .build(),
+            Course.builder()
+                .id(2)
+                .name("Course 2")
+                .description("Some description for course 2")
+                .build());
 
         // when
         var actual = courseDao.getCoursesByStudentId(2);

@@ -21,9 +21,9 @@ public class GroupDaoImpl implements GroupDao {
     @Override
     public void addGroup(Group group) throws DataAccessException {
         var query = """
-                INSERT
-                INTO groups (group_name)
-                    values (?);""";
+            INSERT
+            INTO groups (group_name)
+                values (?);""";
 
         jdbcTemplate.update(query, group.getName());
     }
@@ -31,32 +31,32 @@ public class GroupDaoImpl implements GroupDao {
     @Override
     public Optional<Group> getGroupById(int groupId) throws DataAccessException {
         var query = """
-                SELECT group_id, group_name
-                FROM groups
-                WHERE group_id = ?;""";
+            SELECT group_id, group_name
+            FROM groups
+            WHERE group_id = ?;""";
 
         return jdbcTemplate.query(query, new GroupRowMapper(), groupId)
-                .stream()
-                .findFirst();
+            .stream()
+            .findFirst();
     }
 
     @Override
     public Optional<Group> getGroupByName(String groupName) throws DataAccessException {
         var query = """
-                SELECT group_id, group_name
-                FROM groups
-                WHERE group_name = ?;""";
+            SELECT group_id, group_name
+            FROM groups
+            WHERE group_name = ?;""";
 
         return jdbcTemplate.query(query, new GroupRowMapper(), groupName)
-                .stream()
-                .findFirst();
+            .stream()
+            .findFirst();
     }
 
     @Override
     public List<Group> getAll() throws DataAccessException {
         var query = """
-                SELECT group_id, group_name
-                FROM groups;""";
+            SELECT group_id, group_name
+            FROM groups;""";
 
         return jdbcTemplate.query(query, new GroupRowMapper());
     }
@@ -64,21 +64,21 @@ public class GroupDaoImpl implements GroupDao {
     @Override
     public List<Group> getGroupsLessThen(int numberOfStudents) throws DataAccessException {
         var query = """
-                SELECT group_id, group_name
-                FROM groups
+            SELECT group_id, group_name
+            FROM groups
+            WHERE group_id
+            NOT IN(
+                SELECT group_id
+                FROM students
                 WHERE group_id
-                NOT IN(
-                    SELECT group_id
-                    FROM students
-                    WHERE group_id
-                    IS NOT NULL)
-                OR group_id IN(
-                    SELECT group_id
-                    FROM students
-                    WHERE group_id
-                    IS NOT NULL
-                    GROUP BY group_id
-                    HAVING COUNT(group_id) <= ?);""";
+                IS NOT NULL)
+            OR group_id IN(
+                SELECT group_id
+                FROM students
+                WHERE group_id
+                IS NOT NULL
+                GROUP BY group_id
+                HAVING COUNT(group_id) <= ?);""";
 
         return jdbcTemplate.query(query, new GroupRowMapper(), numberOfStudents);
     }

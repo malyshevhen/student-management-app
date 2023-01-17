@@ -1,16 +1,15 @@
 package ua.com.foxstudent102052.controller;
 
-import java.util.List;
-import java.util.NoSuchElementException;
-
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Controller;
-
-import lombok.RequiredArgsConstructor;
 import ua.com.foxstudent102052.model.dto.CourseDto;
 import ua.com.foxstudent102052.service.interfaces.CourseService;
 import ua.com.foxstudent102052.service.interfaces.StudentService;
+
+import java.util.List;
+import java.util.NoSuchElementException;
 
 @Controller
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
@@ -20,8 +19,8 @@ public class CourseController {
 
     public List<CourseDto> getAllCourses() throws DataAccessException {
         return courseService.getAll().stream()
-                .map(this::setStudentsToCourse)
-                .toList();
+            .map(this::setStudentsToCourse)
+            .toList();
     }
 
     private CourseDto setStudentsToCourse(CourseDto courseDto) {
