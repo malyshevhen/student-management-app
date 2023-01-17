@@ -1,10 +1,16 @@
 package ua.com.foxstudent102052.utils;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
+import java.util.Set;
+
 import ua.com.foxstudent102052.model.dto.CourseDto;
 import ua.com.foxstudent102052.model.dto.GroupDto;
 import ua.com.foxstudent102052.model.dto.StudentDto;
-
-import java.util.*;
 
 public class RandomModelCreator {
     private static final Random random = new Random();
@@ -18,8 +24,8 @@ public class RandomModelCreator {
 
         for (String groupName : groupNames) {
             var group = GroupDto.builder()
-                .name(groupName)
-                .build();
+                    .name(groupName)
+                    .build();
             groupList.add(group);
         }
 
@@ -31,24 +37,25 @@ public class RandomModelCreator {
 
         for (var courseString : courses) {
             var courseDto = CourseDto.builder()
-                .name(courseString[0])
-                .description(courseString[1])
-                .build();
+                    .name(courseString[0])
+                    .description(courseString[1])
+                    .build();
             courseDtoArrayList.add(courseDto);
         }
 
         return courseDtoArrayList;
     }
 
-    public static List<StudentDto> getStudents(List<String> names, List<String> surnames, int groupsCount, int studentsCount) {
+    public static List<StudentDto> getStudents(List<String> names, List<String> surnames, int groupsCount,
+            int studentsCount) {
         var studentDtoList = new ArrayList<StudentDto>();
 
         for (int i = 0; i < studentsCount; i++) {
             studentDtoList.add(StudentDto.builder()
-                .group(new GroupDto(random.nextInt(groupsCount) + 1, " ", List.of()))
-                .firstName(names.get(random.nextInt(names.size())))
-                .lastName(surnames.get(random.nextInt(surnames.size())))
-                .build());
+                    .group(new GroupDto(random.nextInt(groupsCount) + 1, " ", List.of()))
+                    .firstName(names.get(random.nextInt(names.size())))
+                    .lastName(surnames.get(random.nextInt(surnames.size())))
+                    .build());
         }
 
         return studentDtoList;

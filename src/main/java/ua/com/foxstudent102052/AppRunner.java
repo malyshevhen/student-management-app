@@ -1,10 +1,11 @@
 package ua.com.foxstudent102052;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
+
+import lombok.RequiredArgsConstructor;
 import ua.com.foxstudent102052.client.ConsoleUI;
 import ua.com.foxstudent102052.controller.TestDataInitializer;
 

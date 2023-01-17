@@ -1,19 +1,20 @@
 package ua.com.foxstudent102052.dao.impl;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.jdbc.Sql;
+
 import ua.com.foxstudent102052.dao.exceptions.DAOException;
 import ua.com.foxstudent102052.dao.interfaces.GroupDao;
 import ua.com.foxstudent102052.model.entity.Group;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
 @JdbcTest
-@Sql({"/scripts/ddl/Table_creation.sql", "/scripts/dml/testDB_Data.sql"})
+@Sql({ "/scripts/ddl/Table_creation.sql", "/scripts/dml/testDB_Data.sql" })
 class GroupDaoImplTest {
 
     @Autowired

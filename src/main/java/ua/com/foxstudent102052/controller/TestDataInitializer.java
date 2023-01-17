@@ -1,9 +1,13 @@
 package ua.com.foxstudent102052.controller;
 
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import java.util.List;
+import java.util.NoSuchElementException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import ua.com.foxstudent102052.dao.exceptions.DAOException;
 import ua.com.foxstudent102052.model.dto.CourseDto;
 import ua.com.foxstudent102052.model.dto.GroupDto;
@@ -15,9 +19,6 @@ import ua.com.foxstudent102052.service.interfaces.GroupService;
 import ua.com.foxstudent102052.service.interfaces.StudentService;
 import ua.com.foxstudent102052.utils.FileUtils;
 import ua.com.foxstudent102052.utils.RandomModelCreator;
-
-import java.util.List;
-import java.util.NoSuchElementException;
 
 @Controller
 @Slf4j
@@ -40,14 +41,14 @@ public class TestDataInitializer {
     public void initTestDada() {
         var coursesNamesAndDescriptions = fileUtils.readCsvFileFromResources(COURSES_CSV);
         var groupNames = fileUtils.readCsvFileFromResources(GROUPS_CSV).stream()
-            .map(s -> s[0])
-            .toList();
+                .map(s -> s[0])
+                .toList();
         var studentNames = fileUtils.readCsvFileFromResources(STUDENT_NAMES_CSV).stream()
-            .map(s -> s[0])
-            .toList();
+                .map(s -> s[0])
+                .toList();
         var studentSurnames = fileUtils.readCsvFileFromResources(STUDENT_SURNAMES_CSV).stream()
-            .map(s -> s[0])
-            .toList();
+                .map(s -> s[0])
+                .toList();
 
         var courses = RandomModelCreator.getCourses(coursesNamesAndDescriptions);
         var groups = RandomModelCreator.getGroups(groupNames);

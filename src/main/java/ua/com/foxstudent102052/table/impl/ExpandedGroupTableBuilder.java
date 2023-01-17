@@ -5,9 +5,9 @@ import ua.com.foxstudent102052.model.dto.GroupDto;
 public class ExpandedGroupTableBuilder extends DtoTableBuilderImpl<GroupDto> {
     private static final String ROW = "|%-5s|%-10s|%-50s|";
     private static final String HEADER = """
-        +=====+==========+==================================================+
-        |ID   |NAME      |STUDENTS                                          |
-        +=====+==========+==================================================+""";
+            +=====+==========+==================================================+
+            |ID   |NAME      |STUDENTS                                          |
+            +=====+==========+==================================================+""";
     private static final String FOOTER = "+=====+==========+==================================================+";
     private static final String SEMI_FOOTER = "+-----+----------+--------------------------------------------------+";
 
@@ -20,23 +20,23 @@ public class ExpandedGroupTableBuilder extends DtoTableBuilderImpl<GroupDto> {
 
         if (students.isEmpty()) {
             return infoBlockBuilder.append(String.format(ROW, id, name, "No students"))
-                .append("\n")
-                .append(SEMI_FOOTER)
-                .append("\n").toString();
+                    .append("\n")
+                    .append(SEMI_FOOTER)
+                    .append("\n").toString();
         } else {
             for (int i = 0; i < students.size(); i++) {
                 if (i == 0) {
                     infoBlockBuilder.append(String.format(ROW, id, name,
                             students.get(i).getFirstName() + " " + students.get(i).getLastName()))
-                        .append("\n");
+                            .append("\n");
                 } else {
                     infoBlockBuilder.append(String.format(ROW, " ", " ",
                             students.get(i).getFirstName() + " " + students.get(i).getLastName()))
-                        .append("\n");
+                            .append("\n");
                 }
             }
             return infoBlockBuilder.append(SEMI_FOOTER)
-                .append("\n").toString();
+                    .append("\n").toString();
         }
     }
 
