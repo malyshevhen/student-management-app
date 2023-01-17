@@ -23,11 +23,10 @@ public class StudentDaoImpl implements StudentDao {
 
     @Override
     public void addStudent(Student student) {
-        var query =
-            """
-                INSERT INTO students (
-                    group_id, first_name, last_name)
-                VALUES (?, ?, ?);""";
+        var query = """
+            INSERT INTO students (
+                group_id, first_name, last_name)
+            VALUES (?, ?, ?);""";
 
         try (var connection = dataSource.getConnection();
              var statement = connection.prepareStatement(query)) {
@@ -45,13 +44,12 @@ public class StudentDaoImpl implements StudentDao {
 
     @Override
     public void removeStudent(int studentId) {
-        var query =
-            """
-                DELETE FROM students_courses
-                WHERE student_id = ?;
-                DELETE
-                FROM students
-                WHERE student_id = ?;""";
+        var query = """
+            DELETE FROM students_courses
+            WHERE student_id = ?;
+            DELETE
+            FROM students
+            WHERE student_id = ?;""";
 
         try (var connection = dataSource.getConnection();
              var statement = connection.prepareStatement(query)) {
@@ -68,12 +66,11 @@ public class StudentDaoImpl implements StudentDao {
 
     @Override
     public void addStudentToCourse(int studentId, int courseId) {
-        var query =
-            """
-                INSERT INTO students_courses (
-                    student_id,
-                    course_id)
-                VALUES (?, ?);""";
+        var query = """
+            INSERT INTO students_courses (
+                student_id,
+                course_id)
+            VALUES (?, ?);""";
 
         try (var connection = dataSource.getConnection();
              var statement = connection.prepareStatement(query)) {
@@ -91,12 +88,11 @@ public class StudentDaoImpl implements StudentDao {
 
     @Override
     public void removeStudentFromCourse(int studentId, int courseId) {
-        var query =
-            """
-                DELETE
-                FROM students_courses
-                WHERE student_id = ?
-                AND course_id = ?;""";
+        var query = """
+            DELETE
+            FROM students_courses
+            WHERE student_id = ?
+            AND course_id = ?;""";
 
         try (var connection = dataSource.getConnection();
              var statement = connection.prepareStatement(query)) {
@@ -113,11 +109,10 @@ public class StudentDaoImpl implements StudentDao {
 
     @Override
     public Optional<Student> getStudent(int id) {
-        var query =
-            """
-                SELECT student_id, group_id, first_name, last_name
-                FROM students
-                WHERE student_id = ?;""";
+        var query = """
+            SELECT student_id, group_id, first_name, last_name
+            FROM students
+            WHERE student_id = ?;""";
 
         try (var connection = dataSource.getConnection();
              var statement = connection.prepareStatement(query)) {
@@ -159,14 +154,13 @@ public class StudentDaoImpl implements StudentDao {
 
     @Override
     public List<Student> getStudentsByCourse(int courseId) {
-        var query =
-            """
-                SELECT student_id, group_id, first_name, last_name
-                FROM students
-                WHERE student_id IN (
-                    SELECT student_id
-                    FROM students_courses
-                    WHERE course_id = ?);""";
+        var query = """
+            SELECT student_id, group_id, first_name, last_name
+            FROM students
+            WHERE student_id IN (
+                SELECT student_id
+                FROM students_courses
+                WHERE course_id = ?);""";
 
         try (var connection = dataSource.getConnection();
              var statement = connection.prepareStatement(query)) {
@@ -183,11 +177,10 @@ public class StudentDaoImpl implements StudentDao {
 
     @Override
     public List<Student> getStudentsByGroup(int groupId) {
-        var query =
-            """
-                SELECT student_id, group_id, first_name, last_name
-                FROM students
-                WHERE group_id = ? ;""";
+        var query = """
+            SELECT student_id, group_id, first_name, last_name
+            FROM students
+            WHERE group_id = ? ;""";
 
         try (var connection = dataSource.getConnection();
              var statement = connection.prepareStatement(query)) {
@@ -204,15 +197,14 @@ public class StudentDaoImpl implements StudentDao {
 
     @Override
     public List<Student> getStudents(String studentName, int courseId) {
-        var query =
-            """
-                SELECT student_id, group_id, first_name, last_name
-                FROM students
-                WHERE student_id IN (
-                    SELECT student_id
-                    FROM students_courses
-                    WHERE course_id = ?)
-                AND first_name = ?;""";
+        var query = """
+            SELECT student_id, group_id, first_name, last_name
+            FROM students
+            WHERE student_id IN (
+                SELECT student_id
+                FROM students_courses
+                WHERE course_id = ?)
+            AND first_name = ?;""";
 
         try (var connection = dataSource.getConnection();
              var statement = connection.prepareStatement(query)) {

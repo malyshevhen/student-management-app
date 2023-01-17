@@ -22,11 +22,10 @@ public class GroupDaoImpl implements GroupDao {
 
     @Override
     public void addGroup(Group group) {
-        var query =
-            """
-                INSERT
-                INTO groups (group_name)
-                    values (?);""";
+        var query = """
+            INSERT
+            INTO groups (group_name)
+                values (?);""";
 
         try (var connection = dataSource.getConnection();
              var statement = connection.prepareStatement(query)) {
@@ -42,11 +41,10 @@ public class GroupDaoImpl implements GroupDao {
 
     @Override
     public Optional<Group> getGroup(int groupId) {
-        var query =
-            """
-                SELECT group_id, group_name
-                FROM groups
-                WHERE group_id = ?;""";
+        var query = """
+            SELECT group_id, group_name
+            FROM groups
+            WHERE group_id = ?;""";
 
         try (var connection = dataSource.getConnection();
              var statement = connection.prepareStatement(query)) {
@@ -70,11 +68,10 @@ public class GroupDaoImpl implements GroupDao {
 
     @Override
     public Optional<Group> getGroup(String groupName) {
-        var query =
-            """
-                SELECT group_id, group_name
-                FROM groups
-                WHERE group_name = ?;""";
+        var query = """
+            SELECT group_id, group_name
+            FROM groups
+            WHERE group_name = ?;""";
 
         try (var connection = dataSource.getConnection();
              var statement = connection.prepareStatement(query)) {
@@ -116,23 +113,22 @@ public class GroupDaoImpl implements GroupDao {
 
     @Override
     public List<Group> getGroupsLessThen(int numberOfStudents) {
-        var query =
-            """
-                SELECT group_id, group_name
-                FROM groups
+        var query = """
+            SELECT group_id, group_name
+            FROM groups
+            WHERE group_id
+            NOT IN(
+                SELECT group_id
+                FROM students
                 WHERE group_id
-                NOT IN(
-                    SELECT group_id
-                    FROM students
-                    WHERE group_id
-                    IS NOT NULL)
-                OR group_id IN(
-                    SELECT group_id
-                    FROM students
-                    WHERE group_id
-                    IS NOT NULL
-                    GROUP BY group_id
-                    HAVING COUNT(group_id) <= ?);""";
+                IS NOT NULL)
+            OR group_id IN(
+                SELECT group_id
+                FROM students
+                WHERE group_id
+                IS NOT NULL
+                GROUP BY group_id
+                HAVING COUNT(group_id) <= ?);""";
 
         try (var connection = dataSource.getConnection();
              var statement = connection.prepareStatement(query)) {
