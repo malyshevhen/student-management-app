@@ -12,14 +12,14 @@ import java.util.List;
 public class FileUtils {
     public String readFileFromResourcesAsString(String filePath) {
         try (var inputStream = getFileFromResourceAsStream(filePath);
-                var bufferedReader = new BufferedReader(new InputStreamReader(inputStream))) {
+             var bufferedReader = new BufferedReader(new InputStreamReader(inputStream))) {
             var stringBuilder = new StringBuilder();
 
             String line;
 
             while ((line = bufferedReader.readLine()) != null) {
                 stringBuilder.append(line)
-                        .append("\n");
+                    .append("\n");
             }
 
             return stringBuilder.toString();
@@ -30,8 +30,8 @@ public class FileUtils {
 
     public List<String[]> readCsvFileFromResources(String filePath) {
         try (var inputStream = getFileFromResourceAsStream(filePath);
-                var bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
-                var csvReader = new CSVReader(bufferedReader)) {
+             var bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+             var csvReader = new CSVReader(bufferedReader)) {
             return csvReader.readAll();
         } catch (IOException | CsvException e) {
             throw new IllegalArgumentException("File not found: " + filePath);

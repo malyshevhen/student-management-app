@@ -6,12 +6,13 @@ import java.util.List;
 import java.util.Optional;
 
 public interface CourseDao {
-    void addCourse(Course course) ;
+    void addCourse(Course course);
 
-    List<Course> getCourses() ;
+    List<Course> getCourses();
 
-    Optional<Course> getCourse(int courseId) ;
-    Optional<Course> getCourse(String courseName) ;
+    Optional<Course> getCourse(int courseId);
 
-    List<Course> getCourses(int studentId) ;
+    Optional<Course> getCourse(String courseName);
+
+    List<Course> getCourses(int studentId);
 }

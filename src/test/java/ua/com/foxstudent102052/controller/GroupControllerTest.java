@@ -26,7 +26,7 @@ class GroupControllerTest {
     }
 
     @Test
-    void MethodGetGroups_ShouldReturnListOfAllGroups() throws ElementAlreadyExistException{
+    void MethodGetGroups_ShouldReturnListOfAllGroups() throws ElementAlreadyExistException {
         // given
         var students = List.of(
             StudentDto.builder().id(1).group(GroupDto.builder().id(1).build()).firstName("Darth").lastName("Vader").coursesList(List.of()).build(),
@@ -47,7 +47,7 @@ class GroupControllerTest {
     }
 
     @Test
-    void MethodGetGroupsLessThen_ShouldReturnListOfAllGroups() throws ElementAlreadyExistException{
+    void MethodGetGroupsLessThen_ShouldReturnListOfAllGroups() throws ElementAlreadyExistException {
         // given
         var students = List.of(
             StudentDto.builder().id(1).group(GroupDto.builder().id(1).build()).firstName("Darth").lastName("Vader").coursesList(List.of()).build(),

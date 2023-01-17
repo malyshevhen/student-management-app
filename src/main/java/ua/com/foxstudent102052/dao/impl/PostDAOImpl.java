@@ -1,8 +1,8 @@
 package ua.com.foxstudent102052.dao.impl;
 
 import lombok.extern.slf4j.Slf4j;
-import ua.com.foxstudent102052.dao.exceptions.DAOException;
 import ua.com.foxstudent102052.dao.datasource.interfaces.CustomDataSource;
+import ua.com.foxstudent102052.dao.exceptions.DAOException;
 
 import java.sql.SQLException;
 

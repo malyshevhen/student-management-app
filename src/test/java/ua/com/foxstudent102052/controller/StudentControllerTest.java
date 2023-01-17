@@ -41,7 +41,7 @@ class StudentControllerTest {
     }
 
     @Test
-    void MethodAddStudentToCourse_ShouldPassToServiceValues() throws ElementAlreadyExistException{
+    void MethodAddStudentToCourse_ShouldPassToServiceValues() throws ElementAlreadyExistException {
         // when
         studentController.addStudentToCourse(1, 1);
 
@@ -50,7 +50,7 @@ class StudentControllerTest {
     }
 
     @Test
-    void MethodRemoveStudent_ShouldPassToServiceValues() throws ElementAlreadyExistException{
+    void MethodRemoveStudent_ShouldPassToServiceValues() throws ElementAlreadyExistException {
         // when
         studentController.removeStudent(1);
 
@@ -59,7 +59,7 @@ class StudentControllerTest {
     }
 
     @Test
-    void MethodRemoveStudentFromCourse_ShouldPassToServiceValues() throws ElementAlreadyExistException{
+    void MethodRemoveStudentFromCourse_ShouldPassToServiceValues() throws ElementAlreadyExistException {
         // when
         studentController.removeStudentFromCourse(1, 1);
 
@@ -68,7 +68,7 @@ class StudentControllerTest {
     }
 
     @Test
-    void MethodGetStudents_ShouldReturnListOfStudentsWithCoursesAndGroup() throws ElementAlreadyExistException{
+    void MethodGetStudents_ShouldReturnListOfStudentsWithCoursesAndGroup() throws ElementAlreadyExistException {
         // given
         var group = GroupDto.builder().id(1).name("Java").build();
         var studentsDto = List.of(StudentDto
@@ -127,7 +127,7 @@ class StudentControllerTest {
     }
 
     @Test
-    void MethodGetStudents_ShouldPassToServiceValue() throws ElementAlreadyExistException{
+    void MethodGetStudents_ShouldPassToServiceValue() throws ElementAlreadyExistException {
         // when
         studentController.getAllStudents();
 
@@ -137,7 +137,7 @@ class StudentControllerTest {
 
     @Test
     void MethodGetStudents_ShouldReturnListOfStudentsWithCoursesAndGroup_ByNameAndCourseId()
-        throws ElementAlreadyExistException{
+        throws ElementAlreadyExistException {
         // given
         var group = GroupDto.builder().id(1).name("Java").build();
         var studentsDto = List.of(StudentDto
@@ -196,7 +196,7 @@ class StudentControllerTest {
     }
 
     @Test
-    void MethodGetStudents_ShouldPassToServiceValues() throws ElementAlreadyExistException{
+    void MethodGetStudents_ShouldPassToServiceValues() throws ElementAlreadyExistException {
         // when
         studentController.getStudents("John", 1);
 
