@@ -27,7 +27,7 @@ class CourseControllerTest {
     }
 
     @Test
-    void MethodGetAllCourses_ShouldReturnListOfAllCourses() throws ElementAlreadyExistException{
+    void MethodGetAllCourses_ShouldReturnListOfAllCourses() throws ElementAlreadyExistException {
         // given
         var studentDtoList = List.of(
             StudentDto.builder().id(1).firstName("John").lastName("Doe").build(),

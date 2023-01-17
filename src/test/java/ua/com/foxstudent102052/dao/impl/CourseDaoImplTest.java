@@ -165,7 +165,7 @@ class CourseDaoImplTest {
                 .name("Course 2")
                 .description("Some description for course 2")
                 .build()
-            );
+        );
 
         // when
         var actual = courseDao.getCourses(2);
