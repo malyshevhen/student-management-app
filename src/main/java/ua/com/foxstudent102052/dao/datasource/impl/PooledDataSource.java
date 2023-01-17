@@ -19,13 +19,13 @@ public class PooledDataSource implements CustomDataSource {
 
     private static PooledDataSource instance;
 
-    private PooledDataSource() {
-    }
-
     static {
         loadPropertiesFromResources();
         config = new HikariConfig(properties);
         hikariDataSource = new HikariDataSource(config);
+    }
+
+    private PooledDataSource() {
     }
 
     public static PooledDataSource getInstance() {
@@ -36,16 +36,16 @@ public class PooledDataSource implements CustomDataSource {
         return instance;
     }
 
-    @Override
-    public Connection getConnection() throws SQLException {
-        return hikariDataSource.getConnection();
-    }
-
     private static void loadPropertiesFromResources() {
         try {
             properties.load(fileUtils.getFileFromResourceAsStream(PROPERTIES_FILE_NAME));
         } catch (IOException e) {
             throw new IllegalArgumentException("File not found: " + PROPERTIES_FILE_NAME);
         }
+    }
+
+    @Override
+    public Connection getConnection() throws SQLException {
+        return hikariDataSource.getConnection();
     }
 }
