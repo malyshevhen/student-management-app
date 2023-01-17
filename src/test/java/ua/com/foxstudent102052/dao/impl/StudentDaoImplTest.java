@@ -1,40 +1,41 @@
 package ua.com.foxstudent102052.dao.impl;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.jdbc.Sql;
-import org.testcontainers.junit.jupiter.Testcontainers;
-
-import ua.com.foxstudent102052.dao.interfaces.StudentDao;
-import ua.com.foxstudent102052.model.entity.Student;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.transaction.annotation.Transactional;
 
-@JdbcTest
-@Testcontainers
-@ActiveProfiles("test-containers-flyway")
-@AutoConfigureTestDatabase(replace = Replace.NONE)
-@Sql({ "/scripts/ddl/Table_creation.sql", "/scripts/dml/testDB_Data.sql" })
-class StudentDaoImplTest {
+import ua.com.foxstudent102052.dao.impl.config.AbstractTestContainerIT;
+import ua.com.foxstudent102052.dao.interfaces.StudentDao;
+import ua.com.foxstudent102052.model.entity.Student;
+
+class StudentDaoImplTest extends AbstractTestContainerIT {
+
+    private final StudentDao studentDao;
 
     @Autowired
-    private JdbcTemplate jdbcTemplate;
-    private StudentDao studentDao;
-
-    @BeforeEach
-    void setUp() {
+    public StudentDaoImplTest(JdbcTemplate jdbcTemplate) {
         studentDao = new StudentDaoImpl(jdbcTemplate);
     }
 
+    @BeforeAll
+    static void setUp() {
+        start();
+    }
+
+    @AfterAll
+    static void tearDown() {
+        close();
+    }
+
     @Test
+    @Transactional
     void MethodAddStudent_ShouldAddStudentToDb() {
         // given
         var newStudent = Student.builder()
@@ -54,6 +55,7 @@ class StudentDaoImplTest {
     }
 
     @Test
+    @Transactional
     void MethodAddStudentToCourse_ShouldAddStudentToNewCourse() {
         // given
         var expected = Student.builder()
@@ -72,6 +74,7 @@ class StudentDaoImplTest {
     }
 
     @Test
+    @Transactional
     void MethodGetAllStudents_ShouldReturnAllStudents() {
         // when
         var actual = studentDao.getAll().size();
@@ -81,6 +84,7 @@ class StudentDaoImplTest {
     }
 
     @Test
+    @Transactional
     void MethodGetStudentsByCourseId_ShouldReturnStudentByCourseId() {
         var expected = List.of(
                 Student.builder()
@@ -114,6 +118,7 @@ class StudentDaoImplTest {
     }
 
     @Test
+    @Transactional
     void MethodGetStudentsByGroup_ShouldReturnStudentByGroupId() {
         var expected = List.of(
                 Student.builder()
@@ -159,6 +164,7 @@ class StudentDaoImplTest {
     }
 
     @Test
+    @Transactional
     void MethodGetStudentsByNameAndCourse_ShouldReturnListOfStudents_ByStudentNameAndCourseId() {
         var expected = List.of(
                 Student.builder()
@@ -180,6 +186,7 @@ class StudentDaoImplTest {
     }
 
     @Test
+    @Transactional
     void MethodRemoveStudent_ShouldRemoveStudent_IfItInDataBase() {
         // when
         studentDao.removeStudent(1);
@@ -192,6 +199,7 @@ class StudentDaoImplTest {
     }
 
     @Test
+    @Transactional
     void MethodGetStudentById_ShouldReturnStudentFromDb() {
         // given
         var expected = Student.builder()
@@ -209,6 +217,7 @@ class StudentDaoImplTest {
     }
 
     @Test
+    @Transactional
     void MethodRemoveStudentFromCourse_ShouldRemoveStudentCourseRelation_IfExist() {
         // given
         studentDao.removeStudentFromCourse(1, 1);

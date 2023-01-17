@@ -4,36 +4,34 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.List;
 
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.jdbc.Sql;
-import org.testcontainers.junit.jupiter.Testcontainers;
 
+import ua.com.foxstudent102052.dao.impl.config.AbstractTestContainerIT;
 import ua.com.foxstudent102052.dao.interfaces.CourseDao;
 import ua.com.foxstudent102052.model.entity.Course;
 
-@JdbcTest
-@Testcontainers
-@ActiveProfiles("test-containers-flyway")
-@AutoConfigureTestDatabase(replace = Replace.NONE)
-@Sql({ "/scripts/ddl/Table_creation.sql", "/scripts/dml/testDB_Data.sql" })
-class CourseDaoImplTest {
+class CourseDaoImplTest extends AbstractTestContainerIT {
+
+    private final CourseDao courseDao;
 
     @Autowired
-    private JdbcTemplate jdbcTemplate;
-    private CourseDao courseDao;
-
-    @BeforeEach
-    void setUp() {
+    public CourseDaoImplTest(JdbcTemplate jdbcTemplate) {
         courseDao = new CourseDaoImpl(jdbcTemplate);
     }
 
+    @BeforeAll
+    static void setUp() {
+        start();
+    }
+
+    @AfterAll
+    static void tearDown() {
+        close();
+    }
 
     @Test
     void MethodAddCourse_ShouldAddCourseToDb() {

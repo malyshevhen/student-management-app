@@ -2,34 +2,33 @@ package ua.com.foxstudent102052.dao.impl;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.jdbc.Sql;
-import org.testcontainers.junit.jupiter.Testcontainers;
 
+import ua.com.foxstudent102052.dao.impl.config.AbstractTestContainerIT;
 import ua.com.foxstudent102052.dao.interfaces.GroupDao;
 import ua.com.foxstudent102052.model.entity.Group;
 
-@JdbcTest
-@Testcontainers
-@ActiveProfiles("test-containers-flyway")
-@AutoConfigureTestDatabase(replace = Replace.NONE)
-@Sql({ "/scripts/ddl/Table_creation.sql", "/scripts/dml/testDB_Data.sql" })
-class GroupDaoImplTest {
+class GroupDaoImplTest extends AbstractTestContainerIT {
+
+    private final GroupDao groupDao;
 
     @Autowired
-    private JdbcTemplate jdbcTemplate;
-    private GroupDao groupDao;
-
-    @BeforeEach
-    void setUp() {
+    public GroupDaoImplTest(JdbcTemplate jdbcTemplate) {
         groupDao = new GroupDaoImpl(jdbcTemplate);
+    }
+
+    @BeforeAll
+    static void setUp() {
+        start();
+    }
+
+    @AfterAll
+    static void tearDown() {
+        close();
     }
 
     @Test
