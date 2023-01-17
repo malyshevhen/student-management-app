@@ -1,11 +1,12 @@
 package ua.com.foxstudent102052.service;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import ua.com.foxstudent102052.dao.interfaces.PostDAO;
-
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import ua.com.foxstudent102052.dao.interfaces.PostDAO;
 
 class QueryPostServiceTest {
     private PostDAO postDAO;

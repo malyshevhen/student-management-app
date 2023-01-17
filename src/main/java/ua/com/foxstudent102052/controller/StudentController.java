@@ -1,14 +1,14 @@
 package ua.com.foxstudent102052.controller;
 
+import java.util.List;
+import java.util.NoSuchElementException;
+
 import lombok.AllArgsConstructor;
 import ua.com.foxstudent102052.dao.exceptions.DAOException;
 import ua.com.foxstudent102052.model.dto.StudentDto;
 import ua.com.foxstudent102052.service.interfaces.CourseService;
 import ua.com.foxstudent102052.service.interfaces.GroupService;
 import ua.com.foxstudent102052.service.interfaces.StudentService;
-
-import java.util.List;
-import java.util.NoSuchElementException;
 
 @AllArgsConstructor
 public class StudentController {
@@ -34,18 +34,19 @@ public class StudentController {
 
     public List<StudentDto> getAllStudents() throws NoSuchElementException, DAOException {
         return studentService.getStudents()
-            .stream()
-            .map(this::setStudentsGroup)
-            .map(this::setStudentsCourseList)
-            .toList();
+                .stream()
+                .map(this::setStudentsGroup)
+                .map(this::setStudentsCourseList)
+                .toList();
     }
 
-    public List<StudentDto> getStudents(String studentName, Integer courseId) throws NoSuchElementException, DAOException {
+    public List<StudentDto> getStudents(String studentName, Integer courseId)
+            throws NoSuchElementException, DAOException {
         return studentService.getStudents(studentName, courseId)
-            .stream()
-            .map(this::setStudentsGroup)
-            .map(this::setStudentsCourseList)
-            .toList();
+                .stream()
+                .map(this::setStudentsGroup)
+                .map(this::setStudentsCourseList)
+                .toList();
     }
 
     private StudentDto setStudentsCourseList(StudentDto studentDto) {

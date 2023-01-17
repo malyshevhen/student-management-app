@@ -1,7 +1,16 @@
 package ua.com.foxstudent102052.dao.impl;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mock;
+
+import java.sql.SQLException;
+import java.util.List;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
 import ua.com.foxstudent102052.dao.datasource.impl.PooledDataSource;
 import ua.com.foxstudent102052.dao.datasource.interfaces.CustomDataSource;
 import ua.com.foxstudent102052.dao.exceptions.DAOException;
@@ -9,14 +18,6 @@ import ua.com.foxstudent102052.dao.interfaces.CourseDao;
 import ua.com.foxstudent102052.dao.interfaces.PostDAO;
 import ua.com.foxstudent102052.model.entity.Course;
 import ua.com.foxstudent102052.utils.FileUtils;
-
-import java.sql.SQLException;
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.mock;
 
 class CourseDaoImplTest {
     private CustomDataSource customDataSource;
@@ -40,9 +41,9 @@ class CourseDaoImplTest {
     void MethodAddCourse_ShouldAddCourseToDb() throws DAOException {
         // given
         var course = Course.builder()
-            .name("Course 4")
-            .description("Some description for course 4")
-            .build();
+                .name("Course 4")
+                .description("Some description for course 4")
+                .build();
 
         // when
         courseDao.addCourse(course);
@@ -65,7 +66,7 @@ class CourseDaoImplTest {
 
         // then
         assertThrows(DAOException.class, () -> courseDao.addCourse(course),
-            "Error while adding student to the database");
+                "Error while adding student to the database");
     }
 
     @Test
@@ -88,17 +89,17 @@ class CourseDaoImplTest {
 
         // then
         assertThrows(DAOException.class, () -> courseDao.getCourses(),
-            "Error while adding student to the database");
+                "Error while adding student to the database");
     }
 
     @Test
     void MethodGetCourse_ById_ShouldReturnCourseFromDb() throws DAOException {
         // given
         var expected = Course.builder()
-            .id(1)
-            .name("Course 1")
-            .description("Some description for course 1")
-            .build();
+                .id(1)
+                .name("Course 1")
+                .description("Some description for course 1")
+                .build();
 
         // when
         var actual = courseDao.getCourse(1).get();
@@ -118,17 +119,17 @@ class CourseDaoImplTest {
 
         // then
         assertThrows(DAOException.class, () -> courseDao.getCourse(1),
-            "Error while adding student to the database");
+                "Error while adding student to the database");
     }
 
     @Test
     void MethodGetCourse_ByName_ShouldReturnCourseFromDb() throws DAOException {
         // given
         var expected = Course.builder()
-            .id(1)
-            .name("Course 1")
-            .description("Some description for course 1")
-            .build();
+                .id(1)
+                .name("Course 1")
+                .description("Some description for course 1")
+                .build();
 
         // when
         var actual = courseDao.getCourse(expected.getName()).get();
@@ -148,24 +149,23 @@ class CourseDaoImplTest {
 
         // then
         assertThrows(DAOException.class, () -> courseDao.getCourse(""),
-            "Error while adding student to the database");
+                "Error while adding student to the database");
     }
 
     @Test
     void MethodGetCourses_ByStudentId_ShouldReturnCourseListFromDb() throws DAOException {
         // given
         var expected = List.of(
-            Course.builder()
-                .id(1)
-                .name("Course 1")
-                .description("Some description for course 1")
-                .build(),
-            Course.builder()
-                .id(2)
-                .name("Course 2")
-                .description("Some description for course 2")
-                .build()
-        );
+                Course.builder()
+                        .id(1)
+                        .name("Course 1")
+                        .description("Some description for course 1")
+                        .build(),
+                Course.builder()
+                        .id(2)
+                        .name("Course 2")
+                        .description("Some description for course 2")
+                        .build());
 
         // when
         var actual = courseDao.getCourses(2);
@@ -185,6 +185,6 @@ class CourseDaoImplTest {
 
         // then
         assertThrows(DAOException.class, () -> courseDao.getCourses(1),
-            "Error while adding student to the database");
+                "Error while adding student to the database");
     }
 }

@@ -42,7 +42,8 @@ public class StudentManagementApp {
         var courseController = new CourseController(courseService, studentService);
         var studentController = new StudentController(studentService, groupService, courseService);
 
-        testDataInitializer = new TestDataInitializer(studentService, courseService, groupService, queryPostService, fileUtils);
+        testDataInitializer = new TestDataInitializer(studentService, courseService, groupService, queryPostService,
+                fileUtils);
         consoleUI = new ConsoleUI(groupController, courseController, studentController, consoleUtils, tableFactory);
     }
 

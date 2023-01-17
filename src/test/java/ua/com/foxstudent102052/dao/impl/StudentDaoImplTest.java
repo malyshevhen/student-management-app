@@ -1,7 +1,16 @@
 package ua.com.foxstudent102052.dao.impl;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mock;
+
+import java.sql.SQLException;
+import java.util.List;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
 import ua.com.foxstudent102052.dao.datasource.impl.PooledDataSource;
 import ua.com.foxstudent102052.dao.datasource.interfaces.CustomDataSource;
 import ua.com.foxstudent102052.dao.exceptions.DAOException;
@@ -9,14 +18,6 @@ import ua.com.foxstudent102052.dao.interfaces.PostDAO;
 import ua.com.foxstudent102052.dao.interfaces.StudentDao;
 import ua.com.foxstudent102052.model.entity.Student;
 import ua.com.foxstudent102052.utils.FileUtils;
-
-import java.sql.SQLException;
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.mock;
 
 class StudentDaoImplTest {
     private CustomDataSource customDataSource;
@@ -40,11 +41,11 @@ class StudentDaoImplTest {
     void MethodAddStudent_ShouldAddStudentToDb() throws DAOException {
         // given
         var newStudent = Student.builder()
-            .id(1)
-            .groupId(1)
-            .firstName("John")
-            .lastName("Doe")
-            .build();
+                .id(1)
+                .groupId(1)
+                .firstName("John")
+                .lastName("Doe")
+                .build();
 
         // when
         studentDao.addStudent(newStudent);
@@ -67,18 +68,18 @@ class StudentDaoImplTest {
 
         // then
         assertThrows(DAOException.class, () -> studentDao.addStudent(student),
-            "Error while adding student to the database");
+                "Error while adding student to the database");
     }
 
     @Test
     void MethodAddStudentToCourse_ShouldAddStudentToNewCourse() throws DAOException {
         // given
         var expected = Student.builder()
-            .id(1)
-            .groupId(1)
-            .firstName("Leia")
-            .lastName("Organa")
-            .build();
+                .id(1)
+                .groupId(1)
+                .firstName("Leia")
+                .lastName("Organa")
+                .build();
 
         // when
         studentDao.addStudentToCourse(1, 2);
@@ -99,7 +100,7 @@ class StudentDaoImplTest {
 
         // then
         assertThrows(DAOException.class, () -> studentDao.addStudentToCourse(1, 1),
-            "Error while adding student to the database");
+                "Error while adding student to the database");
 
     }
 
@@ -115,31 +116,30 @@ class StudentDaoImplTest {
     @Test
     void MethodGetStudentsByCourseId_ShouldReturnStudentByCourseId() throws DAOException {
         var expected = List.of(
-            Student.builder()
-                .id(1)
-                .groupId(1)
-                .firstName("Leia")
-                .lastName("Organa")
-                .build(),
-            Student.builder()
-                .id(2)
-                .groupId(1)
-                .firstName("Luke")
-                .lastName("Skywalker")
-                .build(),
-            Student.builder()
-                .id(3)
-                .groupId(1)
-                .firstName("Han")
-                .lastName("Solo")
-                .build(),
-            Student.builder()
-                .id(4)
-                .groupId(1)
-                .firstName("Padme")
-                .lastName("Amidala")
-                .build()
-        );
+                Student.builder()
+                        .id(1)
+                        .groupId(1)
+                        .firstName("Leia")
+                        .lastName("Organa")
+                        .build(),
+                Student.builder()
+                        .id(2)
+                        .groupId(1)
+                        .firstName("Luke")
+                        .lastName("Skywalker")
+                        .build(),
+                Student.builder()
+                        .id(3)
+                        .groupId(1)
+                        .firstName("Han")
+                        .lastName("Solo")
+                        .build(),
+                Student.builder()
+                        .id(4)
+                        .groupId(1)
+                        .firstName("Padme")
+                        .lastName("Amidala")
+                        .build());
 
         var actual = studentDao.getStudentsByGroup(1);
 
@@ -157,49 +157,48 @@ class StudentDaoImplTest {
 
         // then
         assertThrows(DAOException.class, () -> studentDao.getStudentsByCourse(1),
-            "Error while adding student to the database");
+                "Error while adding student to the database");
     }
 
     @Test
     void MethodGetStudentsByGroup_ShouldReturnStudentByGroupId() throws DAOException {
         var expected = List.of(
-            Student.builder()
-                .id(1)
-                .groupId(1)
-                .firstName("Leia")
-                .lastName("Organa")
-                .build(),
-            Student.builder()
-                .id(2)
-                .groupId(1)
-                .firstName("Luke")
-                .lastName("Skywalker")
-                .build(),
-            Student.builder()
-                .id(4)
-                .groupId(1)
-                .firstName("Padme")
-                .lastName("Amidala")
-                .build(),
-            Student.builder()
-                .id(5)
-                .groupId(2)
-                .firstName("Dart")
-                .lastName("Maul")
-                .build(),
-            Student.builder()
-                .id(9)
-                .groupId(2)
-                .firstName("Dart")
-                .lastName("Vader")
-                .build(),
-            Student.builder()
-                .id(10)
-                .groupId(3)
-                .firstName("Jah Jah")
-                .lastName("Binks")
-                .build()
-        );
+                Student.builder()
+                        .id(1)
+                        .groupId(1)
+                        .firstName("Leia")
+                        .lastName("Organa")
+                        .build(),
+                Student.builder()
+                        .id(2)
+                        .groupId(1)
+                        .firstName("Luke")
+                        .lastName("Skywalker")
+                        .build(),
+                Student.builder()
+                        .id(4)
+                        .groupId(1)
+                        .firstName("Padme")
+                        .lastName("Amidala")
+                        .build(),
+                Student.builder()
+                        .id(5)
+                        .groupId(2)
+                        .firstName("Dart")
+                        .lastName("Maul")
+                        .build(),
+                Student.builder()
+                        .id(9)
+                        .groupId(2)
+                        .firstName("Dart")
+                        .lastName("Vader")
+                        .build(),
+                Student.builder()
+                        .id(10)
+                        .groupId(3)
+                        .firstName("Jah Jah")
+                        .lastName("Binks")
+                        .build());
 
         var actual = studentDao.getStudentsByCourse(1);
 
@@ -217,25 +216,24 @@ class StudentDaoImplTest {
 
         // then
         assertThrows(DAOException.class, () -> studentDao.getStudentsByGroup(1),
-            "Error while adding student to the database");
+                "Error while adding student to the database");
     }
 
     @Test
     void MethodGetStudentsByNameAndCourse_ShouldReturnListOfStudents_ByStudentNameAndCourseId() throws DAOException {
         var expected = List.of(
-            Student.builder()
-                .id(5)
-                .groupId(2)
-                .firstName("Dart")
-                .lastName("Maul")
-                .build(),
-            Student.builder()
-                .id(9)
-                .groupId(2)
-                .firstName("Dart")
-                .lastName("Vader")
-                .build()
-        );
+                Student.builder()
+                        .id(5)
+                        .groupId(2)
+                        .firstName("Dart")
+                        .lastName("Maul")
+                        .build(),
+                Student.builder()
+                        .id(9)
+                        .groupId(2)
+                        .firstName("Dart")
+                        .lastName("Vader")
+                        .build());
 
         var actual = studentDao.getStudents("Dart", 1);
 
@@ -253,7 +251,7 @@ class StudentDaoImplTest {
 
         // then
         assertThrows(DAOException.class, () -> studentDao.getStudents("SomeName", 1),
-            "Error while adding student to the database");
+                "Error while adding student to the database");
     }
 
     @Test
@@ -279,20 +277,20 @@ class StudentDaoImplTest {
 
         // then
         assertThrows(
-            DAOException.class,
-            () -> studentDao.removeStudent(1),
-            "Expected removeStudent() to throw, but it didn't");
+                DAOException.class,
+                () -> studentDao.removeStudent(1),
+                "Expected removeStudent() to throw, but it didn't");
     }
 
     @Test
     void MethodGetStudentById_ShouldReturnStudentFromDb() throws DAOException {
         // given
         var expected = Student.builder()
-            .id(1)
-            .groupId(1)
-            .firstName("Leia")
-            .lastName("Organa")
-            .build();
+                .id(1)
+                .groupId(1)
+                .firstName("Leia")
+                .lastName("Organa")
+                .build();
 
         // when
         var actual = studentDao.getStudent(1).get();
@@ -313,9 +311,9 @@ class StudentDaoImplTest {
         // then
 
         assertThrows(
-            DAOException.class,
-            () -> studentDao.getStudent(3),
-            "Expected getStudentById() to throw, but it didn't");
+                DAOException.class,
+                () -> studentDao.getStudent(3),
+                "Expected getStudentById() to throw, but it didn't");
     }
 
     @Test
@@ -329,7 +327,7 @@ class StudentDaoImplTest {
 
         // then
         assertThrows(DAOException.class, () -> studentDao.getStudent(1),
-            "Error while getting student by id");
+                "Error while getting student by id");
     }
 
     @Test
@@ -356,7 +354,7 @@ class StudentDaoImplTest {
 
         // then
         assertThrows(DAOException.class,
-            () -> studentDao.removeStudentFromCourse(1, 1),
-            "Expected removeStudentFromCourse() to throw, but it didn't");
+                () -> studentDao.removeStudentFromCourse(1, 1),
+                "Expected removeStudentFromCourse() to throw, but it didn't");
     }
 }

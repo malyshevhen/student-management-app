@@ -1,16 +1,17 @@
 package ua.com.foxstudent102052.service.impl;
 
-import lombok.AllArgsConstructor;
+import java.util.List;
+import java.util.NoSuchElementException;
+
 import org.modelmapper.ModelMapper;
+
+import lombok.AllArgsConstructor;
 import ua.com.foxstudent102052.dao.exceptions.DAOException;
 import ua.com.foxstudent102052.dao.interfaces.GroupDao;
 import ua.com.foxstudent102052.model.dto.GroupDto;
 import ua.com.foxstudent102052.model.entity.Group;
 import ua.com.foxstudent102052.service.exceptions.ElementAlreadyExistException;
 import ua.com.foxstudent102052.service.interfaces.GroupService;
-
-import java.util.List;
-import java.util.NoSuchElementException;
 
 @AllArgsConstructor
 public class GroupServiceImpl implements GroupService {
@@ -30,23 +31,23 @@ public class GroupServiceImpl implements GroupService {
     @Override
     public GroupDto getGroup(int groupId) throws DAOException {
         return groupDao.getGroup(groupId)
-            .map(group -> modelMapper.map(group, GroupDto.class))
-            .orElseThrow(() -> new NoSuchElementException(GROUP_DOES_NOT_EXIST));
+                .map(group -> modelMapper.map(group, GroupDto.class))
+                .orElseThrow(() -> new NoSuchElementException(GROUP_DOES_NOT_EXIST));
     }
 
     @Override
     public GroupDto getGroup(String groupName) throws DAOException {
         return groupDao.getGroup(groupName)
-            .map(group -> modelMapper.map(group, GroupDto.class))
-            .orElseThrow(() -> new NoSuchElementException(GROUP_DOES_NOT_EXIST));
+                .map(group -> modelMapper.map(group, GroupDto.class))
+                .orElseThrow(() -> new NoSuchElementException(GROUP_DOES_NOT_EXIST));
     }
 
     @Override
     public List<GroupDto> getGroups() throws DAOException {
         var groupDtoList = groupDao.getGroups()
-            .stream()
-            .map(group -> modelMapper.map(group, GroupDto.class))
-            .toList();
+                .stream()
+                .map(group -> modelMapper.map(group, GroupDto.class))
+                .toList();
 
         if (groupDtoList.isEmpty()) {
             throw new NoSuchElementException("There are no groups in the database");
@@ -58,13 +59,13 @@ public class GroupServiceImpl implements GroupService {
     @Override
     public List<GroupDto> getGroupsLessThen(int numberOfStudents) throws DAOException {
         var groupList = groupDao.getGroupsLessThen(numberOfStudents)
-            .stream()
-            .map(group -> modelMapper.map(group, GroupDto.class))
-            .toList();
+                .stream()
+                .map(group -> modelMapper.map(group, GroupDto.class))
+                .toList();
 
         if (groupList.isEmpty()) {
             throw new NoSuchElementException(
-                String.format("There are no groups with number of students less then %d", numberOfStudents));
+                    String.format("There are no groups with number of students less then %d", numberOfStudents));
         } else {
             return groupList;
         }

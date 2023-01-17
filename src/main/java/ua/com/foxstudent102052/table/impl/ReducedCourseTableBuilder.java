@@ -5,9 +5,9 @@ import ua.com.foxstudent102052.model.dto.CourseDto;
 public class ReducedCourseTableBuilder extends DtoTableBuilderImpl<CourseDto> {
     private static final String ROW = "|%-5s|%-15s|";
     private static final String HEATHER = """
-        +=====+===============+
-        |ID   |NAME           |
-        +=====+===============+""";
+            +=====+===============+
+            |ID   |NAME           |
+            +=====+===============+""";
     private static final String FOOTER = "+=====+===============+";
     private static final String SEMI_FOOTER = "+-----+---------------+";
 
@@ -18,10 +18,10 @@ public class ReducedCourseTableBuilder extends DtoTableBuilderImpl<CourseDto> {
         var name = course.getName();
 
         return courseBlockBuilder.append(String.format(ROW, id, name))
-            .append("\n")
-            .append(SEMI_FOOTER)
-            .append("\n")
-            .toString();
+                .append("\n")
+                .append(SEMI_FOOTER)
+                .append("\n")
+                .toString();
     }
 
     @Override

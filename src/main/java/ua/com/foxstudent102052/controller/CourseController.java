@@ -1,13 +1,13 @@
 package ua.com.foxstudent102052.controller;
 
+import java.util.List;
+import java.util.NoSuchElementException;
+
 import lombok.AllArgsConstructor;
 import ua.com.foxstudent102052.dao.exceptions.DAOException;
 import ua.com.foxstudent102052.model.dto.CourseDto;
 import ua.com.foxstudent102052.service.interfaces.CourseService;
 import ua.com.foxstudent102052.service.interfaces.StudentService;
-
-import java.util.List;
-import java.util.NoSuchElementException;
 
 @AllArgsConstructor
 public class CourseController {
@@ -16,8 +16,8 @@ public class CourseController {
 
     public List<CourseDto> getAllCourses() throws DAOException {
         return courseService.getCourses().stream()
-            .map(this::setStudentsToCourse)
-            .toList();
+                .map(this::setStudentsToCourse)
+                .toList();
     }
 
     private CourseDto setStudentsToCourse(CourseDto courseDto) {

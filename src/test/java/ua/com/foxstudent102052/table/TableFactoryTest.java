@@ -1,9 +1,16 @@
 package ua.com.foxstudent102052.table;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import java.util.LinkedList;
+import java.util.List;
+import java.util.stream.Stream;
+
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+
 import ua.com.foxstudent102052.model.dto.CourseDto;
 import ua.com.foxstudent102052.model.dto.GroupDto;
 import ua.com.foxstudent102052.model.dto.StudentDto;
@@ -13,75 +20,69 @@ import ua.com.foxstudent102052.table.impl.ReducedCourseTableBuilder;
 import ua.com.foxstudent102052.table.impl.ReducedGroupTableBuilder;
 import ua.com.foxstudent102052.table.interfaces.TableBuilder;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.stream.Stream;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
 class TableFactoryTest {
     private static final String REDUCED_GROUP_TABLE = """
-        +=====+==========+
-        |ID   |NAME      |
-        +=====+==========+
-        |1    |Group 1   |
-        +-----+----------+
-        |2    |Group 2   |
-        +-----+----------+
-        |3    |Bad group |
-        +=====+==========+
-        """;
+            +=====+==========+
+            |ID   |NAME      |
+            +=====+==========+
+            |1    |Group 1   |
+            +-----+----------+
+            |2    |Group 2   |
+            +-----+----------+
+            |3    |Bad group |
+            +=====+==========+
+            """;
     private static final String REDUCED_COURSE_TABLE = """
-        +=====+===============+
-        |ID   |NAME           |
-        +=====+===============+
-        |1    |Math           |
-        +-----+---------------+
-        |2    |English        |
-        +-----+---------------+
-        |3    |Physics        |
-        +-----+---------------+
-        |4    |Chemistry      |
-        +=====+===============+
-        """;
+            +=====+===============+
+            |ID   |NAME           |
+            +=====+===============+
+            |1    |Math           |
+            +-----+---------------+
+            |2    |English        |
+            +-----+---------------+
+            |3    |Physics        |
+            +-----+---------------+
+            |4    |Chemistry      |
+            +=====+===============+
+            """;
 
     private static final String EXPANDED_GROUP_TABLE = """
-        +=====+==========+==================================================+
-        |ID   |NAME      |STUDENTS                                          |
-        +=====+==========+==================================================+
-        |1    |Group 1   |John Doe                                          |
-        |     |          |Jane Doe                                          |
-        |     |          |Jane Depp                                         |
-        +-----+----------+--------------------------------------------------+
-        |2    |Group 2   |John Smith                                        |
-        |     |          |Jane Smith                                        |
-        +-----+----------+--------------------------------------------------+
-        |3    |Bad group |No students                                       |
-        +=====+==========+==================================================+
-        """;
+            +=====+==========+==================================================+
+            |ID   |NAME      |STUDENTS                                          |
+            +=====+==========+==================================================+
+            |1    |Group 1   |John Doe                                          |
+            |     |          |Jane Doe                                          |
+            |     |          |Jane Depp                                         |
+            +-----+----------+--------------------------------------------------+
+            |2    |Group 2   |John Smith                                        |
+            |     |          |Jane Smith                                        |
+            +-----+----------+--------------------------------------------------+
+            |3    |Bad group |No students                                       |
+            +=====+==========+==================================================+
+            """;
     private static final String EXPANDED_STUDENT_TABLE = """
-        +=====+==========+==========+==========+========================================+
-        |ID   |GROUP     |FIRST NAME|LAST NAME |COURSES                                 |
-        +=====+==========+==========+==========+========================================+
-        |1    |Group 1   |John      |Doe       |Math                                    |
-        +-----+----------+----------+----------+----------------------------------------+
-        |2    |Group 1   |Jane      |Doe       |Math                                    |
-        |     |          |          |          |English                                 |
-        +-----+----------+----------+----------+----------------------------------------+
-        |3    |Group 2   |John      |Smith     |Math                                    |
-        |     |          |          |          |English                                 |
-        |     |          |          |          |Physics                                 |
-        +-----+----------+----------+----------+----------------------------------------+
-        |4    |Group 2   |Jane      |Smith     |Math                                    |
-        |     |          |          |          |English                                 |
-        |     |          |          |          |Physics                                 |
-        |     |          |          |          |Chemistry                               |
-        +-----+----------+----------+----------+----------------------------------------+
-        |5    |No group  |John      |Depp      |Math                                    |
-        +-----+----------+----------+----------+----------------------------------------+
-        |6    |Group 1   |Jane      |Depp      |No courses                              |
-        +=====+==========+==========+==========+========================================+
-        """;
+            +=====+==========+==========+==========+========================================+
+            |ID   |GROUP     |FIRST NAME|LAST NAME |COURSES                                 |
+            +=====+==========+==========+==========+========================================+
+            |1    |Group 1   |John      |Doe       |Math                                    |
+            +-----+----------+----------+----------+----------------------------------------+
+            |2    |Group 1   |Jane      |Doe       |Math                                    |
+            |     |          |          |          |English                                 |
+            +-----+----------+----------+----------+----------------------------------------+
+            |3    |Group 2   |John      |Smith     |Math                                    |
+            |     |          |          |          |English                                 |
+            |     |          |          |          |Physics                                 |
+            +-----+----------+----------+----------+----------------------------------------+
+            |4    |Group 2   |Jane      |Smith     |Math                                    |
+            |     |          |          |          |English                                 |
+            |     |          |          |          |Physics                                 |
+            |     |          |          |          |Chemistry                               |
+            +-----+----------+----------+----------+----------------------------------------+
+            |5    |No group  |John      |Depp      |Math                                    |
+            +-----+----------+----------+----------+----------------------------------------+
+            |6    |Group 1   |Jane      |Depp      |No courses                              |
+            +=====+==========+==========+==========+========================================+
+            """;
 
     private static List<StudentDto> studentDtoList;
     private static List<CourseDto> courseDtoList;
@@ -111,14 +112,14 @@ class TableFactoryTest {
         studentDtoList.add(new StudentDto(6, "Jane", "Depp", groupDtoList.get(0), List.of()));
 
         courseDtoList.forEach(courseDto -> courseDto.setStudentList(
-            studentDtoList.stream()
-                .filter(studentDto -> studentDto.getCoursesList().contains(courseDto))
-                .toList()));
+                studentDtoList.stream()
+                        .filter(studentDto -> studentDto.getCoursesList().contains(courseDto))
+                        .toList()));
 
         groupDtoList.forEach(groupDto -> groupDto.setStudentList(
-            studentDtoList.stream()
-                .filter(studentDto -> studentDto.getGroup() == groupDto)
-                .toList()));
+                studentDtoList.stream()
+                        .filter(studentDto -> studentDto.getGroup() == groupDto)
+                        .toList()));
     }
 
     @ParameterizedTest
@@ -136,11 +137,10 @@ class TableFactoryTest {
 
     public static Stream<Arguments> buildTable_ShouldReturnDefaultResult_WhenDtoListIsEmpty() {
         return Stream.of(
-            Arguments.of(List.of(), new ReducedGroupTableBuilder()),
-            Arguments.of(List.of(), new ReducedCourseTableBuilder()),
-            Arguments.of(List.of(), new ExpandedGroupTableBuilder()),
-            Arguments.of(List.of(), new ExpandedStudentTableBuilder())
-        );
+                Arguments.of(List.of(), new ReducedGroupTableBuilder()),
+                Arguments.of(List.of(), new ReducedCourseTableBuilder()),
+                Arguments.of(List.of(), new ExpandedGroupTableBuilder()),
+                Arguments.of(List.of(), new ExpandedStudentTableBuilder()));
     }
 
     @ParameterizedTest
@@ -155,10 +155,9 @@ class TableFactoryTest {
 
     public static Stream<Arguments> buildTable_ShouldReturnTableAsExpected() {
         return Stream.of(
-            Arguments.of(groupDtoList, new ReducedGroupTableBuilder(), REDUCED_GROUP_TABLE),
-            Arguments.of(courseDtoList, new ReducedCourseTableBuilder(), REDUCED_COURSE_TABLE),
-            Arguments.of(groupDtoList, new ExpandedGroupTableBuilder(), EXPANDED_GROUP_TABLE),
-            Arguments.of(studentDtoList, new ExpandedStudentTableBuilder(), EXPANDED_STUDENT_TABLE)
-        );
+                Arguments.of(groupDtoList, new ReducedGroupTableBuilder(), REDUCED_GROUP_TABLE),
+                Arguments.of(courseDtoList, new ReducedCourseTableBuilder(), REDUCED_COURSE_TABLE),
+                Arguments.of(groupDtoList, new ExpandedGroupTableBuilder(), EXPANDED_GROUP_TABLE),
+                Arguments.of(studentDtoList, new ExpandedStudentTableBuilder(), EXPANDED_STUDENT_TABLE));
     }
 }

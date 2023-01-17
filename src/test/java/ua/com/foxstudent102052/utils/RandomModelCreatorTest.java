@@ -1,12 +1,14 @@
 package ua.com.foxstudent102052.utils;
 
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
 import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 class RandomModelCreatorTest {
     public static final String COURSES_CSV = "csv/courses.csv";
@@ -24,14 +26,14 @@ class RandomModelCreatorTest {
 
         coursesNamesAndDescriptions = fileUtils.readCsvFileFromResources(COURSES_CSV);
         groupNames = fileUtils.readCsvFileFromResources(GROUPS_CSV).stream()
-            .map(s -> s[0])
-            .toList();
+                .map(s -> s[0])
+                .toList();
         studentNames = fileUtils.readCsvFileFromResources(STUDENT_NAMES_CSV).stream()
-            .map(s -> s[0])
-            .toList();
+                .map(s -> s[0])
+                .toList();
         studentSurnames = fileUtils.readCsvFileFromResources(STUDENT_SURNAMES_CSV).stream()
-            .map(s -> s[0])
-            .toList();
+                .map(s -> s[0])
+                .toList();
     }
 
     @Test
@@ -41,8 +43,8 @@ class RandomModelCreatorTest {
 
         // when
         var actual = groups.stream()
-            .filter(group -> group.getName() == null)
-            .toList();
+                .filter(group -> group.getName() == null)
+                .toList();
 
         // then
         assertTrue(actual.isEmpty());
@@ -55,8 +57,8 @@ class RandomModelCreatorTest {
 
         // when
         var actual = courses.stream()
-            .filter(course -> course.getName() == null || course.getDescription() == null)
-            .toList();
+                .filter(course -> course.getName() == null || course.getDescription() == null)
+                .toList();
 
         // then
         assertTrue(actual.isEmpty());
@@ -69,8 +71,9 @@ class RandomModelCreatorTest {
 
         // when
         var actual = students.stream()
-            .filter(student -> student.getFirstName() == null || student.getLastName() == null || student.getGroup() == null)
-            .toList();
+                .filter(student -> student.getFirstName() == null || student.getLastName() == null
+                        || student.getGroup() == null)
+                .toList();
 
         // then
         assertTrue(actual.isEmpty());
@@ -83,8 +86,8 @@ class RandomModelCreatorTest {
 
         // when
         var actual = students.stream()
-            .mapToInt(student -> student.getGroup().getId())
-            .anyMatch(id -> id < 0 || id > 9);
+                .mapToInt(student -> student.getGroup().getId())
+                .anyMatch(id -> id < 0 || id > 9);
 
         // then
         assertFalse(actual);
@@ -112,8 +115,8 @@ class RandomModelCreatorTest {
         // when
         var actual = RandomModelCreator.getStudentsCoursesRelations(studentsCount, coursesCount);
         boolean anyMatch = actual.values().stream()
-            .mapToInt(Set::size)
-            .anyMatch(size -> size <= 3 || size >= 1);
+                .mapToInt(Set::size)
+                .anyMatch(size -> size <= 3 || size >= 1);
 
         // then
         assertTrue(anyMatch);

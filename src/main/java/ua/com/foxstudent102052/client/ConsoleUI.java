@@ -1,5 +1,8 @@
 package ua.com.foxstudent102052.client;
 
+import java.io.InputStreamReader;
+import java.util.NoSuchElementException;
+
 import lombok.RequiredArgsConstructor;
 import ua.com.foxstudent102052.controller.CourseController;
 import ua.com.foxstudent102052.controller.GroupController;
@@ -14,27 +17,24 @@ import ua.com.foxstudent102052.table.impl.ReducedCourseTableBuilder;
 import ua.com.foxstudent102052.table.impl.ReducedGroupTableBuilder;
 import ua.com.foxstudent102052.utils.ConsoleUtils;
 
-import java.io.InputStreamReader;
-import java.util.NoSuchElementException;
-
 @RequiredArgsConstructor
 public class ConsoleUI {
     private static final String STUDENT_MENU = """
-        +----------------------------------------------------------------+
-        |********************* STUDENTS MANAGEMENT **********************|
-        +----------------------------------------------------------------+
-        |Please, choose one of the options below:                        |
-        +----------------------------------------------------------------+
-        |1. Add student;                                                 |
-        |2. Remove student by ID;                                        |
-        |3. Add student to course;                                       |
-        |4. Remove student from course;                                  |
-        |5. Find all groups with less or equal number of students;       |
-        |6. Find all students related to the course with the given name; |
-        |7. Print all students;                                          |
-        |0. Exit.                                                        |
-        +----------------------------------------------------------------+
-        """;
+            +----------------------------------------------------------------+
+            |********************* STUDENTS MANAGEMENT **********************|
+            +----------------------------------------------------------------+
+            |Please, choose one of the options below:                        |
+            +----------------------------------------------------------------+
+            |1. Add student;                                                 |
+            |2. Remove student by ID;                                        |
+            |3. Add student to course;                                       |
+            |4. Remove student from course;                                  |
+            |5. Find all groups with less or equal number of students;       |
+            |6. Find all students related to the course with the given name; |
+            |7. Print all students;                                          |
+            |0. Exit.                                                        |
+            +----------------------------------------------------------------+
+            """;
     private static final String ENTER_STUDENT_ID = "Enter student id: ";
     private static final String ENTER_GROUP_ID = "Enter group id: ";
     private static final String ENTER_COURSE_ID = "Enter course id: ";
@@ -99,13 +99,13 @@ public class ConsoleUI {
 
         int groupId = consoleUtils.getInputInt(ENTER_OPTION_NUMBER, reader);
         var chosenGroup = GroupDto.builder()
-            .id(groupId)
-            .build();
+                .id(groupId)
+                .build();
         var studentDto = StudentDto.builder()
-            .firstName(firstName)
-            .lastName(lastName)
-            .group(chosenGroup)
-            .build();
+                .firstName(firstName)
+                .lastName(lastName)
+                .group(chosenGroup)
+                .build();
 
         try {
             studentController.addStudent(studentDto);
@@ -199,14 +199,14 @@ public class ConsoleUI {
             var studentName = consoleUtils.getInputString(ENTER_STUDENT_NAME, reader);
             var allCourses = courseController.getAllCourses();
             var courseTable = tableFactory.buildTable(allCourses,
-                new ReducedCourseTableBuilder());
+                    new ReducedCourseTableBuilder());
 
             consoleUtils.print(courseTable);
             var courseId = consoleUtils.getInputInt(ENTER_GROUP_ID, reader);
             var studentsByCourseNameAndGroupId = studentController
-                .getStudents(studentName, courseId);
+                    .getStudents(studentName, courseId);
             var studentTable = tableFactory.buildTable(studentsByCourseNameAndGroupId,
-                new ExpandedStudentTableBuilder());
+                    new ExpandedStudentTableBuilder());
 
             consoleUtils.print(studentTable);
         } catch (DAOException | NoSuchElementException e) {

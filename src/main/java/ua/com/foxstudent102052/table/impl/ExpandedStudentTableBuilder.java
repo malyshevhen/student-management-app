@@ -6,13 +6,11 @@ import ua.com.foxstudent102052.model.dto.StudentDto;
 public class ExpandedStudentTableBuilder extends DtoTableBuilderImpl<StudentDto> {
     private static final String ROW = "|%-5s|%-10s|%-10s|%-10s|%-40s|";
     private static final String HEADER = """
-        +=====+==========+==========+==========+========================================+
-        |ID   |GROUP     |FIRST NAME|LAST NAME |COURSES                                 |
-        +=====+==========+==========+==========+========================================+""";
-    private static final String FOOTER =
-        "+=====+==========+==========+==========+========================================+";
-    private static final String SEMI_FOOTER =
-        "+-----+----------+----------+----------+----------------------------------------+";
+            +=====+==========+==========+==========+========================================+
+            |ID   |GROUP     |FIRST NAME|LAST NAME |COURSES                                 |
+            +=====+==========+==========+==========+========================================+""";
+    private static final String FOOTER = "+=====+==========+==========+==========+========================================+";
+    private static final String SEMI_FOOTER = "+-----+----------+----------+----------+----------------------------------------+";
 
     @Override
     protected String buildInfoBlock(StudentDto student) {
@@ -25,24 +23,24 @@ public class ExpandedStudentTableBuilder extends DtoTableBuilderImpl<StudentDto>
 
         if (courses.isEmpty()) {
             return studentBlockBuilder.append(String.format(ROW, id, group, firstName, lastName, "No courses"))
-                .append("\n")
-                .append(SEMI_FOOTER)
-                .append("\n").toString();
+                    .append("\n")
+                    .append(SEMI_FOOTER)
+                    .append("\n").toString();
         } else {
             for (int i = 0; i < courses.size(); i++) {
                 if (i == 0) {
                     studentBlockBuilder.append(String.format(ROW, id, group, firstName, lastName,
                             courses.get(i).getName()))
-                        .append("\n");
+                            .append("\n");
                 } else {
                     studentBlockBuilder
-                        .append(String.format(ROW, " ", " ", " ", " ", courses.get(i).getName()))
-                        .append("\n");
+                            .append(String.format(ROW, " ", " ", " ", " ", courses.get(i).getName()))
+                            .append("\n");
                 }
             }
 
             return studentBlockBuilder.append(SEMI_FOOTER)
-                .append("\n").toString();
+                    .append("\n").toString();
         }
     }
 

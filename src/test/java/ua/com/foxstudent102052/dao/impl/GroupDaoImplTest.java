@@ -1,7 +1,15 @@
 package ua.com.foxstudent102052.dao.impl;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mock;
+
+import java.sql.SQLException;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
 import ua.com.foxstudent102052.dao.datasource.impl.PooledDataSource;
 import ua.com.foxstudent102052.dao.datasource.interfaces.CustomDataSource;
 import ua.com.foxstudent102052.dao.exceptions.DAOException;
@@ -9,13 +17,6 @@ import ua.com.foxstudent102052.dao.interfaces.GroupDao;
 import ua.com.foxstudent102052.dao.interfaces.PostDAO;
 import ua.com.foxstudent102052.model.entity.Group;
 import ua.com.foxstudent102052.utils.FileUtils;
-
-import java.sql.SQLException;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.mock;
 
 class GroupDaoImplTest {
     private CustomDataSource customDataSource;
@@ -60,7 +61,7 @@ class GroupDaoImplTest {
 
         // then
         assertThrows(DAOException.class, () -> groupDao.addGroup(group),
-            "Group wasn`t added");
+                "Group wasn`t added");
     }
 
     @Test
@@ -83,7 +84,7 @@ class GroupDaoImplTest {
 
         // then
         assertThrows(DAOException.class, () -> groupDao.getGroups(),
-            "Groups weren`t received");
+                "Groups weren`t received");
     }
 
     @Test
@@ -109,7 +110,7 @@ class GroupDaoImplTest {
 
         // then
         assertThrows(DAOException.class, () -> groupDao.getGroup(1),
-            "Group wasn`t received");
+                "Group wasn`t received");
     }
 
     @Test
@@ -135,7 +136,7 @@ class GroupDaoImplTest {
 
         // then
         assertThrows(DAOException.class, () -> groupDao.getGroup("Group 1"),
-            "Group wasn`t received");
+                "Group wasn`t received");
     }
 
     @Test
@@ -158,6 +159,6 @@ class GroupDaoImplTest {
 
         // then
         assertThrows(DAOException.class, () -> groupDao.getGroupsLessThen(2),
-            "Groups weren`t received");
+                "Groups weren`t received");
     }
 }

@@ -1,20 +1,23 @@
 package ua.com.foxstudent102052.service.impl;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import java.util.List;
+import java.util.Optional;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.modelmapper.ModelMapper;
+
 import ua.com.foxstudent102052.dao.exceptions.DAOException;
 import ua.com.foxstudent102052.dao.interfaces.GroupDao;
 import ua.com.foxstudent102052.model.dto.GroupDto;
 import ua.com.foxstudent102052.model.entity.Group;
 import ua.com.foxstudent102052.service.exceptions.ElementAlreadyExistException;
 import ua.com.foxstudent102052.service.interfaces.GroupService;
-
-import java.util.List;
-import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.*;
 
 class GroupServiceImplTest {
     private final ModelMapper modelMapper = new ModelMapper();
@@ -44,13 +47,13 @@ class GroupServiceImplTest {
     void MethodGetAllGroups_ShouldReturnAllGroupsFromDb() throws DAOException, ElementAlreadyExistException {
         // given
         var groups = List.of(
-            Group.builder().name("SomeGroup1").build(),
-            Group.builder().name("SomeGroup2").build(),
-            Group.builder().name("SomeGroup3").build());
+                Group.builder().name("SomeGroup1").build(),
+                Group.builder().name("SomeGroup2").build(),
+                Group.builder().name("SomeGroup3").build());
 
         var expected = groups.stream()
-            .map(group -> modelMapper.map(group, GroupDto.class))
-            .toList();
+                .map(group -> modelMapper.map(group, GroupDto.class))
+                .toList();
 
         // when
         when(groupDao.getGroups()).thenReturn(groups);
@@ -89,13 +92,13 @@ class GroupServiceImplTest {
     void MethodGetGroupsSmallerThen_ShouldReturnGroupsFromDb() throws DAOException, ElementAlreadyExistException {
         // given
         var groups = List.of(
-            Group.builder().name("SomeGroup1").build(),
-            Group.builder().name("SomeGroup2").build(),
-            Group.builder().name("SomeGroup3").build());
+                Group.builder().name("SomeGroup1").build(),
+                Group.builder().name("SomeGroup2").build(),
+                Group.builder().name("SomeGroup3").build());
 
         var expected = groups.stream()
-            .map(group -> modelMapper.map(group, GroupDto.class))
-            .toList();
+                .map(group -> modelMapper.map(group, GroupDto.class))
+                .toList();
 
         // when
         when(groupDao.getGroupsLessThen(3)).thenReturn(groups);

@@ -1,10 +1,10 @@
 package ua.com.foxstudent102052.dao.impl;
 
+import java.sql.SQLException;
+
 import lombok.extern.slf4j.Slf4j;
 import ua.com.foxstudent102052.dao.datasource.interfaces.CustomDataSource;
 import ua.com.foxstudent102052.dao.exceptions.DAOException;
-
-import java.sql.SQLException;
 
 @Slf4j
 public class PostDAOImpl implements ua.com.foxstudent102052.dao.interfaces.PostDAO {
@@ -20,7 +20,7 @@ public class PostDAOImpl implements ua.com.foxstudent102052.dao.interfaces.PostD
     @Override
     public void doPost(String query) {
         try (var connection = customDataSource.getConnection();
-             var statement = connection.createStatement()) {
+                var statement = connection.createStatement()) {
 
             log.info(CONNECTION_SUCCESSFUL);
             statement.executeUpdate(query);
