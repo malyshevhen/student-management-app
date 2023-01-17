@@ -1,15 +1,17 @@
 package ua.com.foxstudent102052.dao.datasource.impl;
 
-import com.zaxxer.hikari.HikariConfig;
-import com.zaxxer.hikari.HikariDataSource;
-import org.springframework.stereotype.Component;
-import ua.com.foxstudent102052.dao.datasource.interfaces.CustomDataSource;
-import ua.com.foxstudent102052.utils.FileUtils;
-
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Properties;
+
+import org.springframework.stereotype.Component;
+
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
+
+import ua.com.foxstudent102052.dao.datasource.interfaces.CustomDataSource;
+import ua.com.foxstudent102052.utils.FileUtils;
 
 @Component
 public class PooledDataSource implements CustomDataSource {

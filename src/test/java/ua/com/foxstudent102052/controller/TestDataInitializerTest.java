@@ -1,8 +1,16 @@
 package ua.com.foxstudent102052.controller;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.Mockito.atLeast;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+
 import ua.com.foxstudent102052.model.dto.CourseDto;
 import ua.com.foxstudent102052.model.dto.GroupDto;
 import ua.com.foxstudent102052.model.dto.StudentDto;
@@ -11,9 +19,6 @@ import ua.com.foxstudent102052.service.interfaces.CourseService;
 import ua.com.foxstudent102052.service.interfaces.GroupService;
 import ua.com.foxstudent102052.service.interfaces.StudentService;
 import ua.com.foxstudent102052.utils.FileUtils;
-
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
 
 @ExtendWith(org.mockito.junit.jupiter.MockitoExtension.class)
 class TestDataInitializerTest {
@@ -29,7 +34,8 @@ class TestDataInitializerTest {
         groupService = mock(GroupService.class);
         studentService = mock(StudentService.class);
         courseService = mock(CourseService.class);
-        testDataInitializer = new TestDataInitializer(studentService, courseService, groupService, queryPostService, fileUtils);
+        testDataInitializer = new TestDataInitializer(studentService, courseService, groupService, queryPostService,
+                fileUtils);
     }
 
     @Test

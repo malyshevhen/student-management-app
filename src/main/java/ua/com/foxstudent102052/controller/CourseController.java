@@ -1,15 +1,16 @@
 package ua.com.foxstudent102052.controller;
 
-import lombok.RequiredArgsConstructor;
+import java.util.List;
+import java.util.NoSuchElementException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import lombok.RequiredArgsConstructor;
 import ua.com.foxstudent102052.dao.exceptions.DAOException;
 import ua.com.foxstudent102052.model.dto.CourseDto;
 import ua.com.foxstudent102052.service.interfaces.CourseService;
 import ua.com.foxstudent102052.service.interfaces.StudentService;
-
-import java.util.List;
-import java.util.NoSuchElementException;
 
 @Component
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
@@ -19,8 +20,8 @@ public class CourseController {
 
     public List<CourseDto> getAllCourses() throws DAOException {
         return courseService.getCourses().stream()
-            .map(this::setStudentsToCourse)
-            .toList();
+                .map(this::setStudentsToCourse)
+                .toList();
     }
 
     private CourseDto setStudentsToCourse(CourseDto courseDto) {

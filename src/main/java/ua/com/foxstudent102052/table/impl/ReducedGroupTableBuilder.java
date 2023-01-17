@@ -5,9 +5,9 @@ import ua.com.foxstudent102052.model.dto.GroupDto;
 public class ReducedGroupTableBuilder extends DtoTableBuilderImpl<GroupDto> {
     private static final String ROW = "|%-5s|%-10s|";
     private static final String HEATHER = """
-        +=====+==========+
-        |ID   |NAME      |
-        +=====+==========+""";
+            +=====+==========+
+            |ID   |NAME      |
+            +=====+==========+""";
     private static final String FOOTER = "+=====+==========+";
     private static final String SEMI_FOOTER = "+-----+----------+";
 
@@ -18,9 +18,9 @@ public class ReducedGroupTableBuilder extends DtoTableBuilderImpl<GroupDto> {
         var name = group.getName();
 
         return groupTableBlockBuilder.append(String.format(ROW, id, name))
-            .append("\n")
-            .append(SEMI_FOOTER)
-            .append("\n").toString();
+                .append("\n")
+                .append(SEMI_FOOTER)
+                .append("\n").toString();
     }
 
     @Override

@@ -1,8 +1,8 @@
 package ua.com.foxstudent102052.table.impl;
 
-import ua.com.foxstudent102052.table.interfaces.TableBuilder;
-
 import java.util.List;
+
+import ua.com.foxstudent102052.table.interfaces.TableBuilder;
 
 abstract class DtoTableBuilderImpl<T> implements TableBuilder<T> {
     private static final String DEFAULT_RESULT = "List is empty";
@@ -15,17 +15,17 @@ abstract class DtoTableBuilderImpl<T> implements TableBuilder<T> {
         } else {
             var tableBuilder = new StringBuilder();
             tableBuilder.append(getHeather())
-                .append("\n");
+                    .append("\n");
 
             for (T dto : dtoList) {
                 tableBuilder.append(buildInfoBlock(dto));
             }
 
             return tableBuilder
-                .replace(tableBuilder.length() - getFooter().length() - 1,
-                    tableBuilder.length() - 1,
-                    getFooter())
-                .toString();
+                    .replace(tableBuilder.length() - getFooter().length() - 1,
+                            tableBuilder.length() - 1,
+                            getFooter())
+                    .toString();
         }
     }
 

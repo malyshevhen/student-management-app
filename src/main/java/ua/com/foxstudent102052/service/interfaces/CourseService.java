@@ -1,8 +1,8 @@
 package ua.com.foxstudent102052.service.interfaces;
 
-import ua.com.foxstudent102052.model.dto.CourseDto;
-
 import java.util.List;
+
+import ua.com.foxstudent102052.model.dto.CourseDto;
 
 public interface CourseService {
     void addCourse(CourseDto courseDto);

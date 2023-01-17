@@ -1,11 +1,11 @@
 package ua.com.foxstudent102052.utils;
 
-import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.BufferedReader;
 import java.io.StringReader;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import org.junit.jupiter.api.Test;
 
 class ConsoleUtilsTest {
     private final ConsoleUtils consoleUtils = new ConsoleUtils();

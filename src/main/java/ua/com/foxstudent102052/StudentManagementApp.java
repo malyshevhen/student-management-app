@@ -1,10 +1,11 @@
 package ua.com.foxstudent102052;
 
-import jakarta.annotation.PostConstruct;
-import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+import jakarta.annotation.PostConstruct;
+import lombok.AllArgsConstructor;
 import ua.com.foxstudent102052.client.ConsoleUI;
 import ua.com.foxstudent102052.controller.TestDataInitializer;
 

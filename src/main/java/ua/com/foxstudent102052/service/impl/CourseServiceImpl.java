@@ -44,9 +44,9 @@ public class CourseServiceImpl implements CourseService {
             throw new NoSuchElementException("There are no courses in database");
         } else {
             return courseDao.getCourses()
-                .stream()
-                .map(course -> modelMapper.map(course, CourseDto.class))
-                .toList();
+                    .stream()
+                    .map(course -> modelMapper.map(course, CourseDto.class))
+                    .toList();
         }
     }
 
@@ -56,9 +56,9 @@ public class CourseServiceImpl implements CourseService {
             throw new NoSuchElementException("There are no students on course");
         } else {
             return courseDao.getCourses(studentId)
-                .stream()
-                .map(course -> modelMapper.map(course, CourseDto.class))
-                .toList();
+                    .stream()
+                    .map(course -> modelMapper.map(course, CourseDto.class))
+                    .toList();
         }
     }
 }

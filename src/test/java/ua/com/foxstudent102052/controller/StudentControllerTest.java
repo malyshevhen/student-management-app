@@ -1,7 +1,17 @@
 package ua.com.foxstudent102052.controller;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import java.util.List;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
 import ua.com.foxstudent102052.model.dto.CourseDto;
 import ua.com.foxstudent102052.model.dto.GroupDto;
 import ua.com.foxstudent102052.model.dto.StudentDto;
@@ -9,13 +19,6 @@ import ua.com.foxstudent102052.service.exceptions.ElementAlreadyExistException;
 import ua.com.foxstudent102052.service.interfaces.CourseService;
 import ua.com.foxstudent102052.service.interfaces.GroupService;
 import ua.com.foxstudent102052.service.interfaces.StudentService;
-
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.*;
 
 class StudentControllerTest {
     private StudentService studentService;
@@ -78,42 +81,42 @@ class StudentControllerTest {
                 .lastName("Doe")
                 .group(group)
                 .build(),
-            StudentDto.builder()
-                .id(2)
-                .firstName("Jane")
-                .lastName("Doe")
-                .group(group)
-                .build());
+                StudentDto.builder()
+                        .id(2)
+                        .firstName("Jane")
+                        .lastName("Doe")
+                        .group(group)
+                        .build());
         var courses = List.of(
-            CourseDto
-                .builder()
-                .id(1)
-                .name("Java")
-                .description("Java course")
-                .build(),
-            CourseDto
-                .builder()
-                .id(2)
-                .name("C#")
-                .description("C# course")
-                .build());
+                CourseDto
+                        .builder()
+                        .id(1)
+                        .name("Java")
+                        .description("Java course")
+                        .build(),
+                CourseDto
+                        .builder()
+                        .id(2)
+                        .name("C#")
+                        .description("C# course")
+                        .build());
 
         var expected = List.of(
-            StudentDto
-                .builder()
-                .id(1)
-                .firstName("John")
-                .lastName("Doe")
-                .group(group)
-                .coursesList(courses)
-                .build(),
-            StudentDto.builder()
-                .id(2)
-                .firstName("Jane")
-                .lastName("Doe")
-                .group(group)
-                .coursesList(courses)
-                .build());
+                StudentDto
+                        .builder()
+                        .id(1)
+                        .firstName("John")
+                        .lastName("Doe")
+                        .group(group)
+                        .coursesList(courses)
+                        .build(),
+                StudentDto.builder()
+                        .id(2)
+                        .firstName("Jane")
+                        .lastName("Doe")
+                        .group(group)
+                        .coursesList(courses)
+                        .build());
 
         // when
         when(studentService.getStudents()).thenReturn(studentsDto);
@@ -137,7 +140,7 @@ class StudentControllerTest {
 
     @Test
     void MethodGetStudents_ShouldReturnListOfStudentsWithCoursesAndGroup_ByNameAndCourseId()
-        throws ElementAlreadyExistException {
+            throws ElementAlreadyExistException {
         // given
         var group = GroupDto.builder().id(1).name("Java").build();
         var studentsDto = List.of(StudentDto
@@ -147,42 +150,42 @@ class StudentControllerTest {
                 .lastName("Doe")
                 .group(group)
                 .build(),
-            StudentDto.builder()
-                .id(2)
-                .firstName("John")
-                .lastName("Fox")
-                .group(group)
-                .build());
+                StudentDto.builder()
+                        .id(2)
+                        .firstName("John")
+                        .lastName("Fox")
+                        .group(group)
+                        .build());
         var courses = List.of(
-            CourseDto
-                .builder()
-                .id(1)
-                .name("Java")
-                .description("Java course")
-                .build(),
-            CourseDto
-                .builder()
-                .id(2)
-                .name("C#")
-                .description("C# course")
-                .build());
+                CourseDto
+                        .builder()
+                        .id(1)
+                        .name("Java")
+                        .description("Java course")
+                        .build(),
+                CourseDto
+                        .builder()
+                        .id(2)
+                        .name("C#")
+                        .description("C# course")
+                        .build());
 
         var expected = List.of(
-            StudentDto
-                .builder()
-                .id(1)
-                .firstName("John")
-                .lastName("Doe")
-                .group(group)
-                .coursesList(courses)
-                .build(),
-            StudentDto.builder()
-                .id(2)
-                .firstName("John")
-                .lastName("Fox")
-                .group(group)
-                .coursesList(courses)
-                .build());
+                StudentDto
+                        .builder()
+                        .id(1)
+                        .firstName("John")
+                        .lastName("Doe")
+                        .group(group)
+                        .coursesList(courses)
+                        .build(),
+                StudentDto.builder()
+                        .id(2)
+                        .firstName("John")
+                        .lastName("Fox")
+                        .group(group)
+                        .coursesList(courses)
+                        .build());
 
         // when
         when(studentService.getStudents(anyString(), anyInt())).thenReturn(studentsDto);
