@@ -21,14 +21,15 @@ public class GroupController {
 
     public List<GroupDto> getAllGroups() throws NoSuchElementException, ElementAlreadyExistException {
         return groupService.getGroups().stream()
-            .map(this::setStudentsToGroups)
-            .toList();
+                .map(this::setStudentsToGroups)
+                .toList();
     }
 
-    public List<GroupDto> getGroupsSmallerThen(int numberOfStudents) throws NoSuchElementException, ElementAlreadyExistException {
+    public List<GroupDto> getGroupsSmallerThen(int numberOfStudents)
+            throws NoSuchElementException, ElementAlreadyExistException {
         return groupService.getGroupsLessThen(numberOfStudents).stream()
-            .map(this::setStudentsToGroups)
-            .toList();
+                .map(this::setStudentsToGroups)
+                .toList();
     }
 
     private GroupDto setStudentsToGroups(GroupDto groupDto) {
