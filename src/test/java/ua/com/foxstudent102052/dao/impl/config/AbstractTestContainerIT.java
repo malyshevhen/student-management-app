@@ -5,6 +5,8 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
@@ -18,25 +20,12 @@ public abstract class AbstractTestContainerIT {
     private static final String POSTGRES_VERSION = "postgres:15";
 
     @Container
-    public static PostgreSQLContainer<?> postgreSQLContainer;
+    public static PostgreSQLContainer<?> container= new PostgreSQLContainer<>(POSTGRES_VERSION);
 
-    static {
-        postgreSQLContainer = new PostgreSQLContainer<>(POSTGRES_VERSION)
-            .withDatabaseName("tests-db")
-            .withUsername("sa")
-            .withPassword("sa");
-    }
-
-    public static void start() {
-        postgreSQLContainer.start();
-
-        System.setProperty("DATASOURCE_CLASS_NAME", postgreSQLContainer.getDriverClassName());
-        System.setProperty("DATASOURCE_URL", postgreSQLContainer.getJdbcUrl());
-        System.setProperty("DATASOURCE_USER", postgreSQLContainer.getUsername());
-        System.setProperty("DATASOURCE_PASSWORD", postgreSQLContainer.getPassword());
-    }
-
-    public static void close() {
-        postgreSQLContainer.close();
+    @DynamicPropertySource
+    public static void overrideProps(DynamicPropertyRegistry registry) {
+        registry.add("spring.datasource.url", container::getJdbcUrl);
+        registry.add("spring.datasource.username", container::getUsername);
+        registry.add("spring.datasource.password", container::getPassword);
     }
 }

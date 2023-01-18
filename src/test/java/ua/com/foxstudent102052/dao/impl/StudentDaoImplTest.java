@@ -1,18 +1,17 @@
 package ua.com.foxstudent102052.dao.impl;
 
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import java.util.List;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.transaction.annotation.Transactional;
+
 import ua.com.foxstudent102052.dao.impl.config.AbstractTestContainerIT;
 import ua.com.foxstudent102052.dao.interfaces.StudentDao;
 import ua.com.foxstudent102052.model.entity.Student;
-
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class StudentDaoImplTest extends AbstractTestContainerIT {
 
@@ -23,26 +22,16 @@ class StudentDaoImplTest extends AbstractTestContainerIT {
         studentDao = new StudentDaoImpl(jdbcTemplate);
     }
 
-    @BeforeAll
-    static void setUp() {
-        start();
-    }
-
-    @AfterAll
-    static void tearDown() {
-        close();
-    }
-
     @Test
     @Transactional
     void MethodAddStudent_ShouldAddStudentToDb() {
         // given
         var newStudent = Student.builder()
-            .id(1)
-            .groupId(1)
-            .firstName("John")
-            .lastName("Doe")
-            .build();
+                .id(1)
+                .groupId(1)
+                .firstName("John")
+                .lastName("Doe")
+                .build();
 
         // when
         studentDao.addStudent(newStudent);
@@ -58,11 +47,11 @@ class StudentDaoImplTest extends AbstractTestContainerIT {
     void MethodAddStudentToCourse_ShouldAddStudentToNewCourse() {
         // given
         var expected = Student.builder()
-            .id(1)
-            .groupId(1)
-            .firstName("Leia")
-            .lastName("Organa")
-            .build();
+                .id(1)
+                .groupId(1)
+                .firstName("Leia")
+                .lastName("Organa")
+                .build();
 
         // when
         studentDao.addStudentToCourse(1, 2);
@@ -86,30 +75,30 @@ class StudentDaoImplTest extends AbstractTestContainerIT {
     @Transactional
     void MethodGetStudentsByCourseId_ShouldReturnStudentByCourseId() {
         var expected = List.of(
-            Student.builder()
-                .id(1)
-                .groupId(1)
-                .firstName("Leia")
-                .lastName("Organa")
-                .build(),
-            Student.builder()
-                .id(2)
-                .groupId(1)
-                .firstName("Luke")
-                .lastName("Skywalker")
-                .build(),
-            Student.builder()
-                .id(3)
-                .groupId(1)
-                .firstName("Han")
-                .lastName("Solo")
-                .build(),
-            Student.builder()
-                .id(4)
-                .groupId(1)
-                .firstName("Padme")
-                .lastName("Amidala")
-                .build());
+                Student.builder()
+                        .id(1)
+                        .groupId(1)
+                        .firstName("Leia")
+                        .lastName("Organa")
+                        .build(),
+                Student.builder()
+                        .id(2)
+                        .groupId(1)
+                        .firstName("Luke")
+                        .lastName("Skywalker")
+                        .build(),
+                Student.builder()
+                        .id(3)
+                        .groupId(1)
+                        .firstName("Han")
+                        .lastName("Solo")
+                        .build(),
+                Student.builder()
+                        .id(4)
+                        .groupId(1)
+                        .firstName("Padme")
+                        .lastName("Amidala")
+                        .build());
 
         var actual = studentDao.getStudentsByGroup(1);
 
@@ -120,42 +109,42 @@ class StudentDaoImplTest extends AbstractTestContainerIT {
     @Transactional
     void MethodGetStudentsByGroup_ShouldReturnStudentByGroupId() {
         var expected = List.of(
-            Student.builder()
-                .id(1)
-                .groupId(1)
-                .firstName("Leia")
-                .lastName("Organa")
-                .build(),
-            Student.builder()
-                .id(2)
-                .groupId(1)
-                .firstName("Luke")
-                .lastName("Skywalker")
-                .build(),
-            Student.builder()
-                .id(4)
-                .groupId(1)
-                .firstName("Padme")
-                .lastName("Amidala")
-                .build(),
-            Student.builder()
-                .id(5)
-                .groupId(2)
-                .firstName("Dart")
-                .lastName("Maul")
-                .build(),
-            Student.builder()
-                .id(9)
-                .groupId(2)
-                .firstName("Dart")
-                .lastName("Vader")
-                .build(),
-            Student.builder()
-                .id(10)
-                .groupId(3)
-                .firstName("Jah Jah")
-                .lastName("Binks")
-                .build());
+                Student.builder()
+                        .id(1)
+                        .groupId(1)
+                        .firstName("Leia")
+                        .lastName("Organa")
+                        .build(),
+                Student.builder()
+                        .id(2)
+                        .groupId(1)
+                        .firstName("Luke")
+                        .lastName("Skywalker")
+                        .build(),
+                Student.builder()
+                        .id(4)
+                        .groupId(1)
+                        .firstName("Padme")
+                        .lastName("Amidala")
+                        .build(),
+                Student.builder()
+                        .id(5)
+                        .groupId(2)
+                        .firstName("Dart")
+                        .lastName("Maul")
+                        .build(),
+                Student.builder()
+                        .id(9)
+                        .groupId(2)
+                        .firstName("Dart")
+                        .lastName("Vader")
+                        .build(),
+                Student.builder()
+                        .id(10)
+                        .groupId(3)
+                        .firstName("Jah Jah")
+                        .lastName("Binks")
+                        .build());
 
         var actual = studentDao.getStudentsByCourse(1);
 
@@ -166,18 +155,18 @@ class StudentDaoImplTest extends AbstractTestContainerIT {
     @Transactional
     void MethodGetStudentsByNameAndCourse_ShouldReturnListOfStudents_ByStudentNameAndCourseId() {
         var expected = List.of(
-            Student.builder()
-                .id(5)
-                .groupId(2)
-                .firstName("Dart")
-                .lastName("Maul")
-                .build(),
-            Student.builder()
-                .id(9)
-                .groupId(2)
-                .firstName("Dart")
-                .lastName("Vader")
-                .build());
+                Student.builder()
+                        .id(5)
+                        .groupId(2)
+                        .firstName("Dart")
+                        .lastName("Maul")
+                        .build(),
+                Student.builder()
+                        .id(9)
+                        .groupId(2)
+                        .firstName("Dart")
+                        .lastName("Vader")
+                        .build());
 
         var actual = studentDao.getStudentsByNameAndCourse("Dart", 1);
 
@@ -202,11 +191,11 @@ class StudentDaoImplTest extends AbstractTestContainerIT {
     void MethodGetStudentById_ShouldReturnStudentFromDb() {
         // given
         var expected = Student.builder()
-            .id(1)
-            .groupId(1)
-            .firstName("Leia")
-            .lastName("Organa")
-            .build();
+                .id(1)
+                .groupId(1)
+                .firstName("Leia")
+                .lastName("Organa")
+                .build();
 
         // when
         var actual = studentDao.getStudent(1).get();
