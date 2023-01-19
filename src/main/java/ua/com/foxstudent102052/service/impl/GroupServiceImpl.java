@@ -5,7 +5,7 @@ import java.util.NoSuchElementException;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
 import ua.com.foxstudent102052.dao.exceptions.DAOException;
@@ -15,13 +15,13 @@ import ua.com.foxstudent102052.model.entity.Group;
 import ua.com.foxstudent102052.service.exceptions.ElementAlreadyExistException;
 import ua.com.foxstudent102052.service.interfaces.GroupService;
 
-@Component
+@Service
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class GroupServiceImpl implements GroupService {
     public static final String GROUP_DOES_NOT_EXIST = "This group does not exist in DB";
 
     private final GroupDao groupDao;
-    private final ModelMapper modelMapper = new ModelMapper();
+    private final ModelMapper modelMapper;
 
     @Override
     public void addGroup(GroupDto groupDto) throws DAOException {

@@ -4,22 +4,23 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
+import javax.sql.DataSource;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import ua.com.foxstudent102052.dao.datasource.interfaces.CustomDataSource;
 import ua.com.foxstudent102052.dao.exceptions.DAOException;
 import ua.com.foxstudent102052.dao.interfaces.GroupDao;
 import ua.com.foxstudent102052.dao.mapper.GroupDaoMapper;
 import ua.com.foxstudent102052.model.entity.Group;
 
-@Component
+@Repository
 @Slf4j
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class GroupDaoImpl implements GroupDao {
-    private final CustomDataSource dataSource;
+    private final DataSource dataSource;
 
     @Override
     public void addGroup(Group group) {

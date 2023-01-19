@@ -1,9 +1,13 @@
 package ua.com.foxstudent102052.service.impl;
 
-import lombok.RequiredArgsConstructor;
+import java.util.List;
+import java.util.NoSuchElementException;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
+
+import lombok.RequiredArgsConstructor;
 import ua.com.foxstudent102052.dao.exceptions.DAOException;
 import ua.com.foxstudent102052.dao.interfaces.CourseDao;
 import ua.com.foxstudent102052.model.dto.CourseDto;
@@ -11,14 +15,11 @@ import ua.com.foxstudent102052.model.entity.Course;
 import ua.com.foxstudent102052.service.exceptions.ElementAlreadyExistException;
 import ua.com.foxstudent102052.service.interfaces.CourseService;
 
-import java.util.List;
-import java.util.NoSuchElementException;
-
-@Component
+@Service
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class CourseServiceImpl implements CourseService {
-    private static final ModelMapper modelMapper = new ModelMapper();
     private final CourseDao courseDao;
+    private final ModelMapper modelMapper;
 
     @Override
     public void addCourse(CourseDto courseDto) throws DAOException {

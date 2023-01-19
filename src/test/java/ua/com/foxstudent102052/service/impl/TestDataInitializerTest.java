@@ -1,4 +1,4 @@
-package ua.com.foxstudent102052.controller;
+package ua.com.foxstudent102052.service.impl;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
@@ -15,6 +15,7 @@ import ua.com.foxstudent102052.model.dto.CourseDto;
 import ua.com.foxstudent102052.model.dto.GroupDto;
 import ua.com.foxstudent102052.model.dto.StudentDto;
 import ua.com.foxstudent102052.service.QueryPostService;
+import ua.com.foxstudent102052.service.TestDataInitializer;
 import ua.com.foxstudent102052.service.interfaces.CourseService;
 import ua.com.foxstudent102052.service.interfaces.GroupService;
 import ua.com.foxstudent102052.service.interfaces.StudentService;

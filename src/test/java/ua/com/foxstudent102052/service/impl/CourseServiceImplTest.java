@@ -27,7 +27,7 @@ class CourseServiceImplTest {
     @BeforeEach
     public void setUp() {
         courseDao = mock(CourseDao.class);
-        courseService = new CourseServiceImpl(courseDao);
+        courseService = new CourseServiceImpl(courseDao, modelMapper);
     }
 
     @Test

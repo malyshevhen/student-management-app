@@ -27,7 +27,7 @@ class GroupServiceImplTest {
     @BeforeEach
     public void setUp() {
         groupDao = mock(GroupDao.class);
-        groupService = new GroupServiceImpl(groupDao);
+        groupService = new GroupServiceImpl(groupDao, modelMapper);
     }
 
     @Test

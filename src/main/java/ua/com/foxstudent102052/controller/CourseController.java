@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Controller;
 
 import lombok.RequiredArgsConstructor;
 import ua.com.foxstudent102052.dao.exceptions.DAOException;
@@ -12,7 +12,7 @@ import ua.com.foxstudent102052.model.dto.CourseDto;
 import ua.com.foxstudent102052.service.interfaces.CourseService;
 import ua.com.foxstudent102052.service.interfaces.StudentService;
 
-@Component
+@Controller
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class CourseController {
     private final CourseService courseService;

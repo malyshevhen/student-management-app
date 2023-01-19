@@ -32,7 +32,7 @@ class StudentServiceImplTest {
     @BeforeEach
     public void setUp() {
         studentDao = mock(StudentDao.class);
-        studentService = new StudentServiceImpl(studentDao);
+        studentService = new StudentServiceImpl(studentDao, modelMapper);
     }
 
     @Test

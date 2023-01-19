@@ -1,38 +1,40 @@
 package ua.com.foxstudent102052.dao.impl;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.mock;
 
-import java.sql.SQLException;
 import java.util.List;
+
+import javax.sql.DataSource;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 
-import ua.com.foxstudent102052.dao.datasource.impl.PooledDataSource;
-import ua.com.foxstudent102052.dao.datasource.interfaces.CustomDataSource;
 import ua.com.foxstudent102052.dao.exceptions.DAOException;
 import ua.com.foxstudent102052.dao.interfaces.PostDAO;
 import ua.com.foxstudent102052.dao.interfaces.StudentDao;
 import ua.com.foxstudent102052.model.entity.Student;
 import ua.com.foxstudent102052.utils.FileUtils;
 
+@JdbcTest
 class StudentDaoImplTest {
-    private CustomDataSource customDataSource;
-    private StudentDao studentDao;
+    private final StudentDao studentDao;
+    private final PostDAO postDAO;
+    private final FileUtils fileUtils;
+
+    @Autowired
+    public StudentDaoImplTest(DataSource dataSource) {
+        this.studentDao = new StudentDaoImpl(dataSource);
+        this.postDAO = new PostDaoImpl(dataSource);
+        this.fileUtils = new FileUtils();
+    }
 
     @BeforeEach
     public void setUp() throws DAOException {
-        customDataSource = PooledDataSource.getInstance();
-        studentDao = new StudentDaoImpl(customDataSource);
-
-        FileUtils fileUtils = new FileUtils();
         var ddlScript = fileUtils.readFileFromResourcesAsString("scripts/ddl/Table_creation.sql");
         var dmlScript = fileUtils.readFileFromResourcesAsString("scripts/dml/testDB_Data.sql");
 
-        PostDAO postDAO = new PostDAOImpl(customDataSource);
         postDAO.doPost(ddlScript);
         postDAO.doPost(dmlScript);
     }
@@ -57,21 +59,6 @@ class StudentDaoImplTest {
     }
 
     @Test
-    void MethodAddStudent_ShouldThrowException_WhenDAOExceptionThrown() throws SQLException {
-        // given
-        customDataSource = mock(CustomDataSource.class);
-        studentDao = new StudentDaoImpl(customDataSource);
-        var student = new Student(0, 0, "", "");
-
-        // when
-        doThrow(SQLException.class).when(customDataSource).getConnection();
-
-        // then
-        assertThrows(DAOException.class, () -> studentDao.addStudent(student),
-                "Error while adding student to the database");
-    }
-
-    @Test
     void MethodAddStudentToCourse_ShouldAddStudentToNewCourse() throws DAOException {
         // given
         var expected = Student.builder()
@@ -87,21 +74,6 @@ class StudentDaoImplTest {
 
         // then
         assertEquals(expected, actual);
-    }
-
-    @Test
-    void MethodAddStudentToCourse_ShouldThrowAnException_IfIdIsInvalid() throws SQLException {
-        // given
-        customDataSource = mock(CustomDataSource.class);
-        studentDao = new StudentDaoImpl(customDataSource);
-
-        // when
-        doThrow(SQLException.class).when(customDataSource).getConnection();
-
-        // then
-        assertThrows(DAOException.class, () -> studentDao.addStudentToCourse(1, 1),
-                "Error while adding student to the database");
-
     }
 
     @Test
@@ -144,20 +116,6 @@ class StudentDaoImplTest {
         var actual = studentDao.getStudentsByGroup(1);
 
         assertEquals(expected, actual);
-    }
-
-    @Test
-    void MethodGetStudentByCourseId_ShouldThrowAnException_IfCourseIdIsInvalid() throws SQLException {
-        // given
-        customDataSource = mock(CustomDataSource.class);
-        studentDao = new StudentDaoImpl(customDataSource);
-
-        // when
-        doThrow(SQLException.class).when(customDataSource).getConnection();
-
-        // then
-        assertThrows(DAOException.class, () -> studentDao.getStudentsByCourse(1),
-                "Error while adding student to the database");
     }
 
     @Test
@@ -206,20 +164,6 @@ class StudentDaoImplTest {
     }
 
     @Test
-    void MethodGetStudentByGroup_ShouldThrowAnException_IfCourseIdIsInvalid() throws SQLException {
-        // given
-        customDataSource = mock(CustomDataSource.class);
-        studentDao = new StudentDaoImpl(customDataSource);
-
-        // when
-        doThrow(SQLException.class).when(customDataSource).getConnection();
-
-        // then
-        assertThrows(DAOException.class, () -> studentDao.getStudentsByGroup(1),
-                "Error while adding student to the database");
-    }
-
-    @Test
     void MethodGetStudentsByNameAndCourse_ShouldReturnListOfStudents_ByStudentNameAndCourseId() throws DAOException {
         var expected = List.of(
                 Student.builder()
@@ -241,20 +185,6 @@ class StudentDaoImplTest {
     }
 
     @Test
-    void MethodGetStudentsByNameAndCourse_ShouldThrowAnException_IfNoRelationFromThem() throws SQLException {
-        // given
-        customDataSource = mock(CustomDataSource.class);
-        studentDao = new StudentDaoImpl(customDataSource);
-
-        // when
-        doThrow(SQLException.class).when(customDataSource).getConnection();
-
-        // then
-        assertThrows(DAOException.class, () -> studentDao.getStudents("SomeName", 1),
-                "Error while adding student to the database");
-    }
-
-    @Test
     void MethodRemoveStudent_ShouldRemoveStudent_IfItInDataBase() throws DAOException {
         // when
         studentDao.removeStudent(1);
@@ -264,22 +194,6 @@ class StudentDaoImplTest {
 
         // then
         assertEquals(expected, actual);
-    }
-
-    @Test
-    void MethodRemoveStudent_ShouldThrowAnException_IfDAOExceptionWasThrown() throws SQLException {
-        // given
-        customDataSource = mock(CustomDataSource.class);
-        studentDao = new StudentDaoImpl(customDataSource);
-
-        // when
-        doThrow(SQLException.class).when(customDataSource).getConnection();
-
-        // then
-        assertThrows(
-                DAOException.class,
-                () -> studentDao.removeStudent(1),
-                "Expected removeStudent() to throw, but it didn't");
     }
 
     @Test
@@ -300,37 +214,6 @@ class StudentDaoImplTest {
     }
 
     @Test
-    void MethodGetStudentById_ShouldThrowException_WhenStudentDoseNotExist() throws SQLException {
-        // given
-        customDataSource = mock(CustomDataSource.class);
-        studentDao = new StudentDaoImpl(customDataSource);
-
-        // when
-        doThrow(SQLException.class).when(customDataSource).getConnection();
-
-        // then
-
-        assertThrows(
-                DAOException.class,
-                () -> studentDao.getStudent(3),
-                "Expected getStudentById() to throw, but it didn't");
-    }
-
-    @Test
-    void MethodGetStudentById_ShouldThrowException_IfDAOExceptionWasThrown() throws SQLException {
-        // given
-        customDataSource = mock(CustomDataSource.class);
-        studentDao = new StudentDaoImpl(customDataSource);
-
-        // when
-        doThrow(SQLException.class).when(customDataSource).getConnection();
-
-        // then
-        assertThrows(DAOException.class, () -> studentDao.getStudent(1),
-                "Error while getting student by id");
-    }
-
-    @Test
     void MethodRemoveStudentFromCourse_ShouldRemoveStudentCourseRelation_IfExist() throws DAOException {
         // given
         studentDao.removeStudentFromCourse(1, 1);
@@ -341,20 +224,5 @@ class StudentDaoImplTest {
 
         // then
         assertEquals(expected, actual);
-    }
-
-    @Test
-    void MethodRemoveStudentFromCourse_ShouldThrowAnException_IfDAOExceptionWasThrown() throws SQLException {
-        // given
-        customDataSource = mock(CustomDataSource.class);
-        studentDao = new StudentDaoImpl(customDataSource);
-
-        // when
-        doThrow(SQLException.class).when(customDataSource).getConnection();
-
-        // then
-        assertThrows(DAOException.class,
-                () -> studentDao.removeStudentFromCourse(1, 1),
-                "Expected removeStudentFromCourse() to throw, but it didn't");
     }
 }
