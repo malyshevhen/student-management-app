@@ -35,7 +35,7 @@ class StudentServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        studentService = new StudentServiceImpl(studentDao);
+        studentService = new StudentServiceImpl(studentDao, modelMapper);
     }
 
     @Test

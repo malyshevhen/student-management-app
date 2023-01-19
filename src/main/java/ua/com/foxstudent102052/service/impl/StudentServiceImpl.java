@@ -18,7 +18,7 @@ import ua.com.foxstudent102052.service.interfaces.StudentService;
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class StudentServiceImpl implements StudentService {
     private final StudentDao studentDao;
-    private final ModelMapper modelMapper = new ModelMapper();
+    private final ModelMapper modelMapper;
 
     @Override
     public void addStudent(StudentDto studentDto) throws DAOException {

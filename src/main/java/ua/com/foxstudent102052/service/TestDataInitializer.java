@@ -1,4 +1,4 @@
-package ua.com.foxstudent102052.controller;
+package ua.com.foxstudent102052.service;
 
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -12,7 +12,6 @@ import ua.com.foxstudent102052.dao.exceptions.DAOException;
 import ua.com.foxstudent102052.model.dto.CourseDto;
 import ua.com.foxstudent102052.model.dto.GroupDto;
 import ua.com.foxstudent102052.model.dto.StudentDto;
-import ua.com.foxstudent102052.service.QueryPostService;
 import ua.com.foxstudent102052.service.exceptions.ElementAlreadyExistException;
 import ua.com.foxstudent102052.service.interfaces.CourseService;
 import ua.com.foxstudent102052.service.interfaces.GroupService;

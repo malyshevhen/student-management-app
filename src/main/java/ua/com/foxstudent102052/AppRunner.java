@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
 import ua.com.foxstudent102052.client.ConsoleUI;
-import ua.com.foxstudent102052.controller.TestDataInitializer;
+import ua.com.foxstudent102052.service.TestDataInitializer;
 
 @Component
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
