@@ -16,9 +16,8 @@ public class AppRunner implements ApplicationRunner {
     private final ConsoleUI consoleUI;
 
     @Override
-    public void run(ApplicationArguments args) {
+    public void run(ApplicationArguments args) throws Exception {
         testDataInitializer.initTestDada();
         consoleUI.callMainMenu();
     }
 }
-

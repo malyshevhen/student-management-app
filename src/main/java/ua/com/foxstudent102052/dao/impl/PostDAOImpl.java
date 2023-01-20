@@ -15,7 +15,7 @@ import ua.com.foxstudent102052.dao.interfaces.PostDAO;
 @Repository
 @Slf4j
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
-public class PostDaoImpl implements PostDAO {
+public class PostDAOImpl implements PostDAO {
     private static final String QUERY_EXEC_SUCCESSFUL = "Query: '{}' executed successfully";
     private static final String CONNECTION_SUCCESSFUL = "Connection to DB successful!";
 

@@ -2,39 +2,28 @@ package ua.com.foxstudent102052.dao.impl;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import javax.sql.DataSource;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.context.jdbc.Sql;
 
 import ua.com.foxstudent102052.dao.exceptions.DAOException;
 import ua.com.foxstudent102052.dao.interfaces.GroupDao;
-import ua.com.foxstudent102052.dao.interfaces.PostDAO;
 import ua.com.foxstudent102052.model.entity.Group;
-import ua.com.foxstudent102052.utils.FileUtils;
 
 @JdbcTest
+@Sql({ "/scripts/ddl/Table_creation.sql", "/scripts/dml/testDB_Data.sql" })
 class GroupDaoImplTest {
-    private final GroupDao groupDao;
-    private final PostDAO postDAO;
-    private final FileUtils fileUtils;
 
     @Autowired
-    public GroupDaoImplTest(DataSource dataSource) {
-        this.groupDao = new GroupDaoImpl(dataSource);
-        this.postDAO = new PostDaoImpl(dataSource);
-        this.fileUtils = new FileUtils();
-    }
+    private JdbcTemplate jdbcTemplate;
+    private GroupDao groupDao;
 
     @BeforeEach
-    public void setUp() throws DAOException {
-        var ddlScript = fileUtils.readFileFromResourcesAsString("scripts/ddl/Table_creation.sql");
-        var dmlScript = fileUtils.readFileFromResourcesAsString("scripts/dml/testDB_Data.sql");
-
-        postDAO.doPost(ddlScript);
-        postDAO.doPost(dmlScript);
+    void setUp() {
+        groupDao = new GroupDaoImpl(jdbcTemplate);
     }
 
     @Test
@@ -44,7 +33,7 @@ class GroupDaoImplTest {
         groupDao.addGroup(group);
 
         // when
-        var allGroups = groupDao.getGroups();
+        var allGroups = groupDao.getAll();
 
         // then
         assertEquals(4, allGroups.size());
@@ -53,7 +42,7 @@ class GroupDaoImplTest {
     @Test
     void MethodGetGroups_ShouldReturnAllGroupsFromDb() throws DAOException {
         // when
-        var allGroups = groupDao.getGroups();
+        var allGroups = groupDao.getAll();
 
         // then
         assertEquals(3, allGroups.size());
@@ -65,7 +54,7 @@ class GroupDaoImplTest {
         var expected = Group.builder().id(1).name("Group 1").build();
 
         // when
-        var actual = groupDao.getGroup(1).get();
+        var actual = groupDao.getGroupById(1).get();
 
         // then
         assertEquals(expected, actual);
@@ -77,7 +66,7 @@ class GroupDaoImplTest {
         var expected = Group.builder().id(1).name("Group 1").build();
 
         // when
-        var actual = groupDao.getGroup("Group 1").get();
+        var actual = groupDao.getGroupByName("Group 1").get();
 
         // then
         assertEquals(expected, actual);
@@ -88,6 +77,5 @@ class GroupDaoImplTest {
         var actual = groupDao.getGroupsLessThen(2);
 
         assertEquals(1, actual.size());
-
     }
 }

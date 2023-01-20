@@ -19,7 +19,7 @@ public class CourseController {
     private final StudentService studentService;
 
     public List<CourseDto> getAllCourses() throws DAOException {
-        return courseService.getCourses().stream()
+        return courseService.getAll().stream()
                 .map(this::setStudentsToCourse)
                 .toList();
     }

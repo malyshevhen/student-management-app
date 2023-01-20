@@ -8,11 +8,11 @@ import ua.com.foxstudent102052.model.entity.Course;
 public interface CourseDao {
     void addCourse(Course course);
 
-    List<Course> getCourses();
+    List<Course> getAll();
 
-    Optional<Course> getCourse(int courseId);
+    Optional<Course> getCourseById(int courseId);
 
-    Optional<Course> getCourse(String courseName);
+    Optional<Course> getCourseByName(String courseName);
 
-    List<Course> getCourses(int studentId);
+    List<Course> getCoursesByStudentId(int studentId);
 }

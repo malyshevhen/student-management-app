@@ -25,7 +25,7 @@ public class CourseServiceImpl implements CourseService {
     public void addCourse(CourseDto courseDto) throws DAOException {
         var courseName = courseDto.getName();
 
-        if (courseDao.getCourse(courseName).isEmpty()) {
+        if (courseDao.getCourseByName(courseName).isEmpty()) {
             courseDao.addCourse(modelMapper.map(courseDto, Course.class));
         } else {
             throw new ElementAlreadyExistException(String.format("Course with id %d already exist", courseDto.getId()));
@@ -33,18 +33,18 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public CourseDto getCourse(int courseId) throws DAOException {
-        var course = courseDao.getCourse(courseId).orElseThrow();
+    public CourseDto getCourseById(int courseId) throws DAOException {
+        var course = courseDao.getCourseById(courseId).orElseThrow();
 
         return modelMapper.map(course, CourseDto.class);
     }
 
     @Override
-    public List<CourseDto> getCourses() throws DAOException {
-        if (courseDao.getCourses().isEmpty()) {
+    public List<CourseDto> getAll() throws DAOException {
+        if (courseDao.getAll().isEmpty()) {
             throw new NoSuchElementException("There are no courses in database");
         } else {
-            return courseDao.getCourses()
+            return courseDao.getAll()
                     .stream()
                     .map(course -> modelMapper.map(course, CourseDto.class))
                     .toList();
@@ -52,11 +52,11 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public List<CourseDto> getCourses(int studentId) throws DAOException {
-        if (courseDao.getCourses(studentId).isEmpty()) {
+    public List<CourseDto> getCoursesByStudent(int studentId) throws DAOException {
+        if (courseDao.getCoursesByStudentId(studentId).isEmpty()) {
             throw new NoSuchElementException("There are no students on course");
         } else {
-            return courseDao.getCourses(studentId)
+            return courseDao.getCoursesByStudentId(studentId)
                     .stream()
                     .map(course -> modelMapper.map(course, CourseDto.class))
                     .toList();

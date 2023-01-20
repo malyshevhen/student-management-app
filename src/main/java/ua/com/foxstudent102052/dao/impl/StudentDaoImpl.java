@@ -1,26 +1,22 @@
 package ua.com.foxstudent102052.dao.impl;
 
-import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
-import javax.sql.DataSource;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import ua.com.foxstudent102052.dao.exceptions.DAOException;
 import ua.com.foxstudent102052.dao.interfaces.StudentDao;
-import ua.com.foxstudent102052.dao.mapper.StudentDaoMapper;
+import ua.com.foxstudent102052.dao.mapper.StudentRowMapper;
 import ua.com.foxstudent102052.model.entity.Student;
 
-@Slf4j
 @Repository
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class StudentDaoImpl implements StudentDao {
-    private final DataSource dataSource;
+
+    private final JdbcTemplate jdbcTemplate;
 
     @Override
     public void addStudent(Student student) {
@@ -29,18 +25,7 @@ public class StudentDaoImpl implements StudentDao {
                     group_id, first_name, last_name)
                 VALUES (?, ?, ?);""";
 
-        try (var connection = dataSource.getConnection();
-                var statement = connection.prepareStatement(query)) {
-            statement.setInt(1, student.getGroupId());
-            statement.setString(2, student.getFirstName());
-            statement.setString(3, student.getLastName());
-
-            statement.executeUpdate();
-        } catch (SQLException e) {
-            log.error(e.getMessage());
-
-            throw new DAOException(e);
-        }
+        jdbcTemplate.update(query, student.getGroupId(), student.getFirstName(), student.getLastName());
     }
 
     @Override
@@ -52,17 +37,7 @@ public class StudentDaoImpl implements StudentDao {
                 FROM students
                 WHERE student_id = ?;""";
 
-        try (var connection = dataSource.getConnection();
-                var statement = connection.prepareStatement(query)) {
-            statement.setInt(1, studentId);
-            statement.setInt(2, studentId);
-
-            statement.executeUpdate();
-        } catch (SQLException e) {
-            log.error(e.getMessage());
-
-            throw new DAOException(e);
-        }
+        jdbcTemplate.update(query, studentId, studentId);
     }
 
     @Override
@@ -73,18 +48,7 @@ public class StudentDaoImpl implements StudentDao {
                     course_id)
                 VALUES (?, ?);""";
 
-        try (var connection = dataSource.getConnection();
-                var statement = connection.prepareStatement(query)) {
-            statement.setInt(1, studentId);
-            statement.setInt(2, courseId);
-
-            statement.executeUpdate();
-        } catch (SQLException e) {
-            log.error("Student with id {} was not added to Course with id {}", studentId, courseId);
-
-            throw new DAOException(String.format("Student with id %d was not added to Course with id %d",
-                    studentId, courseId), e);
-        }
+        jdbcTemplate.update(query, studentId, courseId);
     }
 
     @Override
@@ -95,17 +59,7 @@ public class StudentDaoImpl implements StudentDao {
                 WHERE student_id = ?
                 AND course_id = ?;""";
 
-        try (var connection = dataSource.getConnection();
-                var statement = connection.prepareStatement(query)) {
-            statement.setInt(1, studentId);
-            statement.setInt(2, courseId);
-
-            statement.executeUpdate();
-        } catch (SQLException e) {
-            log.error(e.getMessage());
-
-            throw new DAOException(e);
-        }
+        jdbcTemplate.update(query, studentId, courseId);
     }
 
     @Override
@@ -115,42 +69,18 @@ public class StudentDaoImpl implements StudentDao {
                 FROM students
                 WHERE student_id = ?;""";
 
-        try (var connection = dataSource.getConnection();
-                var statement = connection.prepareStatement(query)) {
-            statement.setInt(1, id);
-
-            var studentsResultSet = statement.executeQuery();
-
-            if (studentsResultSet.next()) {
-                var student = StudentDaoMapper.mapToStudent(studentsResultSet);
-
-                return Optional.of(student);
-            } else {
-                return Optional.empty();
-            }
-        } catch (SQLException e) {
-            log.error(e.getMessage());
-
-            throw new DAOException(e);
-        }
+        return jdbcTemplate.query(query, new StudentRowMapper(), id)
+                .stream()
+                .findFirst();
     }
 
     @Override
-    public List<Student> getStudents() {
+    public List<Student> getAll() {
         var query = """
                 SELECT student_id, group_id, first_name, last_name
                 FROM students;""";
 
-        try (var connection = dataSource.getConnection();
-                var statement = connection.createStatement();
-                var studentsResultSet = statement.executeQuery(query)) {
-
-            return StudentDaoMapper.mapToStudents(studentsResultSet);
-        } catch (SQLException e) {
-            log.error(e.getMessage());
-
-            throw new DAOException(e);
-        }
+        return jdbcTemplate.query(query, new StudentRowMapper());
     }
 
     @Override
@@ -163,17 +93,7 @@ public class StudentDaoImpl implements StudentDao {
                     FROM students_courses
                     WHERE course_id = ?);""";
 
-        try (var connection = dataSource.getConnection();
-                var statement = connection.prepareStatement(query)) {
-            statement.setInt(1, courseId);
-            var studentsResultSet = statement.executeQuery();
-
-            return StudentDaoMapper.mapToStudents(studentsResultSet);
-        } catch (SQLException e) {
-            log.error(e.getMessage());
-
-            throw new DAOException(e);
-        }
+        return jdbcTemplate.query(query, new StudentRowMapper(), courseId);
     }
 
     @Override
@@ -183,21 +103,11 @@ public class StudentDaoImpl implements StudentDao {
                 FROM students
                 WHERE group_id = ? ;""";
 
-        try (var connection = dataSource.getConnection();
-                var statement = connection.prepareStatement(query)) {
-            statement.setInt(1, groupId);
-            var studentsResultSet = statement.executeQuery();
-
-            return StudentDaoMapper.mapToStudents(studentsResultSet);
-        } catch (SQLException e) {
-            log.error(e.getMessage());
-
-            throw new DAOException(e);
-        }
+        return jdbcTemplate.query(query, new StudentRowMapper(), groupId);
     }
 
     @Override
-    public List<Student> getStudents(String studentName, int courseId) {
+    public List<Student> getStudentsByNameAndCourse(String studentName, int courseId) {
         var query = """
                 SELECT student_id, group_id, first_name, last_name
                 FROM students
@@ -207,18 +117,6 @@ public class StudentDaoImpl implements StudentDao {
                     WHERE course_id = ?)
                 AND first_name = ?;""";
 
-        try (var connection = dataSource.getConnection();
-                var statement = connection.prepareStatement(query)) {
-            statement.setInt(1, courseId);
-            statement.setString(2, studentName);
-
-            var studentsResultSet = statement.executeQuery();
-
-            return StudentDaoMapper.mapToStudents(studentsResultSet);
-        } catch (SQLException e) {
-            log.error(e.getMessage());
-
-            throw new DAOException(e);
-        }
+        return jdbcTemplate.query(query, new StudentRowMapper(), courseId, studentName);
     }
 }

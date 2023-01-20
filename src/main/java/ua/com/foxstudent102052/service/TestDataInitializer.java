@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,7 +19,7 @@ import ua.com.foxstudent102052.service.interfaces.StudentService;
 import ua.com.foxstudent102052.utils.FileUtils;
 import ua.com.foxstudent102052.utils.RandomModelCreator;
 
-@Service
+@Controller
 @Slf4j
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class TestDataInitializer {

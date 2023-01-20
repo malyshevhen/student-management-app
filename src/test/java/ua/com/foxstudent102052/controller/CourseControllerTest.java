@@ -1,34 +1,39 @@
 package ua.com.foxstudent102052.controller;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import ua.com.foxstudent102052.model.dto.CourseDto;
 import ua.com.foxstudent102052.model.dto.StudentDto;
-import ua.com.foxstudent102052.service.exceptions.ElementAlreadyExistException;
 import ua.com.foxstudent102052.service.interfaces.CourseService;
 import ua.com.foxstudent102052.service.interfaces.StudentService;
 
+@ExtendWith(MockitoExtension.class)
 class CourseControllerTest {
+
+    @Mock
     private CourseService courseService;
+
+    @Mock
     private StudentService studentService;
+
     private CourseController courseController;
 
     @BeforeEach
     void setUp() {
-        courseService = mock(CourseService.class);
-        studentService = mock(StudentService.class);
         courseController = new CourseController(courseService, studentService);
     }
 
     @Test
-    void MethodGetAllCourses_ShouldReturnListOfAllCourses() throws ElementAlreadyExistException {
+    void MethodGetAllCourses_ShouldReturnListOfAllCourses() {
         // given
         var studentDtoList = List.of(
                 StudentDto.builder().id(1).firstName("John").lastName("Doe").build(),
@@ -41,8 +46,7 @@ class CourseControllerTest {
                         .build());
 
         // when
-        when(studentService.getStudents()).thenReturn(studentDtoList);
-        when(courseService.getCourses()).thenReturn(expected);
+        when(courseService.getAll()).thenReturn(expected);
 
         // then
         var actual = courseController.getAllCourses();

@@ -3,7 +3,6 @@ package ua.com.foxstudent102052.controller;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -11,31 +10,38 @@ import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import ua.com.foxstudent102052.model.dto.CourseDto;
 import ua.com.foxstudent102052.model.dto.GroupDto;
 import ua.com.foxstudent102052.model.dto.StudentDto;
-import ua.com.foxstudent102052.service.exceptions.ElementAlreadyExistException;
 import ua.com.foxstudent102052.service.interfaces.CourseService;
 import ua.com.foxstudent102052.service.interfaces.GroupService;
 import ua.com.foxstudent102052.service.interfaces.StudentService;
 
+@ExtendWith(MockitoExtension.class)
 class StudentControllerTest {
+
+    @Mock
     private StudentService studentService;
+
+    @Mock
     private GroupService groupService;
+
+    @Mock
     private CourseService courseService;
+
     private StudentController studentController;
 
     @BeforeEach
-    public void setUp() {
-        studentService = mock(StudentService.class);
-        groupService = mock(GroupService.class);
-        courseService = mock(CourseService.class);
+    void setUp() {
         studentController = new StudentController(studentService, groupService, courseService);
     }
 
     @Test
-    void MethodAddStudent_ShouldPassStudentToService() throws ElementAlreadyExistException {
+    void MethodAddStudent_ShouldPassStudentToService() {
         // when
         studentController.addStudent(new StudentDto());
 
@@ -44,7 +50,7 @@ class StudentControllerTest {
     }
 
     @Test
-    void MethodAddStudentToCourse_ShouldPassToServiceValues() throws ElementAlreadyExistException {
+    void MethodAddStudentToCourse_ShouldPassToServiceValues() {
         // when
         studentController.addStudentToCourse(1, 1);
 
@@ -53,7 +59,7 @@ class StudentControllerTest {
     }
 
     @Test
-    void MethodRemoveStudent_ShouldPassToServiceValues() throws ElementAlreadyExistException {
+    void MethodRemoveStudent_ShouldPassToServiceValues() {
         // when
         studentController.removeStudent(1);
 
@@ -62,7 +68,7 @@ class StudentControllerTest {
     }
 
     @Test
-    void MethodRemoveStudentFromCourse_ShouldPassToServiceValues() throws ElementAlreadyExistException {
+    void MethodRemoveStudentFromCourse_ShouldPassToServiceValues() {
         // when
         studentController.removeStudentFromCourse(1, 1);
 
@@ -71,7 +77,7 @@ class StudentControllerTest {
     }
 
     @Test
-    void MethodGetStudents_ShouldReturnListOfStudentsWithCoursesAndGroup() throws ElementAlreadyExistException {
+    void MethodGetStudents_ShouldReturnListOfStudentsWithCoursesAndGroup() {
         // given
         var group = GroupDto.builder().id(1).name("Java").build();
         var studentsDto = List.of(StudentDto
@@ -119,9 +125,9 @@ class StudentControllerTest {
                         .build());
 
         // when
-        when(studentService.getStudents()).thenReturn(studentsDto);
-        when(courseService.getCourses(anyInt())).thenReturn(courses);
-        when(groupService.getGroup(1)).thenReturn(group);
+        when(studentService.getAll()).thenReturn(studentsDto);
+        when(courseService.getCoursesByStudent(anyInt())).thenReturn(courses);
+        when(groupService.getGroupById(1)).thenReturn(group);
 
         // then
         var actual = studentController.getAllStudents();
@@ -130,17 +136,16 @@ class StudentControllerTest {
     }
 
     @Test
-    void MethodGetStudents_ShouldPassToServiceValue() throws ElementAlreadyExistException {
+    void MethodGetStudents_ShouldPassToServiceValue() {
         // when
         studentController.getAllStudents();
 
         // then
-        verify(studentService).getStudents();
+        verify(studentService).getAll();
     }
 
     @Test
-    void MethodGetStudents_ShouldReturnListOfStudentsWithCoursesAndGroup_ByNameAndCourseId()
-            throws ElementAlreadyExistException {
+    void MethodGetStudents_ShouldReturnListOfStudentsWithCoursesAndGroup_ByNameAndCourseId() {
         // given
         var group = GroupDto.builder().id(1).name("Java").build();
         var studentsDto = List.of(StudentDto
@@ -188,9 +193,9 @@ class StudentControllerTest {
                         .build());
 
         // when
-        when(studentService.getStudents(anyString(), anyInt())).thenReturn(studentsDto);
-        when(courseService.getCourses(anyInt())).thenReturn(courses);
-        when(groupService.getGroup(1)).thenReturn(group);
+        when(studentService.getStudentsByNameAndCourse(anyString(), anyInt())).thenReturn(studentsDto);
+        when(courseService.getCoursesByStudent(anyInt())).thenReturn(courses);
+        when(groupService.getGroupById(1)).thenReturn(group);
 
         // then
         var actual = studentController.getStudents(anyString(), anyInt());
@@ -199,11 +204,11 @@ class StudentControllerTest {
     }
 
     @Test
-    void MethodGetStudents_ShouldPassToServiceValues() throws ElementAlreadyExistException {
+    void MethodGetStudents_ShouldPassToServiceValues() {
         // when
         studentController.getStudents("John", 1);
 
         // then
-        verify(studentService).getStudents("John", 1);
+        verify(studentService).getStudentsByNameAndCourse(anyString(), anyInt());
     }
 }

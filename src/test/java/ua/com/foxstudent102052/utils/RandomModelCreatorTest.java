@@ -87,7 +87,7 @@ class RandomModelCreatorTest {
         // when
         var actual = students.stream()
                 .mapToInt(student -> student.getGroup().getId())
-                .anyMatch(id -> id < 0 || id > 9);
+                .anyMatch(id -> id < 0 || id > 10);
 
         // then
         assertFalse(actual);

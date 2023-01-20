@@ -58,8 +58,8 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public List<StudentDto> getStudents() throws DAOException {
-        var studentDtoList = studentDao.getStudents()
+    public List<StudentDto> getAll() throws DAOException {
+        var studentDtoList = studentDao.getAll()
                 .stream()
                 .map(student -> modelMapper.map(student, StudentDto.class))
                 .toList();
@@ -100,8 +100,8 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public List<StudentDto> getStudents(String studentName, Integer courseId) throws DAOException {
-        var studentDtoList = studentDao.getStudents(studentName, courseId)
+    public List<StudentDto> getStudentsByNameAndCourse(String studentName, Integer courseId) throws DAOException {
+        var studentDtoList = studentDao.getStudentsByNameAndCourse(studentName, courseId)
                 .stream()
                 .map(student -> modelMapper.map(student, StudentDto.class))
                 .toList();

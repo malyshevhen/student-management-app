@@ -4,39 +4,28 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.List;
 
-import javax.sql.DataSource;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.context.jdbc.Sql;
 
 import ua.com.foxstudent102052.dao.exceptions.DAOException;
-import ua.com.foxstudent102052.dao.interfaces.PostDAO;
 import ua.com.foxstudent102052.dao.interfaces.StudentDao;
 import ua.com.foxstudent102052.model.entity.Student;
-import ua.com.foxstudent102052.utils.FileUtils;
 
 @JdbcTest
+@Sql({ "/scripts/ddl/Table_creation.sql", "/scripts/dml/testDB_Data.sql" })
 class StudentDaoImplTest {
-    private final StudentDao studentDao;
-    private final PostDAO postDAO;
-    private final FileUtils fileUtils;
 
     @Autowired
-    public StudentDaoImplTest(DataSource dataSource) {
-        this.studentDao = new StudentDaoImpl(dataSource);
-        this.postDAO = new PostDaoImpl(dataSource);
-        this.fileUtils = new FileUtils();
-    }
+    private JdbcTemplate jdbcTemplate;
+    private StudentDao studentDao;
 
     @BeforeEach
-    public void setUp() throws DAOException {
-        var ddlScript = fileUtils.readFileFromResourcesAsString("scripts/ddl/Table_creation.sql");
-        var dmlScript = fileUtils.readFileFromResourcesAsString("scripts/dml/testDB_Data.sql");
-
-        postDAO.doPost(ddlScript);
-        postDAO.doPost(dmlScript);
+    void setUp() {
+        studentDao = new StudentDaoImpl(jdbcTemplate);
     }
 
     @Test
@@ -51,7 +40,7 @@ class StudentDaoImplTest {
 
         // when
         studentDao.addStudent(newStudent);
-        int expected = studentDao.getStudents().size();
+        int expected = studentDao.getAll().size();
         int actual = 11;
 
         // then
@@ -79,7 +68,7 @@ class StudentDaoImplTest {
     @Test
     void MethodGetAllStudents_ShouldReturnAllStudents() throws DAOException {
         // when
-        var actual = studentDao.getStudents().size();
+        var actual = studentDao.getAll().size();
 
         // then
         assertEquals(10, actual);
@@ -179,7 +168,7 @@ class StudentDaoImplTest {
                         .lastName("Vader")
                         .build());
 
-        var actual = studentDao.getStudents("Dart", 1);
+        var actual = studentDao.getStudentsByNameAndCourse("Dart", 1);
 
         assertEquals(expected, actual);
     }
@@ -190,7 +179,7 @@ class StudentDaoImplTest {
         studentDao.removeStudent(1);
 
         int expected = 9;
-        int actual = studentDao.getStudents().size();
+        int actual = studentDao.getAll().size();
 
         // then
         assertEquals(expected, actual);
@@ -220,7 +209,7 @@ class StudentDaoImplTest {
         var expected = List.of();
 
         // when
-        var actual = studentDao.getStudents("Leia", 1);
+        var actual = studentDao.getStudentsByNameAndCourse("Leia", 1);
 
         // then
         assertEquals(expected, actual);

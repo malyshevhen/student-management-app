@@ -13,11 +13,11 @@ public interface StudentService {
 
     void removeStudentFromCourse(int studentId, int groupId);
 
-    List<StudentDto> getStudents();
+    List<StudentDto> getAll();
 
     List<StudentDto> getStudentsByCourse(int courseId);
 
     List<StudentDto> getStudentsByGroup(int groupId);
 
-    List<StudentDto> getStudents(String studentName, Integer courseId);
+    List<StudentDto> getStudentsByNameAndCourse(String studentName, Integer courseId);
 }

@@ -25,7 +25,7 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     public void addGroup(GroupDto groupDto) throws DAOException {
-        if (groupDao.getGroup(groupDto.getName()).isPresent()) {
+        if (groupDao.getGroupByName(groupDto.getName()).isPresent()) {
             throw new ElementAlreadyExistException("Group is already exist!");
         } else {
             groupDao.addGroup(modelMapper.map(groupDto, Group.class));
@@ -33,22 +33,22 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
-    public GroupDto getGroup(int groupId) throws DAOException {
-        return groupDao.getGroup(groupId)
+    public GroupDto getGroupById(int groupId) throws DAOException {
+        return groupDao.getGroupById(groupId)
                 .map(group -> modelMapper.map(group, GroupDto.class))
                 .orElseThrow(() -> new NoSuchElementException(GROUP_DOES_NOT_EXIST));
     }
 
     @Override
-    public GroupDto getGroup(String groupName) throws DAOException {
-        return groupDao.getGroup(groupName)
+    public GroupDto getGroupByName(String groupName) throws DAOException {
+        return groupDao.getGroupByName(groupName)
                 .map(group -> modelMapper.map(group, GroupDto.class))
                 .orElseThrow(() -> new NoSuchElementException(GROUP_DOES_NOT_EXIST));
     }
 
     @Override
-    public List<GroupDto> getGroups() throws DAOException {
-        var groupDtoList = groupDao.getGroups()
+    public List<GroupDto> getAll() throws DAOException {
+        var groupDtoList = groupDao.getAll()
                 .stream()
                 .map(group -> modelMapper.map(group, GroupDto.class))
                 .toList();

@@ -1,26 +1,22 @@
 package ua.com.foxstudent102052.dao.impl;
 
-import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
-import javax.sql.DataSource;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import ua.com.foxstudent102052.dao.exceptions.DAOException;
 import ua.com.foxstudent102052.dao.interfaces.CourseDao;
-import ua.com.foxstudent102052.dao.mapper.CourseDaoMapper;
+import ua.com.foxstudent102052.dao.mapper.CourseRowMapper;
 import ua.com.foxstudent102052.model.entity.Course;
 
 @Repository
-@Slf4j
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class CourseDaoImpl implements CourseDao {
-    private final DataSource dataSource;
+
+    private final JdbcTemplate jdbcTemplate;
 
     @Override
     public void addCourse(Course course) {
@@ -29,94 +25,44 @@ public class CourseDaoImpl implements CourseDao {
                 INTO courses (course_name, course_description)
                 VALUES (?, ?);""";
 
-        try (var connection = dataSource.getConnection();
-                var statement = connection.prepareStatement(query)) {
-            statement.setString(1, course.getName());
-            statement.setString(2, course.getDescription());
-
-            statement.executeUpdate();
-
-        } catch (SQLException e) {
-            log.error(e.getMessage());
-
-            throw new DAOException(e);
-        }
+        jdbcTemplate.update(query, course.getName(), course.getDescription());
     }
 
     @Override
-    public Optional<Course> getCourse(int courseId) {
+    public Optional<Course> getCourseById(int courseId) {
         var query = """
                 SELECT course_id, course_name, course_description
                 FROM courses
                 WHERE course_id = ?;""";
 
-        try (var connection = dataSource.getConnection();
-                var statement = connection.prepareStatement(query)) {
-            statement.setInt(1, courseId);
-
-            var courseResultSet = statement.executeQuery();
-
-            if (courseResultSet.next()) {
-                var course = CourseDaoMapper.mapToCourse(courseResultSet);
-
-                return Optional.of(course);
-            } else {
-                return Optional.empty();
-            }
-        } catch (SQLException e) {
-            log.error(e.getMessage());
-
-            throw new DAOException(e);
-        }
+        return jdbcTemplate.query(query, new CourseRowMapper(), courseId)
+                .stream()
+                .findFirst();
     }
 
     @Override
-    public Optional<Course> getCourse(String courseName) {
+    public Optional<Course> getCourseByName(String courseName) {
         var query = """
                 SELECT course_id, course_name, course_description
                 FROM courses
                 WHERE course_name = ?;""";
 
-        try (var connection = dataSource.getConnection();
-                var statement = connection.prepareStatement(query)) {
-            statement.setString(1, courseName);
-
-            var courseResultSet = statement.executeQuery();
-
-            if (courseResultSet.next()) {
-                var course = CourseDaoMapper.mapToCourse(courseResultSet);
-
-                return Optional.of(course);
-            } else {
-                return Optional.empty();
-            }
-        } catch (SQLException e) {
-            log.error(e.getMessage());
-
-            throw new DAOException(e);
-        }
+        return jdbcTemplate.query(query, new CourseRowMapper(), courseName)
+                .stream()
+                .findFirst();
     }
 
     @Override
-    public List<Course> getCourses() {
+    public List<Course> getAll() {
         var query = """
                 SELECT course_id, course_name, course_description
                 FROM courses;""";
 
-        try (var connection = dataSource.getConnection();
-                var statement = connection.createStatement();
-                var coursesResultSet = statement.executeQuery(query)) {
-
-            return CourseDaoMapper.mapToCourses(coursesResultSet);
-        } catch (SQLException e) {
-            log.error(e.getMessage());
-
-            throw new DAOException(e);
-        }
+        return jdbcTemplate.query(query, new CourseRowMapper());
     }
 
     @Override
-    public List<Course> getCourses(int studentId) {
+    public List<Course> getCoursesByStudentId(int studentId) {
         var query = """
                 SELECT course_id, course_name, course_description
                 FROM courses
@@ -126,17 +72,6 @@ public class CourseDaoImpl implements CourseDao {
                     FROM students_courses
                     WHERE student_id = ?);""";
 
-        try (var connection = dataSource.getConnection();
-                var statement = connection.prepareStatement(query)) {
-            statement.setInt(1, studentId);
-
-            var coursesResultSet = statement.executeQuery();
-
-            return CourseDaoMapper.mapToCourses(coursesResultSet);
-        } catch (SQLException e) {
-            log.error(e.getMessage());
-
-            throw new DAOException(e);
-        }
+        return jdbcTemplate.query(query, new CourseRowMapper(), studentId);
     }
 }

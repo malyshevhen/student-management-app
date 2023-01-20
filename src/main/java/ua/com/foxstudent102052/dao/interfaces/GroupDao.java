@@ -8,11 +8,11 @@ import ua.com.foxstudent102052.model.entity.Group;
 public interface GroupDao {
     void addGroup(Group group);
 
-    List<Group> getGroups();
+    List<Group> getAll();
 
-    Optional<Group> getGroup(int groupId);
+    Optional<Group> getGroupById(int groupId);
 
-    Optional<Group> getGroup(String groupName);
+    Optional<Group> getGroupByName(String groupName);
 
     List<Group> getGroupsLessThen(int numberOfStudents);
 }

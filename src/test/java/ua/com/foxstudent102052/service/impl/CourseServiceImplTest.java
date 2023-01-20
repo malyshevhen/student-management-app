@@ -1,7 +1,6 @@
 package ua.com.foxstudent102052.service.impl;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -10,28 +9,32 @@ import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
 
-import ua.com.foxstudent102052.dao.exceptions.DAOException;
 import ua.com.foxstudent102052.dao.interfaces.CourseDao;
 import ua.com.foxstudent102052.model.dto.CourseDto;
 import ua.com.foxstudent102052.model.entity.Course;
-import ua.com.foxstudent102052.service.exceptions.ElementAlreadyExistException;
 import ua.com.foxstudent102052.service.interfaces.CourseService;
 
+@ExtendWith(MockitoExtension.class)
 class CourseServiceImplTest {
     private final ModelMapper modelMapper = new ModelMapper();
+
+    @Mock
     private CourseDao courseDao;
+
     private CourseService courseService;
 
     @BeforeEach
-    public void setUp() {
-        courseDao = mock(CourseDao.class);
+    void setUp() {
         courseService = new CourseServiceImpl(courseDao, modelMapper);
     }
 
     @Test
-    void MethodAddCourse_ShouldPassCourseToRepository() throws DAOException, ElementAlreadyExistException {
+    void MethodAddCourse_ShouldPassCourseToRepository() {
         // given
         Course courseFromDb = Course.builder().name("Java").description("Java course").build();
         CourseDto newCourse = modelMapper.map(courseFromDb, CourseDto.class);
@@ -44,7 +47,7 @@ class CourseServiceImplTest {
     }
 
     @Test
-    void MethodGetAllCourses_ShouldReturnListOfAllStudents() throws DAOException, ElementAlreadyExistException {
+    void MethodGetAllCourses_ShouldReturnListOfAllStudents() {
         // given
         var courses = List.of(
                 Course.builder().name("Java").description("Java course").build(),
@@ -52,44 +55,44 @@ class CourseServiceImplTest {
                 Course.builder().name("C#").description("C# course").build());
 
         // when
-        when(courseDao.getCourses()).thenReturn(courses);
+        when(courseDao.getAll()).thenReturn(courses);
 
         // then
         var expected = courses.stream()
                 .map(course -> modelMapper.map(course, CourseDto.class))
                 .toList();
 
-        var actual = courseService.getCourses();
+        var actual = courseService.getAll();
         assertEquals(expected, actual);
     }
 
     @Test
-    void MethodGetCourseById_ShouldReturnCourseFromDb() throws DAOException, ElementAlreadyExistException {
+    void MethodGetCourseById_ShouldReturnCourseFromDb() {
         // given
         var course = Course.builder().name("Java").description("Java course").build();
 
         // when
-        when(courseDao.getCourse(1)).thenReturn(Optional.of(course));
+        when(courseDao.getCourseById(1)).thenReturn(Optional.of(course));
 
         // then
         var expected = CourseDto.builder().name("Java").description("Java course").studentList(List.of()).build();
-        var actual = courseService.getCourse(1);
+        var actual = courseService.getCourseById(1);
 
         assertEquals(expected, actual);
     }
 
     @Test
-    void MethodGetCoursesByStudentId_ShouldReturnCourseFromDb() throws DAOException, ElementAlreadyExistException {
+    void MethodGetCoursesByStudentId_ShouldReturnCourseFromDb() {
         // given
         var course = Course.builder().name("Java").description("Java course").build();
 
         // when
-        when(courseDao.getCourses(1)).thenReturn(List.of(course));
+        when(courseDao.getCoursesByStudentId(1)).thenReturn(List.of(course));
 
         // then
         var expected = List
                 .of(CourseDto.builder().name("Java").description("Java course").studentList(List.of()).build());
-        var actual = courseService.getCourses(1);
+        var actual = courseService.getCoursesByStudent(1);
 
         assertEquals(expected, actual);
     }

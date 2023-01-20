@@ -4,45 +4,31 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.List;
 
-import javax.sql.DataSource;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.context.jdbc.Sql;
 
-import ua.com.foxstudent102052.dao.exceptions.DAOException;
 import ua.com.foxstudent102052.dao.interfaces.CourseDao;
-import ua.com.foxstudent102052.dao.interfaces.PostDAO;
 import ua.com.foxstudent102052.model.entity.Course;
-import ua.com.foxstudent102052.utils.FileUtils;
 
 @JdbcTest
+@Sql({ "/scripts/ddl/Table_creation.sql", "/scripts/dml/testDB_Data.sql" })
 class CourseDaoImplTest {
 
-    private final CourseDao courseDao;
-    private final PostDAO postDAO;
-    private final FileUtils fileUtils;
-
     @Autowired
-    public CourseDaoImplTest(DataSource dataSource) {
-        this.courseDao = new CourseDaoImpl(dataSource);
-        this.postDAO = new PostDaoImpl(dataSource);
-        fileUtils = new FileUtils();
-
-    }
+    private JdbcTemplate jdbcTemplate;
+    private CourseDao courseDao;
 
     @BeforeEach
-    public void setUp() throws DAOException {
-        var ddlScript = fileUtils.readFileFromResourcesAsString("scripts/ddl/Table_creation.sql");
-        var dmlScript = fileUtils.readFileFromResourcesAsString("scripts/dml/testDB_Data.sql");
-
-        postDAO.doPost(ddlScript);
-        postDAO.doPost(dmlScript);
+    void setUp() {
+        courseDao = new CourseDaoImpl(jdbcTemplate);
     }
 
     @Test
-    void MethodAddCourse_ShouldAddCourseToDb() throws DAOException {
+    void MethodAddCourse_ShouldAddCourseToDb() {
         // given
         var course = Course.builder()
                 .name("Course 4")
@@ -53,22 +39,22 @@ class CourseDaoImplTest {
         courseDao.addCourse(course);
 
         // then
-        var allCourses = courseDao.getCourses();
+        var allCourses = courseDao.getAll();
 
         assertEquals(4, allCourses.size());
     }
 
     @Test
-    void MethodGetCourses_ShouldReturnListOfAllCoursesFromDB() throws DAOException {
+    void MethodGetCourses_ShouldReturnListOfAllCoursesFromDB() {
         // when
-        var allCourses = courseDao.getCourses();
+        var allCourses = courseDao.getAll();
 
         // then
         assertEquals(3, allCourses.size());
     }
 
     @Test
-    void MethodGetCourse_ById_ShouldReturnCourseFromDb() throws DAOException {
+    void MethodGetCourse_ById_ShouldReturnCourseFromDb() {
         // given
         var expected = Course.builder()
                 .id(1)
@@ -77,14 +63,14 @@ class CourseDaoImplTest {
                 .build();
 
         // when
-        var actual = courseDao.getCourse(1).get();
+        var actual = courseDao.getCourseById(1).get();
 
         // then
         assertEquals(expected, actual);
     }
 
     @Test
-    void MethodGetCourse_ByName_ShouldReturnCourseFromDb() throws DAOException {
+    void MethodGetCourse_ByName_ShouldReturnCourseFromDb() {
         // given
         var expected = Course.builder()
                 .id(1)
@@ -93,14 +79,14 @@ class CourseDaoImplTest {
                 .build();
 
         // when
-        var actual = courseDao.getCourse(expected.getName()).get();
+        var actual = courseDao.getCourseByName(expected.getName()).get();
 
         // then
         assertEquals(expected, actual);
     }
 
     @Test
-    void MethodGetCourses_ByStudentId_ShouldReturnCourseListFromDb() throws DAOException {
+    void MethodGetCourses_ByStudentId_ShouldReturnCourseListFromDb() {
         // given
         var expected = List.of(
                 Course.builder()
@@ -115,7 +101,7 @@ class CourseDaoImplTest {
                         .build());
 
         // when
-        var actual = courseDao.getCourses(2);
+        var actual = courseDao.getCoursesByStudentId(2);
 
         // then
         assertEquals(expected, actual);

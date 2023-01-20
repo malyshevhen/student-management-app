@@ -52,7 +52,7 @@ public class RandomModelCreator {
 
         for (int i = 0; i < studentsCount; i++) {
             studentDtoList.add(StudentDto.builder()
-                    .group(new GroupDto(random.nextInt(groupsCount), " ", List.of()))
+                    .group(new GroupDto(random.nextInt(groupsCount) + 1, " ", List.of()))
                     .firstName(names.get(random.nextInt(names.size())))
                     .lastName(surnames.get(random.nextInt(surnames.size())))
                     .build());
