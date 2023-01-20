@@ -4,26 +4,20 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.List;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.test.context.jdbc.Sql;
 
+import ua.com.foxstudent102052.dao.impl.config.AbstractTestContainerIT;
 import ua.com.foxstudent102052.dao.interfaces.CourseDao;
 import ua.com.foxstudent102052.model.entity.Course;
 
-@JdbcTest
-@Sql({ "/scripts/ddl/Table_creation.sql", "/scripts/dml/testDB_Data.sql" })
-class CourseDaoImplTest {
+class CourseDaoImplTest extends AbstractTestContainerIT {
+
+    private final CourseDao courseDao;
 
     @Autowired
-    private JdbcTemplate jdbcTemplate;
-    private CourseDao courseDao;
-
-    @BeforeEach
-    void setUp() {
+    public CourseDaoImplTest(JdbcTemplate jdbcTemplate) {
         courseDao = new CourseDaoImpl(jdbcTemplate);
     }
 

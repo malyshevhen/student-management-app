@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -19,7 +20,7 @@ public class GroupDaoImpl implements GroupDao {
     private final JdbcTemplate jdbcTemplate;
 
     @Override
-    public void addGroup(Group group) {
+    public void addGroup(Group group) throws DataAccessException {
         var query = """
                 INSERT
                 INTO groups (group_name)
@@ -29,7 +30,7 @@ public class GroupDaoImpl implements GroupDao {
     }
 
     @Override
-    public Optional<Group> getGroupById(int groupId) {
+    public Optional<Group> getGroupById(int groupId) throws DataAccessException {
         var query = """
                 SELECT group_id, group_name
                 FROM groups
@@ -41,7 +42,7 @@ public class GroupDaoImpl implements GroupDao {
     }
 
     @Override
-    public Optional<Group> getGroupByName(String groupName) {
+    public Optional<Group> getGroupByName(String groupName) throws DataAccessException {
         var query = """
                 SELECT group_id, group_name
                 FROM groups
@@ -53,7 +54,7 @@ public class GroupDaoImpl implements GroupDao {
     }
 
     @Override
-    public List<Group> getAll() {
+    public List<Group> getAll() throws DataAccessException {
         var query = """
                 SELECT group_id, group_name
                 FROM groups;""";
@@ -62,7 +63,7 @@ public class GroupDaoImpl implements GroupDao {
     }
 
     @Override
-    public List<Group> getGroupsLessThen(int numberOfStudents) {
+    public List<Group> getGroupsLessThen(int numberOfStudents) throws DataAccessException {
         var query = """
                 SELECT group_id, group_name
                 FROM groups

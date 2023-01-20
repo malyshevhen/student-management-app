@@ -1,28 +1,24 @@
 package ua.com.foxstudent102052.service.impl;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
-
-import ua.com.foxstudent102052.dao.exceptions.DAOException;
 import ua.com.foxstudent102052.dao.interfaces.StudentDao;
 import ua.com.foxstudent102052.model.dto.StudentDto;
 import ua.com.foxstudent102052.model.entity.Student;
 import ua.com.foxstudent102052.service.interfaces.StudentService;
+
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class StudentServiceImplTest {
@@ -42,9 +38,9 @@ class StudentServiceImplTest {
     void MethodAddStudent_ShouldPassNewStudentToRepository() {
         // given
         var studentDto = StudentDto.builder()
-                .firstName("John")
-                .lastName("Doe")
-                .build();
+            .firstName("John")
+            .lastName("Doe")
+            .build();
         var student = modelMapper.map(studentDto, Student.class);
 
         // when
@@ -57,36 +53,36 @@ class StudentServiceImplTest {
     @Test
     void MethodRemoveStudent_ShouldRemoveExistingStudentFromDb() {
         // given
-        var student = Student.builder().id(1).firstName("John").lastName("Doe").build();
+        int id = 1;
 
         // when
-        when(studentDao.getStudent(1)).thenReturn(Optional.of(student)).thenThrow(DAOException.class);
-        doNothing().when(studentDao).removeStudent(student.getId());
+        when(studentDao.getStudent(id)).thenReturn(Optional.of(new Student()));
+        doNothing().when(studentDao).removeStudent(id);
 
         // then
-        studentService.removeStudent(student.getId());
+        studentService.removeStudent(id);
 
-        verify(studentDao).removeStudent(student.getId());
+        verify(studentDao).removeStudent(id);
     }
 
     @Test
     void MethodRemoveStudent_ShouldThrowAnException_IfStudentDoesNotExist() {
         // given
-        var student = Student.builder().id(1).firstName("John").lastName("Doe").build();
+        int id = 1;
 
         // when
-        when(studentDao.getStudent(1)).thenReturn(Optional.empty());
+        when(studentDao.getStudent(id)).thenReturn(Optional.empty());
 
         // then
-        assertThrows(NoSuchElementException.class, () -> studentService.removeStudent(student.getId()),
-                "Student wasn`t removed");
+        assertThrows(NoSuchElementException.class,
+            () -> studentService.removeStudent(id),
+            "Student wasn`t removed");
     }
 
     @Test
     void MethodGetStudents_ShouldSendRequestToDao() {
         // given
-        var students = List.of(
-                new Student(1, 1, "John", "Doe"));
+        var students = List.of(new Student());
 
         // when
         when(studentDao.getAll()).thenReturn(students);
@@ -116,7 +112,7 @@ class StudentServiceImplTest {
 
         // then
         assertThrows(NoSuchElementException.class, () -> studentService.removeStudent(studentId),
-                "Student wasn`t removed");
+            "Student wasn`t removed");
     }
 
     @Test
@@ -150,7 +146,7 @@ class StudentServiceImplTest {
     @Test
     void MethodGetStudentsByCourseShould_ReturnListOfStudents_ByCourseId() {
         // when
-        when(studentDao.getStudentsByCourse(anyInt())).thenReturn(List.of(new Student(0, 0, "", "")));
+        when(studentDao.getStudentsByCourse(anyInt())).thenReturn(List.of(new Student()));
         studentService.getStudentsByCourse(1);
 
         // then
@@ -161,7 +157,7 @@ class StudentServiceImplTest {
     void MethodGetStudentsByNameAndCourse_ShouldReturnListOfStudents() {
         // when
         when(studentDao.getStudentsByNameAndCourse(anyString(), anyInt()))
-            .thenReturn(List.of(new Student(0, 0, "", "")));
+            .thenReturn(List.of(new Student()));
         studentService.getStudentsByNameAndCourse("John", 1);
 
         // then
@@ -171,7 +167,7 @@ class StudentServiceImplTest {
     @Test
     void MethodGetStudentsByGropShould_ReturnListOfStudents_ByCourseId() {
         // when
-        when(studentDao.getStudentsByGroup(anyInt())).thenReturn(List.of(new Student(0, 0, "", "")));
+        when(studentDao.getStudentsByGroup(anyInt())).thenReturn(List.of(new Student()));
         studentService.getStudentsByGroup(1);
 
         // then

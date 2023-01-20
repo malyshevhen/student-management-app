@@ -5,10 +5,10 @@ import java.util.NoSuchElementException;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
-import ua.com.foxstudent102052.dao.exceptions.DAOException;
 import ua.com.foxstudent102052.dao.interfaces.CourseDao;
 import ua.com.foxstudent102052.model.dto.CourseDto;
 import ua.com.foxstudent102052.model.entity.Course;
@@ -22,7 +22,7 @@ public class CourseServiceImpl implements CourseService {
     private final ModelMapper modelMapper;
 
     @Override
-    public void addCourse(CourseDto courseDto) throws DAOException {
+    public void addCourse(CourseDto courseDto) throws DataAccessException {
         var courseName = courseDto.getName();
 
         if (courseDao.getCourseByName(courseName).isEmpty()) {
@@ -33,14 +33,14 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public CourseDto getCourseById(int courseId) throws DAOException {
+    public CourseDto getCourseById(int courseId) throws DataAccessException {
         var course = courseDao.getCourseById(courseId).orElseThrow();
 
         return modelMapper.map(course, CourseDto.class);
     }
 
     @Override
-    public List<CourseDto> getAll() throws DAOException {
+    public List<CourseDto> getAll() throws DataAccessException {
         if (courseDao.getAll().isEmpty()) {
             throw new NoSuchElementException("There are no courses in database");
         } else {
@@ -52,7 +52,7 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public List<CourseDto> getCoursesByStudent(int studentId) throws DAOException {
+    public List<CourseDto> getCoursesByStudent(int studentId) throws DataAccessException {
         if (courseDao.getCoursesByStudentId(studentId).isEmpty()) {
             throw new NoSuchElementException("There are no students on course");
         } else {
