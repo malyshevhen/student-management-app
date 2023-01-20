@@ -24,13 +24,13 @@ import ua.com.foxstudent102052.utils.FileUtils;
 class TestDataInitializerTest {
 
     @Mock
-    private GroupService groupService;
+    private CourseService courseService;
 
     @Mock
     private StudentService studentService;
 
     @Mock
-    private CourseService courseService;
+    private GroupService groupService;
 
     @Mock
     private QueryPostService queryPostService;
@@ -40,6 +40,7 @@ class TestDataInitializerTest {
     @BeforeEach
     void setUp() {
         var fileUtils = new FileUtils();
+
         testDataInitializer = new TestDataInitializer(studentService, courseService, groupService, queryPostService,
                 fileUtils);
     }
