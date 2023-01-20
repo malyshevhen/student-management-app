@@ -19,7 +19,7 @@ import ua.com.foxstudent102052.service.interfaces.CourseService;
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class CourseServiceImpl implements CourseService {
     private final CourseDao courseDao;
-    private static final ModelMapper modelMapper = new ModelMapper();
+    private final ModelMapper modelMapper;
 
     @Override
     public void addCourse(CourseDto courseDto) throws DataAccessException {

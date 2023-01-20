@@ -29,7 +29,7 @@ class GroupServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        groupService = new GroupServiceImpl(groupDao);
+        groupService = new GroupServiceImpl(groupDao, modelMapper);
     }
 
     @Test

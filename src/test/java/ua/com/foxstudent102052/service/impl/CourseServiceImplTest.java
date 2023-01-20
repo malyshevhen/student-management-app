@@ -29,7 +29,7 @@ class CourseServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        courseService = new CourseServiceImpl(courseDao);
+        courseService = new CourseServiceImpl(courseDao, modelMapper);
     }
 
     @Test

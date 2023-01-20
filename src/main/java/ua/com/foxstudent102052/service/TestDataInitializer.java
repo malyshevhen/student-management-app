@@ -1,18 +1,17 @@
-package ua.com.foxstudent102052.controller;
+package ua.com.foxstudent102052.service;
 
 import java.util.List;
 import java.util.NoSuchElementException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
-import org.springframework.stereotype.Controller;
+import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import ua.com.foxstudent102052.model.dto.CourseDto;
 import ua.com.foxstudent102052.model.dto.GroupDto;
 import ua.com.foxstudent102052.model.dto.StudentDto;
-import ua.com.foxstudent102052.service.QueryPostService;
 import ua.com.foxstudent102052.service.exceptions.ElementAlreadyExistException;
 import ua.com.foxstudent102052.service.interfaces.CourseService;
 import ua.com.foxstudent102052.service.interfaces.GroupService;
@@ -20,7 +19,7 @@ import ua.com.foxstudent102052.service.interfaces.StudentService;
 import ua.com.foxstudent102052.utils.FileUtils;
 import ua.com.foxstudent102052.utils.RandomModelCreator;
 
-@Controller
+@Service
 @Slf4j
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class TestDataInitializer {

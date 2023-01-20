@@ -21,7 +21,7 @@ public class GroupServiceImpl implements GroupService {
     public static final String GROUP_DOES_NOT_EXIST = "This group does not exist in DB";
 
     private final GroupDao groupDao;
-    private final ModelMapper modelMapper = new ModelMapper();
+    private final ModelMapper modelMapper;
 
     @Override
     public void addGroup(GroupDto groupDto) throws DataAccessException {
