@@ -1,56 +1,36 @@
-<<<<<<<< HEAD:src/test/java/ua/com/foxstudent102052/service/impl/TestDataInitializerTest.java
-package ua.com.foxstudent102052.service.impl;
-========
 package ua.com.foxstudent102052.service;
->>>>>>>> furure:src/test/java/ua/com/foxstudent102052/service/TestDataInitializerTest.java
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.atLeast;
-<<<<<<<< HEAD:src/test/java/ua/com/foxstudent102052/service/impl/TestDataInitializerTest.java
-import static org.mockito.Mockito.mock;
-========
->>>>>>>> furure:src/test/java/ua/com/foxstudent102052/service/TestDataInitializerTest.java
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-<<<<<<<< HEAD:src/test/java/ua/com/foxstudent102052/service/impl/TestDataInitializerTest.java
-========
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
->>>>>>>> furure:src/test/java/ua/com/foxstudent102052/service/TestDataInitializerTest.java
 
 import ua.com.foxstudent102052.model.dto.CourseDto;
 import ua.com.foxstudent102052.model.dto.GroupDto;
 import ua.com.foxstudent102052.model.dto.StudentDto;
-<<<<<<<< HEAD:src/test/java/ua/com/foxstudent102052/service/impl/TestDataInitializerTest.java
-import ua.com.foxstudent102052.service.QueryPostService;
-import ua.com.foxstudent102052.service.TestDataInitializer;
-========
->>>>>>>> furure:src/test/java/ua/com/foxstudent102052/service/TestDataInitializerTest.java
 import ua.com.foxstudent102052.service.interfaces.CourseService;
 import ua.com.foxstudent102052.service.interfaces.GroupService;
 import ua.com.foxstudent102052.service.interfaces.StudentService;
 import ua.com.foxstudent102052.utils.FileUtils;
 
-<<<<<<<< HEAD:src/test/java/ua/com/foxstudent102052/service/impl/TestDataInitializerTest.java
-@ExtendWith(org.mockito.junit.jupiter.MockitoExtension.class)
-========
 @ExtendWith(MockitoExtension.class)
->>>>>>>> furure:src/test/java/ua/com/foxstudent102052/service/TestDataInitializerTest.java
 class TestDataInitializerTest {
 
     @Mock
-    private GroupService groupService;
+    private CourseService courseService;
 
     @Mock
     private StudentService studentService;
 
     @Mock
-    private CourseService courseService;
+    private GroupService groupService;
 
     @Mock
     private QueryPostService queryPostService;
@@ -60,13 +40,7 @@ class TestDataInitializerTest {
     @BeforeEach
     void setUp() {
         var fileUtils = new FileUtils();
-<<<<<<<< HEAD:src/test/java/ua/com/foxstudent102052/service/impl/TestDataInitializerTest.java
-        var queryPostService = mock(QueryPostService.class);
-        groupService = mock(GroupService.class);
-        studentService = mock(StudentService.class);
-        courseService = mock(CourseService.class);
-========
->>>>>>>> furure:src/test/java/ua/com/foxstudent102052/service/TestDataInitializerTest.java
+
         testDataInitializer = new TestDataInitializer(studentService, courseService, groupService, queryPostService,
                 fileUtils);
     }
