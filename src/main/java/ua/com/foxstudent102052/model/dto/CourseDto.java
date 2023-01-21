@@ -12,8 +12,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class CourseDto {
-    private int id;
-    private String name;
-    private String description;
+    private int courseId;
+    private String courseName;
+    private String courseDescription;
     private List<StudentDto> studentList = List.of();
 }

@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public final class Student {
-    private int id;
+    private int studentId;
     private int groupId;
     private String firstName;
     private String lastName;

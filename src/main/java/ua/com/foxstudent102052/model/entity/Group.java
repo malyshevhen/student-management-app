@@ -10,6 +10,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public final class Group {
-    private int id;
-    private String name;
+    private int groupId;
+    private String groupName;
 }

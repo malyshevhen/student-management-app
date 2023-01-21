@@ -48,7 +48,7 @@ public class StudentServiceImpl implements StudentService {
     public void removeStudentFromCourse(int studentId, int courseId) throws DAOException {
         boolean studentPresentInCourse = studentDao.getStudentsByCourse(courseId)
                 .stream()
-                .anyMatch(student -> student.getId() == studentId);
+                .anyMatch(student -> student.getStudentId() == studentId);
 
         if (studentPresentInCourse) {
             studentDao.removeStudentFromCourse(studentId, courseId);

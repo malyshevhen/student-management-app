@@ -24,7 +24,7 @@ public class RandomModelCreator {
 
         for (String groupName : groupNames) {
             var group = GroupDto.builder()
-                    .name(groupName)
+                    .groupName(groupName)
                     .build();
             groupList.add(group);
         }
@@ -37,8 +37,8 @@ public class RandomModelCreator {
 
         for (var courseString : courses) {
             var courseDto = CourseDto.builder()
-                    .name(courseString[0])
-                    .description(courseString[1])
+                    .courseName(courseString[0])
+                    .courseDescription(courseString[1])
                     .build();
             courseDtoArrayList.add(courseDto);
         }

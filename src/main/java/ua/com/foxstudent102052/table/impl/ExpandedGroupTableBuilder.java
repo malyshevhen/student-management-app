@@ -14,8 +14,8 @@ public class ExpandedGroupTableBuilder extends DtoTableBuilderImpl<GroupDto> {
     @Override
     protected String buildInfoBlock(GroupDto group) {
         var infoBlockBuilder = new StringBuilder();
-        var id = group.getId();
-        var name = group.getName();
+        var id = group.getGroupId();
+        var name = group.getGroupName();
         var students = group.getStudentList();
 
         if (students.isEmpty()) {

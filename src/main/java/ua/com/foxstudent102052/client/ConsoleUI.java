@@ -103,7 +103,7 @@ public class ConsoleUI {
 
         int groupId = consoleUtils.getInputInt(ENTER_OPTION_NUMBER, reader);
         var chosenGroup = GroupDto.builder()
-                .id(groupId)
+                .groupId(groupId)
                 .build();
         var studentDto = StudentDto.builder()
                 .firstName(firstName)

@@ -55,7 +55,7 @@ public class StudentController {
 
     private StudentDto setStudentsCourseList(StudentDto studentDto) {
         try {
-            int studentId = studentDto.getId();
+            int studentId = studentDto.getStudentId();
             var courseDtoList = courseService.getCoursesByStudent(studentId);
             studentDto.setCoursesList(courseDtoList);
 
@@ -67,7 +67,7 @@ public class StudentController {
 
     private StudentDto setStudentsGroup(StudentDto studentDto) {
         try {
-            int groupId = studentDto.getGroup().getId();
+            int groupId = studentDto.getGroup().getGroupId();
             var studentsGroup = groupService.getGroupById(groupId);
             studentDto.setGroup(studentsGroup);
 

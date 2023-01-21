@@ -43,7 +43,7 @@ class RandomModelCreatorTest {
 
         // when
         var actual = groups.stream()
-                .filter(group -> group.getName() == null)
+                .filter(group -> group.getGroupName() == null)
                 .toList();
 
         // then
@@ -57,7 +57,7 @@ class RandomModelCreatorTest {
 
         // when
         var actual = courses.stream()
-                .filter(course -> course.getName() == null || course.getDescription() == null)
+                .filter(course -> course.getCourseName() == null || course.getCourseDescription() == null)
                 .toList();
 
         // then
@@ -86,7 +86,7 @@ class RandomModelCreatorTest {
 
         // when
         var actual = students.stream()
-                .mapToInt(student -> student.getGroup().getId())
+                .mapToInt(student -> student.getGroup().getGroupId())
                 .anyMatch(id -> id < 0 || id > 10);
 
         // then

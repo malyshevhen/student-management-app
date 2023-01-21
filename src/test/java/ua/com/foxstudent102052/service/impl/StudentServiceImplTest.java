@@ -57,28 +57,28 @@ class StudentServiceImplTest {
     @Test
     void MethodRemoveStudent_ShouldRemoveExistingStudentFromDb() {
         // given
-        var student = Student.builder().id(1).firstName("John").lastName("Doe").build();
+        var student = Student.builder().studentId(1).firstName("John").lastName("Doe").build();
 
         // when
         when(studentDao.getStudent(1)).thenReturn(Optional.of(student)).thenThrow(DAOException.class);
-        doNothing().when(studentDao).removeStudent(student.getId());
+        doNothing().when(studentDao).removeStudent(student.getStudentId());
 
         // then
-        studentService.removeStudent(student.getId());
+        studentService.removeStudent(student.getStudentId());
 
-        verify(studentDao).removeStudent(student.getId());
+        verify(studentDao).removeStudent(student.getStudentId());
     }
 
     @Test
     void MethodRemoveStudent_ShouldThrowAnException_IfStudentDoesNotExist() {
         // given
-        var student = Student.builder().id(1).firstName("John").lastName("Doe").build();
+        var student = Student.builder().studentId(1).firstName("John").lastName("Doe").build();
 
         // when
         when(studentDao.getStudent(1)).thenReturn(Optional.empty());
 
         // then
-        assertThrows(NoSuchElementException.class, () -> studentService.removeStudent(student.getId()),
+        assertThrows(NoSuchElementException.class, () -> studentService.removeStudent(student.getStudentId()),
                 "Student wasn`t removed");
     }
 
@@ -122,10 +122,10 @@ class StudentServiceImplTest {
     @Test
     void MethodAddStudentToCourse_ShouldAddExistingStudentToExistingCourse() {
         // given
-        Student newStudent = Student.builder().id(1).firstName("John").lastName("Doe").build();
+        Student newStudent = Student.builder().studentId(1).firstName("John").lastName("Doe").build();
 
         // when
-        when(studentDao.getStudent(newStudent.getId())).thenReturn(Optional.of(newStudent));
+        when(studentDao.getStudent(newStudent.getStudentId())).thenReturn(Optional.of(newStudent));
         studentService.addStudentToCourse(1, 1);
 
         // then

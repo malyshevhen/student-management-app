@@ -25,7 +25,7 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     public void addGroup(GroupDto groupDto) throws DAOException {
-        if (groupDao.getGroupByName(groupDto.getName()).isPresent()) {
+        if (groupDao.getGroupByName(groupDto.getGroupName()).isPresent()) {
             throw new ElementAlreadyExistException("Group is already exist!");
         } else {
             groupDao.addGroup(modelMapper.map(groupDto, Group.class));

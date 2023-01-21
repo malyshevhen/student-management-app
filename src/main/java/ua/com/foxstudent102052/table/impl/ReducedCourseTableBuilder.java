@@ -14,8 +14,8 @@ public class ReducedCourseTableBuilder extends DtoTableBuilderImpl<CourseDto> {
     @Override
     protected String buildInfoBlock(CourseDto course) {
         var courseBlockBuilder = new StringBuilder();
-        var id = String.valueOf(course.getId());
-        var name = course.getName();
+        var id = String.valueOf(course.getCourseId());
+        var name = course.getCourseName();
 
         return courseBlockBuilder.append(String.format(ROW, id, name))
                 .append("\n")

@@ -8,7 +8,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.test.context.jdbc.Sql;
 
 import ua.com.foxstudent102052.dao.interfaces.CourseDao;
@@ -20,19 +22,21 @@ class CourseDaoImplTest {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
+
+    private RowMapper<Course> courseRowMapper = BeanPropertyRowMapper.newInstance(Course.class);;
     private CourseDao courseDao;
 
     @BeforeEach
     void setUp() {
-        courseDao = new CourseDaoImpl(jdbcTemplate);
+        courseDao = new CourseDaoImpl(jdbcTemplate, courseRowMapper);
     }
 
     @Test
     void MethodAddCourse_ShouldAddCourseToDb() {
         // given
         var course = Course.builder()
-                .name("Course 4")
-                .description("Some description for course 4")
+                .courseName("Course 4")
+                .courseDescription("Some courseDescription for course 4")
                 .build();
 
         // when
@@ -57,9 +61,9 @@ class CourseDaoImplTest {
     void MethodGetCourse_ById_ShouldReturnCourseFromDb() {
         // given
         var expected = Course.builder()
-                .id(1)
-                .name("Course 1")
-                .description("Some description for course 1")
+                .courseId(1)
+                .courseName("Course 1")
+                .courseDescription("Some description for course 1")
                 .build();
 
         // when
@@ -73,13 +77,13 @@ class CourseDaoImplTest {
     void MethodGetCourse_ByName_ShouldReturnCourseFromDb() {
         // given
         var expected = Course.builder()
-                .id(1)
-                .name("Course 1")
-                .description("Some description for course 1")
+                .courseId(1)
+                .courseName("Course 1")
+                .courseDescription("Some description for course 1")
                 .build();
 
         // when
-        var actual = courseDao.getCourseByName(expected.getName()).get();
+        var actual = courseDao.getCourseByName(expected.getCourseName()).orElseThrow();
 
         // then
         assertEquals(expected, actual);
@@ -90,14 +94,14 @@ class CourseDaoImplTest {
         // given
         var expected = List.of(
                 Course.builder()
-                        .id(1)
-                        .name("Course 1")
-                        .description("Some description for course 1")
+                        .courseId(1)
+                        .courseName("Course 1")
+                        .courseDescription("Some description for course 1")
                         .build(),
                 Course.builder()
-                        .id(2)
-                        .name("Course 2")
-                        .description("Some description for course 2")
+                        .courseId(2)
+                        .courseName("Course 2")
+                        .courseDescription("Some description for course 2")
                         .build());
 
         // when

@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class GroupDto {
-    private int id;
-    private String name;
+    private int groupId;
+    private String groupName;
     private List<StudentDto> studentList = List.of();
 }

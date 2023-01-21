@@ -36,7 +36,7 @@ class CourseServiceImplTest {
     @Test
     void MethodAddCourse_ShouldPassCourseToRepository() {
         // given
-        Course courseFromDb = Course.builder().name("Java").description("Java course").build();
+        Course courseFromDb = Course.builder().courseName("Java").courseDescription("Java course").build();
         CourseDto newCourse = modelMapper.map(courseFromDb, CourseDto.class);
 
         // when
@@ -50,9 +50,9 @@ class CourseServiceImplTest {
     void MethodGetAllCourses_ShouldReturnListOfAllStudents() {
         // given
         var courses = List.of(
-                Course.builder().name("Java").description("Java course").build(),
-                Course.builder().name("C++").description("C++ course").build(),
-                Course.builder().name("C#").description("C# course").build());
+                Course.builder().courseName("Java").courseDescription("Java course").build(),
+                Course.builder().courseName("C++").courseDescription("C++ course").build(),
+                Course.builder().courseName("C#").courseDescription("C# course").build());
 
         // when
         when(courseDao.getAll()).thenReturn(courses);
@@ -69,13 +69,14 @@ class CourseServiceImplTest {
     @Test
     void MethodGetCourseById_ShouldReturnCourseFromDb() {
         // given
-        var course = Course.builder().name("Java").description("Java course").build();
+        var course = Course.builder().courseName("Java").courseDescription("Java course").build();
 
         // when
         when(courseDao.getCourseById(1)).thenReturn(Optional.of(course));
 
         // then
-        var expected = CourseDto.builder().name("Java").description("Java course").studentList(List.of()).build();
+        var expected = CourseDto.builder().courseName("Java").courseDescription("Java course").studentList(List.of())
+                .build();
         var actual = courseService.getCourseById(1);
 
         assertEquals(expected, actual);
@@ -84,14 +85,15 @@ class CourseServiceImplTest {
     @Test
     void MethodGetCoursesByStudentId_ShouldReturnCourseFromDb() {
         // given
-        var course = Course.builder().name("Java").description("Java course").build();
+        var course = Course.builder().courseName("Java").courseDescription("Java course").build();
 
         // when
         when(courseDao.getCoursesByStudentId(1)).thenReturn(List.of(course));
 
         // then
         var expected = List
-                .of(CourseDto.builder().name("Java").description("Java course").studentList(List.of()).build());
+                .of(CourseDto.builder().courseName("Java").courseDescription("Java course").studentList(List.of())
+                        .build());
         var actual = courseService.getCoursesByStudent(1);
 
         assertEquals(expected, actual);

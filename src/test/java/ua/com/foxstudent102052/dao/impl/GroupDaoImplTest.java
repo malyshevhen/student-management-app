@@ -6,7 +6,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.test.context.jdbc.Sql;
 
 import ua.com.foxstudent102052.dao.exceptions.DAOException;
@@ -19,17 +21,19 @@ class GroupDaoImplTest {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
+
+    private RowMapper<Group> groupRowMapper = BeanPropertyRowMapper.newInstance(Group.class);
     private GroupDao groupDao;
 
     @BeforeEach
     void setUp() {
-        groupDao = new GroupDaoImpl(jdbcTemplate);
+        groupDao = new GroupDaoImpl(jdbcTemplate, groupRowMapper);
     }
 
     @Test
     void MethodAddGroup_ShouldAddGroupToDb() throws DAOException {
         // given
-        var group = Group.builder().name("New Group").build();
+        var group = Group.builder().groupName("New Group").build();
         groupDao.addGroup(group);
 
         // when
@@ -51,7 +55,7 @@ class GroupDaoImplTest {
     @Test
     void MethodGetGroup_ById_ShouldReturnGroupById() throws DAOException {
         // given
-        var expected = Group.builder().id(1).name("Group 1").build();
+        var expected = Group.builder().groupId(1).groupName("Group 1").build();
 
         // when
         var actual = groupDao.getGroupById(1).get();
@@ -63,7 +67,7 @@ class GroupDaoImplTest {
     @Test
     void MethodGetGroup_ByName_ShouldReturnGroupByName() throws DAOException {
         // given
-        var expected = Group.builder().id(1).name("Group 1").build();
+        var expected = Group.builder().groupId(1).groupName("Group 1").build();
 
         // when
         var actual = groupDao.getGroupByName("Group 1").get();

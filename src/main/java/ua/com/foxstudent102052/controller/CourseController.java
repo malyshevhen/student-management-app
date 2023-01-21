@@ -26,7 +26,7 @@ public class CourseController {
 
     private CourseDto setStudentsToCourse(CourseDto courseDto) {
         try {
-            var students = studentService.getStudentsByCourse(courseDto.getId());
+            var students = studentService.getStudentsByCourse(courseDto.getCourseId());
             courseDto.setStudentList(students);
 
             return courseDto;

@@ -4,19 +4,22 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import lombok.RequiredArgsConstructor;
 import ua.com.foxstudent102052.dao.interfaces.GroupDao;
-import ua.com.foxstudent102052.dao.mapper.GroupRowMapper;
 import ua.com.foxstudent102052.model.entity.Group;
 
 @Repository
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class GroupDaoImpl implements GroupDao {
-
     private final JdbcTemplate jdbcTemplate;
+
+    @Qualifier("groupRowMapper")
+    private final RowMapper<Group> groupRowMapper;
 
     @Override
     public void addGroup(Group group) {
@@ -25,7 +28,7 @@ public class GroupDaoImpl implements GroupDao {
                 INTO groups (group_name)
                     values (?);""";
 
-        jdbcTemplate.update(query, group.getName());
+        jdbcTemplate.update(query, group.getGroupName());
     }
 
     @Override
@@ -35,7 +38,7 @@ public class GroupDaoImpl implements GroupDao {
                 FROM groups
                 WHERE group_id = ?;""";
 
-        return jdbcTemplate.query(query, new GroupRowMapper(), groupId)
+        return jdbcTemplate.query(query, groupRowMapper, groupId)
                 .stream()
                 .findFirst();
     }
@@ -47,7 +50,7 @@ public class GroupDaoImpl implements GroupDao {
                 FROM groups
                 WHERE group_name = ?;""";
 
-        return jdbcTemplate.query(query, new GroupRowMapper(), groupName)
+        return jdbcTemplate.query(query, groupRowMapper, groupName)
                 .stream()
                 .findFirst();
     }
@@ -58,7 +61,7 @@ public class GroupDaoImpl implements GroupDao {
                 SELECT group_id, group_name
                 FROM groups;""";
 
-        return jdbcTemplate.query(query, new GroupRowMapper());
+        return jdbcTemplate.query(query, groupRowMapper);
     }
 
     @Override
@@ -80,6 +83,6 @@ public class GroupDaoImpl implements GroupDao {
                     GROUP BY group_id
                     HAVING COUNT(group_id) <= ?);""";
 
-        return jdbcTemplate.query(query, new GroupRowMapper(), numberOfStudents);
+        return jdbcTemplate.query(query, groupRowMapper, numberOfStudents);
     }
 }

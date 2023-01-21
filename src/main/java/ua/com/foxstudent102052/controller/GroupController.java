@@ -34,7 +34,7 @@ public class GroupController {
 
     private GroupDto setStudentsToGroups(GroupDto groupDto) {
         try {
-            var result = studentService.getStudentsByGroup(groupDto.getId());
+            var result = studentService.getStudentsByGroup(groupDto.getGroupId());
             groupDto.setStudentList(result);
 
             return groupDto;

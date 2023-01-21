@@ -23,12 +23,13 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public void addCourse(CourseDto courseDto) throws DAOException {
-        var courseName = courseDto.getName();
+        var courseName = courseDto.getCourseName();
 
         if (courseDao.getCourseByName(courseName).isEmpty()) {
             courseDao.addCourse(modelMapper.map(courseDto, Course.class));
         } else {
-            throw new ElementAlreadyExistException(String.format("Course with id %d already exist", courseDto.getId()));
+            throw new ElementAlreadyExistException(
+                    String.format("Course with id %d already exist", courseDto.getCourseId()));
         }
     }
 

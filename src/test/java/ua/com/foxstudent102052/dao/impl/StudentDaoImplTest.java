@@ -8,7 +8,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.test.context.jdbc.Sql;
 
 import ua.com.foxstudent102052.dao.exceptions.DAOException;
@@ -21,18 +23,19 @@ class StudentDaoImplTest {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
+    private RowMapper<Student> studentRowMapper = BeanPropertyRowMapper.newInstance(Student.class);
     private StudentDao studentDao;
 
     @BeforeEach
     void setUp() {
-        studentDao = new StudentDaoImpl(jdbcTemplate);
+        studentDao = new StudentDaoImpl(jdbcTemplate, studentRowMapper);
     }
 
     @Test
     void MethodAddStudent_ShouldAddStudentToDb() throws DAOException {
         // given
         var newStudent = Student.builder()
-                .id(1)
+                .studentId(1)
                 .groupId(1)
                 .firstName("John")
                 .lastName("Doe")
@@ -51,7 +54,7 @@ class StudentDaoImplTest {
     void MethodAddStudentToCourse_ShouldAddStudentToNewCourse() throws DAOException {
         // given
         var expected = Student.builder()
-                .id(1)
+                .studentId(1)
                 .groupId(1)
                 .firstName("Leia")
                 .lastName("Organa")
@@ -78,25 +81,25 @@ class StudentDaoImplTest {
     void MethodGetStudentsByCourseId_ShouldReturnStudentByCourseId() throws DAOException {
         var expected = List.of(
                 Student.builder()
-                        .id(1)
+                        .studentId(1)
                         .groupId(1)
                         .firstName("Leia")
                         .lastName("Organa")
                         .build(),
                 Student.builder()
-                        .id(2)
+                        .studentId(2)
                         .groupId(1)
                         .firstName("Luke")
                         .lastName("Skywalker")
                         .build(),
                 Student.builder()
-                        .id(3)
+                        .studentId(3)
                         .groupId(1)
                         .firstName("Han")
                         .lastName("Solo")
                         .build(),
                 Student.builder()
-                        .id(4)
+                        .studentId(4)
                         .groupId(1)
                         .firstName("Padme")
                         .lastName("Amidala")
@@ -111,37 +114,37 @@ class StudentDaoImplTest {
     void MethodGetStudentsByGroup_ShouldReturnStudentByGroupId() throws DAOException {
         var expected = List.of(
                 Student.builder()
-                        .id(1)
+                        .studentId(1)
                         .groupId(1)
                         .firstName("Leia")
                         .lastName("Organa")
                         .build(),
                 Student.builder()
-                        .id(2)
+                        .studentId(2)
                         .groupId(1)
                         .firstName("Luke")
                         .lastName("Skywalker")
                         .build(),
                 Student.builder()
-                        .id(4)
+                        .studentId(4)
                         .groupId(1)
                         .firstName("Padme")
                         .lastName("Amidala")
                         .build(),
                 Student.builder()
-                        .id(5)
+                        .studentId(5)
                         .groupId(2)
                         .firstName("Dart")
                         .lastName("Maul")
                         .build(),
                 Student.builder()
-                        .id(9)
+                        .studentId(9)
                         .groupId(2)
                         .firstName("Dart")
                         .lastName("Vader")
                         .build(),
                 Student.builder()
-                        .id(10)
+                        .studentId(10)
                         .groupId(3)
                         .firstName("Jah Jah")
                         .lastName("Binks")
@@ -156,13 +159,13 @@ class StudentDaoImplTest {
     void MethodGetStudentsByNameAndCourse_ShouldReturnListOfStudents_ByStudentNameAndCourseId() throws DAOException {
         var expected = List.of(
                 Student.builder()
-                        .id(5)
+                        .studentId(5)
                         .groupId(2)
                         .firstName("Dart")
                         .lastName("Maul")
                         .build(),
                 Student.builder()
-                        .id(9)
+                        .studentId(9)
                         .groupId(2)
                         .firstName("Dart")
                         .lastName("Vader")
@@ -189,7 +192,7 @@ class StudentDaoImplTest {
     void MethodGetStudentById_ShouldReturnStudentFromDb() throws DAOException {
         // given
         var expected = Student.builder()
-                .id(1)
+                .studentId(1)
                 .groupId(1)
                 .firstName("Leia")
                 .lastName("Organa")

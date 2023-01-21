@@ -15,10 +15,10 @@ public class ExpandedStudentTableBuilder extends DtoTableBuilderImpl<StudentDto>
     @Override
     protected String buildInfoBlock(StudentDto student) {
         var studentBlockBuilder = new StringBuilder();
-        var id = String.valueOf(student.getId());
+        var id = String.valueOf(student.getStudentId());
         var firstName = student.getFirstName();
         var lastName = student.getLastName();
-        var group = student.getGroup().equals(new GroupDto()) ? "No group" : student.getGroup().getName();
+        var group = student.getGroup().equals(new GroupDto()) ? "No group" : student.getGroup().getGroupName();
         var courses = student.getCoursesList();
 
         if (courses.isEmpty()) {
@@ -30,11 +30,11 @@ public class ExpandedStudentTableBuilder extends DtoTableBuilderImpl<StudentDto>
             for (int i = 0; i < courses.size(); i++) {
                 if (i == 0) {
                     studentBlockBuilder.append(String.format(ROW, id, group, firstName, lastName,
-                            courses.get(i).getName()))
+                            courses.get(i).getCourseName()))
                             .append("\n");
                 } else {
                     studentBlockBuilder
-                            .append(String.format(ROW, " ", " ", " ", " ", courses.get(i).getName()))
+                            .append(String.format(ROW, " ", " ", " ", " ", courses.get(i).getCourseName()))
                             .append("\n");
                 }
             }

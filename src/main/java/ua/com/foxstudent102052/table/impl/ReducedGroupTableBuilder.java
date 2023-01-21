@@ -14,8 +14,8 @@ public class ReducedGroupTableBuilder extends DtoTableBuilderImpl<GroupDto> {
     @Override
     protected String buildInfoBlock(GroupDto group) {
         var groupTableBlockBuilder = new StringBuilder();
-        var id = String.valueOf(group.getId());
-        var name = group.getName();
+        var id = String.valueOf(group.getGroupId());
+        var name = group.getGroupName();
 
         return groupTableBlockBuilder.append(String.format(ROW, id, name))
                 .append("\n")
