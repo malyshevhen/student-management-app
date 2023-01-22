@@ -1,5 +1,5 @@
 package ua.com.foxstudent102052.dao.interfaces;
 
-public interface PostDAO {
+public interface PostDao {
     void doPost(String query);
 }

@@ -6,11 +6,11 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import lombok.RequiredArgsConstructor;
-import ua.com.foxstudent102052.dao.interfaces.PostDAO;
+import ua.com.foxstudent102052.dao.interfaces.PostDao;
 
 @Repository
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
-public class PostDaoImpl implements PostDAO {
+public class PostDaoImpl implements PostDao {
 
     private final JdbcTemplate jdbcTemplate;
 
