@@ -2,36 +2,29 @@ package ua.com.foxstudent102052.dao.impl;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.test.context.jdbc.Sql;
 
-import ua.com.foxstudent102052.dao.exceptions.DAOException;
+import ua.com.foxstudent102052.dao.impl.config.AbstractTestContainerIT;
 import ua.com.foxstudent102052.dao.interfaces.GroupDao;
 import ua.com.foxstudent102052.model.entity.Group;
 
-@JdbcTest
-@Sql({ "/scripts/ddl/Table_creation.sql", "/scripts/dml/testDB_Data.sql" })
-class GroupDaoImplTest {
+class GroupDaoImplTest extends AbstractTestContainerIT {
 
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
+    private final GroupDao groupDao;
 
     private RowMapper<Group> groupRowMapper = BeanPropertyRowMapper.newInstance(Group.class);
-    private GroupDao groupDao;
 
-    @BeforeEach
-    void setUp() {
+    @Autowired
+    public GroupDaoImplTest(JdbcTemplate jdbcTemplate) {
         groupDao = new GroupDaoImpl(jdbcTemplate, groupRowMapper);
     }
 
     @Test
-    void MethodAddGroup_ShouldAddGroupToDb() throws DAOException {
+    void MethodAddGroup_ShouldAddGroupToDb() {
         // given
         var group = Group.builder().groupName("New Group").build();
         groupDao.addGroup(group);
@@ -44,7 +37,7 @@ class GroupDaoImplTest {
     }
 
     @Test
-    void MethodGetGroups_ShouldReturnAllGroupsFromDb() throws DAOException {
+    void MethodGetGroups_ShouldReturnAllGroupsFromDb() {
         // when
         var allGroups = groupDao.getAll();
 
@@ -53,7 +46,7 @@ class GroupDaoImplTest {
     }
 
     @Test
-    void MethodGetGroup_ById_ShouldReturnGroupById() throws DAOException {
+    void MethodGetGroup_ById_ShouldReturnGroupById() {
         // given
         var expected = Group.builder().groupId(1).groupName("Group 1").build();
 
@@ -65,7 +58,7 @@ class GroupDaoImplTest {
     }
 
     @Test
-    void MethodGetGroup_ByName_ShouldReturnGroupByName() throws DAOException {
+    void MethodGetGroup_ByName_ShouldReturnGroupByName() {
         // given
         var expected = Group.builder().groupId(1).groupName("Group 1").build();
 
@@ -77,7 +70,7 @@ class GroupDaoImplTest {
     }
 
     @Test
-    void MethodGetGroupsLessThen_ShouldReturnGroupLessCount() throws DAOException {
+    void MethodGetGroupsLessThen_ShouldReturnGroupLessCount() {
         var actual = groupDao.getGroupsLessThen(2);
 
         assertEquals(1, actual.size());

@@ -4,13 +4,13 @@ import java.io.InputStreamReader;
 import java.util.NoSuchElementException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
 import ua.com.foxstudent102052.controller.CourseController;
 import ua.com.foxstudent102052.controller.GroupController;
 import ua.com.foxstudent102052.controller.StudentController;
-import ua.com.foxstudent102052.dao.exceptions.DAOException;
 import ua.com.foxstudent102052.model.dto.GroupDto;
 import ua.com.foxstudent102052.model.dto.StudentDto;
 import ua.com.foxstudent102052.table.TableFactory;
@@ -97,7 +97,7 @@ public class ConsoleUI {
             var groupTable = tableFactory.buildTable(allGroups, new ReducedGroupTableBuilder());
 
             consoleUtils.print(groupTable);
-        } catch (DAOException | NoSuchElementException e) {
+        } catch (DataAccessException | NoSuchElementException e) {
             consoleUtils.print(e.getMessage());
         }
 
@@ -115,7 +115,7 @@ public class ConsoleUI {
             studentController.addStudent(studentDto);
 
             consoleUtils.print("Student added successfully");
-        } catch (DAOException | NoSuchElementException e) {
+        } catch (DataAccessException | NoSuchElementException e) {
             consoleUtils.print(e.getMessage());
         } finally {
             callMainMenu();
@@ -130,7 +130,7 @@ public class ConsoleUI {
             studentController.removeStudent(studentId);
 
             consoleUtils.print("Student removed successfully");
-        } catch (DAOException | NoSuchElementException e) {
+        } catch (DataAccessException | NoSuchElementException e) {
             consoleUtils.print(e.getMessage());
         } finally {
             callMainMenu();
@@ -151,7 +151,7 @@ public class ConsoleUI {
             studentController.addStudentToCourse(studentId, courseId);
 
             consoleUtils.print("Student added to course successfully");
-        } catch (DAOException | NoSuchElementException e) {
+        } catch (DataAccessException | NoSuchElementException e) {
             consoleUtils.print(e.getMessage());
         } finally {
             callMainMenu();
@@ -173,7 +173,7 @@ public class ConsoleUI {
             studentController.removeStudentFromCourse(studentId, courseId);
 
             consoleUtils.print("Student removed from course successfully");
-        } catch (DAOException | NoSuchElementException e) {
+        } catch (DataAccessException | NoSuchElementException e) {
             consoleUtils.print(e.getMessage());
         } finally {
             callMainMenu();
@@ -189,7 +189,7 @@ public class ConsoleUI {
             var groupTable = tableFactory.buildTable(groupsSmallerThen, new ExpandedGroupTableBuilder());
 
             consoleUtils.print(groupTable);
-        } catch (DAOException | NoSuchElementException e) {
+        } catch (DataAccessException | NoSuchElementException e) {
             consoleUtils.print(e.getMessage());
         } finally {
             callMainMenu();
@@ -213,7 +213,7 @@ public class ConsoleUI {
                     new ExpandedStudentTableBuilder());
 
             consoleUtils.print(studentTable);
-        } catch (DAOException | NoSuchElementException e) {
+        } catch (DataAccessException | NoSuchElementException e) {
             consoleUtils.print(e.getMessage());
         } finally {
             callMainMenu();
@@ -228,7 +228,7 @@ public class ConsoleUI {
             var studentTable = tableFactory.buildTable(allStudents, new ExpandedStudentTableBuilder());
 
             consoleUtils.print(studentTable);
-        } catch (DAOException | NoSuchElementException e) {
+        } catch (DataAccessException | NoSuchElementException e) {
             consoleUtils.print(e.getMessage());
         } finally {
             callMainMenu();

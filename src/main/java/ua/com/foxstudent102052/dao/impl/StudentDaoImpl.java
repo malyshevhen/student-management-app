@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -22,7 +23,7 @@ public class StudentDaoImpl implements StudentDao {
     private final RowMapper<Student> studentRowMapper;
 
     @Override
-    public void addStudent(Student student) {
+    public void addStudent(Student student) throws DataAccessException {
         var query = """
                 INSERT INTO students (
                     group_id, first_name, last_name)
@@ -32,7 +33,7 @@ public class StudentDaoImpl implements StudentDao {
     }
 
     @Override
-    public void removeStudent(int studentId) {
+    public void removeStudent(int studentId) throws DataAccessException {
         var query = """
                 DELETE FROM students_courses
                 WHERE student_id = ?;
@@ -44,7 +45,7 @@ public class StudentDaoImpl implements StudentDao {
     }
 
     @Override
-    public void addStudentToCourse(int studentId, int courseId) {
+    public void addStudentToCourse(int studentId, int courseId) throws DataAccessException {
         var query = """
                 INSERT INTO students_courses (
                     student_id,
@@ -55,7 +56,7 @@ public class StudentDaoImpl implements StudentDao {
     }
 
     @Override
-    public void removeStudentFromCourse(int studentId, int courseId) {
+    public void removeStudentFromCourse(int studentId, int courseId) throws DataAccessException {
         var query = """
                 DELETE
                 FROM students_courses
@@ -66,19 +67,17 @@ public class StudentDaoImpl implements StudentDao {
     }
 
     @Override
-    public Optional<Student> getStudent(int id) {
+    public Optional<Student> getStudent(int id) throws DataAccessException {
         var query = """
                 SELECT student_id, group_id, first_name, last_name
                 FROM students
                 WHERE student_id = ?;""";
 
-        return jdbcTemplate.query(query, studentRowMapper, id)
-                .stream()
-                .findFirst();
+        return jdbcTemplate.query(query, studentRowMapper, id).stream().findFirst();
     }
 
     @Override
-    public List<Student> getAll() {
+    public List<Student> getAll() throws DataAccessException {
         var query = """
                 SELECT student_id, group_id, first_name, last_name
                 FROM students;""";
@@ -87,7 +86,7 @@ public class StudentDaoImpl implements StudentDao {
     }
 
     @Override
-    public List<Student> getStudentsByCourse(int courseId) {
+    public List<Student> getStudentsByCourse(int courseId) throws DataAccessException {
         var query = """
                 SELECT student_id, group_id, first_name, last_name
                 FROM students
@@ -100,7 +99,7 @@ public class StudentDaoImpl implements StudentDao {
     }
 
     @Override
-    public List<Student> getStudentsByGroup(int groupId) {
+    public List<Student> getStudentsByGroup(int groupId) throws DataAccessException {
         var query = """
                 SELECT student_id, group_id, first_name, last_name
                 FROM students
@@ -110,7 +109,7 @@ public class StudentDaoImpl implements StudentDao {
     }
 
     @Override
-    public List<Student> getStudentsByNameAndCourse(String studentName, int courseId) {
+    public List<Student> getStudentsByNameAndCourse(String studentName, int courseId) throws DataAccessException {
         var query = """
                 SELECT student_id, group_id, first_name, last_name
                 FROM students

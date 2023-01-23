@@ -35,8 +35,7 @@ class CourseControllerTest {
     @Test
     void MethodGetAllCourses_ShouldReturnListOfAllCourses() {
         // given
-        var studentDtoList = List.of(
-                StudentDto.builder().studentId(1).firstName("John").lastName("Doe").build(),
+        var studentDtoList = List.of(StudentDto.builder().studentId(1).firstName("John").lastName("Doe").build(),
                 StudentDto.builder().studentId(2).firstName("Jane").lastName("Doe").build(),
                 StudentDto.builder().studentId(3).firstName("Jack").lastName("Doe").build());
         var expected = List.of(
@@ -45,8 +44,7 @@ class CourseControllerTest {
                 CourseDto.builder().courseId(2).courseName("C++").courseDescription("C# course")
                         .studentList(studentDtoList).build(),
                 CourseDto.builder().courseId(3).courseName("Python").courseDescription("Python course")
-                        .studentList(studentDtoList)
-                        .build());
+                        .studentList(studentDtoList).build());
 
         // when
         when(courseService.getAll()).thenReturn(expected);

@@ -5,10 +5,10 @@ import java.util.NoSuchElementException;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
-import ua.com.foxstudent102052.dao.exceptions.DAOException;
 import ua.com.foxstudent102052.dao.interfaces.StudentDao;
 import ua.com.foxstudent102052.model.dto.StudentDto;
 import ua.com.foxstudent102052.model.entity.Student;
@@ -21,13 +21,13 @@ public class StudentServiceImpl implements StudentService {
     private final ModelMapper modelMapper;
 
     @Override
-    public void addStudent(StudentDto studentDto) throws DAOException {
+    public void addStudent(StudentDto studentDto) throws DataAccessException {
         var student = modelMapper.map(studentDto, Student.class);
         studentDao.addStudent(student);
     }
 
     @Override
-    public void removeStudent(int studentId) throws DAOException {
+    public void removeStudent(int studentId) throws DataAccessException {
         if (studentDao.getStudent(studentId).isPresent()) {
             studentDao.removeStudent(studentId);
         } else {
@@ -36,7 +36,7 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public void addStudentToCourse(int studentId, int courseId) throws DAOException {
+    public void addStudentToCourse(int studentId, int courseId) throws DataAccessException {
         if (studentDao.getStudent(studentId).isPresent()) {
             studentDao.addStudentToCourse(studentId, courseId);
         } else {
@@ -45,7 +45,7 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public void removeStudentFromCourse(int studentId, int courseId) throws DAOException {
+    public void removeStudentFromCourse(int studentId, int courseId) throws DataAccessException {
         boolean studentPresentInCourse = studentDao.getStudentsByCourse(courseId)
                 .stream()
                 .anyMatch(student -> student.getStudentId() == studentId);
@@ -58,7 +58,7 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public List<StudentDto> getAll() throws DAOException {
+    public List<StudentDto> getAll() throws DataAccessException {
         var studentDtoList = studentDao.getAll()
                 .stream()
                 .map(student -> modelMapper.map(student, StudentDto.class))
@@ -72,7 +72,7 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public List<StudentDto> getStudentsByCourse(int courseId) throws DAOException {
+    public List<StudentDto> getStudentsByCourse(int courseId) throws DataAccessException {
         var studentDtoList = studentDao.getStudentsByCourse(courseId)
                 .stream()
                 .map(student -> modelMapper.map(student, StudentDto.class))
@@ -86,7 +86,7 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public List<StudentDto> getStudentsByGroup(int groupId) throws DAOException {
+    public List<StudentDto> getStudentsByGroup(int groupId) throws DataAccessException {
         var studentDtoList = studentDao.getStudentsByGroup(groupId)
                 .stream()
                 .map(student -> modelMapper.map(student, StudentDto.class))
@@ -100,7 +100,8 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public List<StudentDto> getStudentsByNameAndCourse(String studentName, Integer courseId) throws DAOException {
+    public List<StudentDto> getStudentsByNameAndCourse(String studentName, Integer courseId)
+            throws DataAccessException {
         var studentDtoList = studentDao.getStudentsByNameAndCourse(studentName, courseId)
                 .stream()
                 .map(student -> modelMapper.map(student, StudentDto.class))

@@ -80,48 +80,17 @@ class StudentControllerTest {
     void MethodGetStudents_ShouldReturnListOfStudentsWithCoursesAndGroup() {
         // given
         var group = GroupDto.builder().groupId(1).groupName("Java").build();
-        var studentsDto = List.of(StudentDto
-                .builder()
-                .studentId(1)
-                .firstName("John")
-                .lastName("Doe")
-                .group(group)
-                .build(),
-                StudentDto.builder()
-                        .studentId(2)
-                        .firstName("Jane")
-                        .lastName("Doe")
-                        .group(group)
-                        .build());
+        var studentsDto = List.of(
+                StudentDto.builder().studentId(1).firstName("John").lastName("Doe").group(group).build(),
+                StudentDto.builder().studentId(2).firstName("Jane").lastName("Doe").group(group).build());
         var courses = List.of(
-                CourseDto
-                        .builder()
-                        .courseId(1)
-                        .courseName("Java")
-                        .courseDescription("Java course")
-                        .build(),
-                CourseDto
-                        .builder()
-                        .courseId(2)
-                        .courseName("C#")
-                        .courseDescription("C# course")
-                        .build());
+                CourseDto.builder().courseId(1).courseName("Java").courseDescription("Java course").build(),
+                CourseDto.builder().courseId(2).courseName("C#").courseDescription("C# course").build());
 
         var expected = List.of(
-                StudentDto
-                        .builder()
-                        .studentId(1)
-                        .firstName("John")
-                        .lastName("Doe")
-                        .group(group)
-                        .coursesList(courses)
+                StudentDto.builder().studentId(1).firstName("John").lastName("Doe").group(group).coursesList(courses)
                         .build(),
-                StudentDto.builder()
-                        .studentId(2)
-                        .firstName("Jane")
-                        .lastName("Doe")
-                        .group(group)
-                        .coursesList(courses)
+                StudentDto.builder().studentId(2).firstName("Jane").lastName("Doe").group(group).coursesList(courses)
                         .build());
 
         // when
@@ -149,48 +118,16 @@ class StudentControllerTest {
         // given
         var group = GroupDto.builder().groupId(1).groupName("Java").build();
         var studentsDto = List.of(
-                StudentDto
-                        .builder()
-                        .studentId(1)
-                        .firstName("John")
-                        .lastName("Doe")
-                        .group(group)
-                        .build(),
-                StudentDto.builder()
-                        .studentId(2)
-                        .firstName("John")
-                        .lastName("Fox")
-                        .group(group)
-                        .build());
+                StudentDto.builder().studentId(1).firstName("John").lastName("Doe").group(group).build(),
+                StudentDto.builder().studentId(2).firstName("John").lastName("Fox").group(group).build());
         var courses = List.of(
-                CourseDto
-                        .builder()
-                        .courseId(1)
-                        .courseName("Java")
-                        .courseDescription("Java course")
-                        .build(),
-                CourseDto
-                        .builder()
-                        .courseId(2)
-                        .courseName("C#")
-                        .courseDescription("C# course")
-                        .build());
+                CourseDto.builder().courseId(1).courseName("Java").courseDescription("Java course").build(),
+                CourseDto.builder().courseId(2).courseName("C#").courseDescription("C# course").build());
 
         var expected = List.of(
-                StudentDto
-                        .builder()
-                        .studentId(1)
-                        .firstName("John")
-                        .lastName("Doe")
-                        .group(group)
-                        .coursesList(courses)
+                StudentDto.builder().studentId(1).firstName("John").lastName("Doe").group(group).coursesList(courses)
                         .build(),
-                StudentDto.builder()
-                        .studentId(2)
-                        .firstName("John")
-                        .lastName("Fox")
-                        .group(group)
-                        .coursesList(courses)
+                StudentDto.builder().studentId(2).firstName("John").lastName("Fox").group(group).coursesList(courses)
                         .build());
 
         // when

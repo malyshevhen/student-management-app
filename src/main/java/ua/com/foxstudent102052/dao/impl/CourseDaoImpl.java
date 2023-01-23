@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -22,7 +23,7 @@ public class CourseDaoImpl implements CourseDao {
     private final RowMapper<Course> courseRowMapper;
 
     @Override
-    public void addCourse(Course course) {
+    public void addCourse(Course course) throws DataAccessException {
         var query = """
                 INSERT
                 INTO courses (course_name, course_description)
@@ -32,31 +33,27 @@ public class CourseDaoImpl implements CourseDao {
     }
 
     @Override
-    public Optional<Course> getCourseById(int courseId) {
+    public Optional<Course> getCourseById(int courseId) throws DataAccessException {
         var query = """
                 SELECT course_id, course_name, course_description
                 FROM courses
                 WHERE course_id = ?;""";
 
-        return jdbcTemplate.query(query, courseRowMapper, courseId)
-                .stream()
-                .findFirst();
+        return jdbcTemplate.query(query, courseRowMapper, courseId).stream().findFirst();
     }
 
     @Override
-    public Optional<Course> getCourseByName(String courseName) {
+    public Optional<Course> getCourseByName(String courseName) throws DataAccessException {
         var query = """
                 SELECT course_id, course_name, course_description
                 FROM courses
                 WHERE course_name = ?;""";
 
-        return jdbcTemplate.query(query, courseRowMapper, courseName)
-                .stream()
-                .findFirst();
+        return jdbcTemplate.query(query, courseRowMapper, courseName).stream().findFirst();
     }
 
     @Override
-    public List<Course> getAll() {
+    public List<Course> getAll() throws DataAccessException {
         var query = """
                 SELECT course_id, course_name, course_description
                 FROM courses;""";
@@ -65,7 +62,7 @@ public class CourseDaoImpl implements CourseDao {
     }
 
     @Override
-    public List<Course> getCoursesByStudentId(int studentId) {
+    public List<Course> getCoursesByStudentId(int studentId) throws DataAccessException {
         var query = """
                 SELECT course_id, course_name, course_description
                 FROM courses

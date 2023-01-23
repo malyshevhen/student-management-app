@@ -1,23 +1,22 @@
 package ua.com.foxstudent102052.service.impl;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
-import java.util.List;
-import java.util.Optional;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
-
 import ua.com.foxstudent102052.dao.interfaces.CourseDao;
 import ua.com.foxstudent102052.model.dto.CourseDto;
 import ua.com.foxstudent102052.model.entity.Course;
 import ua.com.foxstudent102052.service.interfaces.CourseService;
+
+import java.util.List;
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class CourseServiceImplTest {
@@ -49,8 +48,7 @@ class CourseServiceImplTest {
     @Test
     void MethodGetAllCourses_ShouldReturnListOfAllStudents() {
         // given
-        var courses = List.of(
-                Course.builder().courseName("Java").courseDescription("Java course").build(),
+        var courses = List.of(Course.builder().courseName("Java").courseDescription("Java course").build(),
                 Course.builder().courseName("C++").courseDescription("C++ course").build(),
                 Course.builder().courseName("C#").courseDescription("C# course").build());
 
@@ -58,9 +56,7 @@ class CourseServiceImplTest {
         when(courseDao.getAll()).thenReturn(courses);
 
         // then
-        var expected = courses.stream()
-                .map(course -> modelMapper.map(course, CourseDto.class))
-                .toList();
+        var expected = courses.stream().map(course -> modelMapper.map(course, CourseDto.class)).toList();
 
         var actual = courseService.getAll();
         assertEquals(expected, actual);
@@ -91,9 +87,8 @@ class CourseServiceImplTest {
         when(courseDao.getCoursesByStudentId(1)).thenReturn(List.of(course));
 
         // then
-        var expected = List
-                .of(CourseDto.builder().courseName("Java").courseDescription("Java course").studentList(List.of())
-                        .build());
+        var expected = List.of(
+                CourseDto.builder().courseName("Java").courseDescription("Java course").studentList(List.of()).build());
         var actual = courseService.getCoursesByStudent(1);
 
         assertEquals(expected, actual);

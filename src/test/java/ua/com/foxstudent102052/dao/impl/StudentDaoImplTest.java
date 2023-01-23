@@ -4,42 +4,33 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.List;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.test.context.jdbc.Sql;
+import org.springframework.transaction.annotation.Transactional;
 
-import ua.com.foxstudent102052.dao.exceptions.DAOException;
+import ua.com.foxstudent102052.dao.impl.config.AbstractTestContainerIT;
 import ua.com.foxstudent102052.dao.interfaces.StudentDao;
 import ua.com.foxstudent102052.model.entity.Student;
 
-@JdbcTest
-@Sql({ "/scripts/ddl/Table_creation.sql", "/scripts/dml/testDB_Data.sql" })
-class StudentDaoImplTest {
+class StudentDaoImplTest extends AbstractTestContainerIT {
+
+    private final StudentDao studentDao;
+
+    private RowMapper<Student> studentRowMapper = BeanPropertyRowMapper.newInstance(Student.class);
 
     @Autowired
-    private JdbcTemplate jdbcTemplate;
-    private RowMapper<Student> studentRowMapper = BeanPropertyRowMapper.newInstance(Student.class);
-    private StudentDao studentDao;
-
-    @BeforeEach
-    void setUp() {
+    public StudentDaoImplTest(JdbcTemplate jdbcTemplate) {
         studentDao = new StudentDaoImpl(jdbcTemplate, studentRowMapper);
     }
 
     @Test
-    void MethodAddStudent_ShouldAddStudentToDb() throws DAOException {
+    @Transactional
+    void MethodAddStudent_ShouldAddStudentToDb() {
         // given
-        var newStudent = Student.builder()
-                .studentId(1)
-                .groupId(1)
-                .firstName("John")
-                .lastName("Doe")
-                .build();
+        var newStudent = Student.builder().studentId(1).groupId(1).firstName("John").lastName("Doe").build();
 
         // when
         studentDao.addStudent(newStudent);
@@ -51,14 +42,10 @@ class StudentDaoImplTest {
     }
 
     @Test
-    void MethodAddStudentToCourse_ShouldAddStudentToNewCourse() throws DAOException {
+    @Transactional
+    void MethodAddStudentToCourse_ShouldAddStudentToNewCourse() {
         // given
-        var expected = Student.builder()
-                .studentId(1)
-                .groupId(1)
-                .firstName("Leia")
-                .lastName("Organa")
-                .build();
+        var expected = Student.builder().studentId(1).groupId(1).firstName("Leia").lastName("Organa").build();
 
         // when
         studentDao.addStudentToCourse(1, 2);
@@ -69,7 +56,8 @@ class StudentDaoImplTest {
     }
 
     @Test
-    void MethodGetAllStudents_ShouldReturnAllStudents() throws DAOException {
+    @Transactional
+    void MethodGetAllStudents_ShouldReturnAllStudents() {
         // when
         var actual = studentDao.getAll().size();
 
@@ -78,32 +66,10 @@ class StudentDaoImplTest {
     }
 
     @Test
-    void MethodGetStudentsByCourseId_ShouldReturnStudentByCourseId() throws DAOException {
+    @Transactional
+    void MethodGetStudentsByCourseId_ShouldReturnStudentByCourseId() {
         var expected = List.of(
-                Student.builder()
-                        .studentId(1)
-                        .groupId(1)
-                        .firstName("Leia")
-                        .lastName("Organa")
-                        .build(),
-                Student.builder()
-                        .studentId(2)
-                        .groupId(1)
-                        .firstName("Luke")
-                        .lastName("Skywalker")
-                        .build(),
-                Student.builder()
-                        .studentId(3)
-                        .groupId(1)
-                        .firstName("Han")
-                        .lastName("Solo")
-                        .build(),
-                Student.builder()
-                        .studentId(4)
-                        .groupId(1)
-                        .firstName("Padme")
-                        .lastName("Amidala")
-                        .build());
+                Student.builder().studentId(1).groupId(1).firstName("Leia").lastName("Organa").build(), Student.builder().studentId(2).groupId(1).firstName("Luke").lastName("Skywalker").build(), Student.builder().studentId(3).groupId(1).firstName("Han").lastName("Solo").build(), Student.builder().studentId(4).groupId(1).firstName("Padme").lastName("Amidala").build());
 
         var actual = studentDao.getStudentsByGroup(1);
 
@@ -111,44 +77,10 @@ class StudentDaoImplTest {
     }
 
     @Test
-    void MethodGetStudentsByGroup_ShouldReturnStudentByGroupId() throws DAOException {
+    @Transactional
+    void MethodGetStudentsByGroup_ShouldReturnStudentByGroupId() {
         var expected = List.of(
-                Student.builder()
-                        .studentId(1)
-                        .groupId(1)
-                        .firstName("Leia")
-                        .lastName("Organa")
-                        .build(),
-                Student.builder()
-                        .studentId(2)
-                        .groupId(1)
-                        .firstName("Luke")
-                        .lastName("Skywalker")
-                        .build(),
-                Student.builder()
-                        .studentId(4)
-                        .groupId(1)
-                        .firstName("Padme")
-                        .lastName("Amidala")
-                        .build(),
-                Student.builder()
-                        .studentId(5)
-                        .groupId(2)
-                        .firstName("Dart")
-                        .lastName("Maul")
-                        .build(),
-                Student.builder()
-                        .studentId(9)
-                        .groupId(2)
-                        .firstName("Dart")
-                        .lastName("Vader")
-                        .build(),
-                Student.builder()
-                        .studentId(10)
-                        .groupId(3)
-                        .firstName("Jah Jah")
-                        .lastName("Binks")
-                        .build());
+                Student.builder().studentId(1).groupId(1).firstName("Leia").lastName("Organa").build(), Student.builder().studentId(2).groupId(1).firstName("Luke").lastName("Skywalker").build(), Student.builder().studentId(4).groupId(1).firstName("Padme").lastName("Amidala").build(), Student.builder().studentId(5).groupId(2).firstName("Dart").lastName("Maul").build(), Student.builder().studentId(9).groupId(2).firstName("Dart").lastName("Vader").build(), Student.builder().studentId(10).groupId(3).firstName("Jah Jah").lastName("Binks").build());
 
         var actual = studentDao.getStudentsByCourse(1);
 
@@ -156,20 +88,10 @@ class StudentDaoImplTest {
     }
 
     @Test
-    void MethodGetStudentsByNameAndCourse_ShouldReturnListOfStudents_ByStudentNameAndCourseId() throws DAOException {
+    @Transactional
+    void MethodGetStudentsByNameAndCourse_ShouldReturnListOfStudents_ByStudentNameAndCourseId() {
         var expected = List.of(
-                Student.builder()
-                        .studentId(5)
-                        .groupId(2)
-                        .firstName("Dart")
-                        .lastName("Maul")
-                        .build(),
-                Student.builder()
-                        .studentId(9)
-                        .groupId(2)
-                        .firstName("Dart")
-                        .lastName("Vader")
-                        .build());
+                Student.builder().studentId(5).groupId(2).firstName("Dart").lastName("Maul").build(), Student.builder().studentId(9).groupId(2).firstName("Dart").lastName("Vader").build());
 
         var actual = studentDao.getStudentsByNameAndCourse("Dart", 1);
 
@@ -177,7 +99,8 @@ class StudentDaoImplTest {
     }
 
     @Test
-    void MethodRemoveStudent_ShouldRemoveStudent_IfItInDataBase() throws DAOException {
+    @Transactional
+    void MethodRemoveStudent_ShouldRemoveStudent_IfItInDataBase() {
         // when
         studentDao.removeStudent(1);
 
@@ -189,14 +112,10 @@ class StudentDaoImplTest {
     }
 
     @Test
-    void MethodGetStudentById_ShouldReturnStudentFromDb() throws DAOException {
+    @Transactional
+    void MethodGetStudentById_ShouldReturnStudentFromDb() {
         // given
-        var expected = Student.builder()
-                .studentId(1)
-                .groupId(1)
-                .firstName("Leia")
-                .lastName("Organa")
-                .build();
+        var expected = Student.builder().studentId(1).groupId(1).firstName("Leia").lastName("Organa").build();
 
         // when
         var actual = studentDao.getStudent(1).get();
@@ -206,7 +125,8 @@ class StudentDaoImplTest {
     }
 
     @Test
-    void MethodRemoveStudentFromCourse_ShouldRemoveStudentCourseRelation_IfExist() throws DAOException {
+    @Transactional
+    void MethodRemoveStudentFromCourse_ShouldRemoveStudentCourseRelation_IfExist() {
         // given
         studentDao.removeStudentFromCourse(1, 1);
         var expected = List.of();

@@ -1,19 +1,18 @@
 package ua.com.foxstudent102052.service;
 
-import static org.mockito.Mockito.verify;
-
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import ua.com.foxstudent102052.dao.interfaces.PostDao;
 
-import ua.com.foxstudent102052.dao.interfaces.PostDAO;
+import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 class QueryPostServiceTest {
 
     @Mock
-    PostDAO postDAO;
+    PostDao postDAO;
 
     @Test
     void Method_executeQuery_shouldPassToDAO_doPostArgument() {
