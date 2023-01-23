@@ -34,19 +34,24 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     public GroupDto getGroupById(int groupId) throws DataAccessException {
-        return groupDao.getGroupById(groupId).map(group -> modelMapper.map(group, GroupDto.class))
+        return groupDao.getGroupById(groupId)
+                .map(group -> modelMapper.map(group, GroupDto.class))
                 .orElseThrow(() -> new NoSuchElementException(GROUP_DOES_NOT_EXIST));
     }
 
     @Override
     public GroupDto getGroupByName(String groupName) throws DataAccessException {
-        return groupDao.getGroupByName(groupName).map(group -> modelMapper.map(group, GroupDto.class))
+        return groupDao.getGroupByName(groupName)
+                .map(group -> modelMapper.map(group, GroupDto.class))
                 .orElseThrow(() -> new NoSuchElementException(GROUP_DOES_NOT_EXIST));
     }
 
     @Override
     public List<GroupDto> getAll() throws DataAccessException {
-        var groupDtoList = groupDao.getAll().stream().map(group -> modelMapper.map(group, GroupDto.class)).toList();
+        var groupDtoList = groupDao.getAll()
+                .stream()
+                .map(group -> modelMapper.map(group, GroupDto.class))
+                .toList();
 
         if (groupDtoList.isEmpty()) {
             throw new NoSuchElementException("There are no groups in the database");
@@ -57,8 +62,10 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     public List<GroupDto> getGroupsLessThen(int numberOfStudents) throws DataAccessException {
-        var groupList = groupDao.getGroupsLessThen(numberOfStudents).stream()
-                .map(group -> modelMapper.map(group, GroupDto.class)).toList();
+        var groupList = groupDao.getGroupsLessThen(numberOfStudents)
+                .stream()
+                .map(group -> modelMapper.map(group, GroupDto.class))
+                .toList();
 
         if (groupList.isEmpty()) {
             throw new NoSuchElementException(

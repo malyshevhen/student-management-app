@@ -39,7 +39,9 @@ public class GroupDaoImpl implements GroupDao {
                 FROM groups
                 WHERE group_id = ?;""";
 
-        return jdbcTemplate.query(query, groupRowMapper, groupId).stream().findFirst();
+        return jdbcTemplate.query(query, groupRowMapper, groupId)
+                .stream()
+                .findFirst();
     }
 
     @Override
@@ -49,7 +51,9 @@ public class GroupDaoImpl implements GroupDao {
                 FROM groups
                 WHERE group_name = ?;""";
 
-        return jdbcTemplate.query(query, groupRowMapper, groupName).stream().findFirst();
+        return jdbcTemplate.query(query, groupRowMapper, groupName)
+                .stream()
+                .findFirst();
     }
 
     @Override

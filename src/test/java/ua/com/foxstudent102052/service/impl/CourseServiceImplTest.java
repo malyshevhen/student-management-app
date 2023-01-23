@@ -48,7 +48,8 @@ class CourseServiceImplTest {
     @Test
     void MethodGetAllCourses_ShouldReturnListOfAllStudents() {
         // given
-        var courses = List.of(Course.builder().courseName("Java").courseDescription("Java course").build(),
+        var courses = List.of(
+                Course.builder().courseName("Java").courseDescription("Java course").build(),
                 Course.builder().courseName("C++").courseDescription("C++ course").build(),
                 Course.builder().courseName("C#").courseDescription("C# course").build());
 

@@ -40,20 +40,15 @@ public class TestDataInitializer {
 
     public void initTestDada() {
         var coursesNamesAndDescriptions = fileUtils.readCsvFileFromResources(COURSES_CSV);
-        var groupNames = fileUtils.readCsvFileFromResources(GROUPS_CSV).stream()
-                .map(s -> s[0])
-                .toList();
-        var studentNames = fileUtils.readCsvFileFromResources(STUDENT_NAMES_CSV).stream()
-                .map(s -> s[0])
-                .toList();
-        var studentSurnames = fileUtils.readCsvFileFromResources(STUDENT_SURNAMES_CSV).stream()
-                .map(s -> s[0])
-                .toList();
+        var groupNames = fileUtils.readCsvFileFromResources(GROUPS_CSV).stream().map(s -> s[0]).toList();
+        var studentNames = fileUtils.readCsvFileFromResources(STUDENT_NAMES_CSV).stream().map(s -> s[0]).toList();
+        var studentSurnames = fileUtils.readCsvFileFromResources(STUDENT_SURNAMES_CSV).stream().map(s -> s[0]).toList();
 
         runDdlScript(queryPostService);
 
         var courses = randomModelCreator.getCourses(coursesNamesAndDescriptions);
         addCourses(courses);
+
         var groups = randomModelCreator.getGroups(groupNames);
         addGroups(groups);
 
@@ -107,8 +102,8 @@ public class TestDataInitializer {
     }
 
     private void addStudentsToCourses(List<StudentDto> studentDtoList, List<CourseDto> courseDtoList) {
-        var relationMap = randomModelCreator.getStudentsCoursesRelations(studentDtoList, courseDtoList,
-                MAX_COUNT_OF_COURSES);
+        var relationMap = randomModelCreator
+                .getStudentsCoursesRelations(studentDtoList, courseDtoList, MAX_COUNT_OF_COURSES);
 
         for (var relation : relationMap.entrySet()) {
             int studentId = relation.getKey();

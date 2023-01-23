@@ -10,7 +10,7 @@ import ua.com.foxstudent102052.dao.interfaces.PostDao;
 
 @Repository
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
-public class PostDAOImpl implements PostDao {
+public class PostDaoImpl implements PostDao {
 
     private final JdbcTemplate jdbcTemplate;
 

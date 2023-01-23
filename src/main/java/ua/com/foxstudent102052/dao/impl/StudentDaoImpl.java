@@ -73,7 +73,9 @@ public class StudentDaoImpl implements StudentDao {
                 FROM students
                 WHERE student_id = ?;""";
 
-        return jdbcTemplate.query(query, studentRowMapper, id).stream().findFirst();
+        return jdbcTemplate.query(query, studentRowMapper, id)
+                .stream()
+                .findFirst();
     }
 
     @Override

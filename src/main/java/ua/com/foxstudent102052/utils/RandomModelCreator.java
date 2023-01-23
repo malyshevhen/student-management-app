@@ -63,8 +63,8 @@ public class RandomModelCreator {
 
     public Map<Integer, Set<Integer>> getStudentsCoursesRelations(List<StudentDto> studentDtoList,
             List<CourseDto> courseDtoList, int maxCoursesCount) {
-        int[] studentIds = studentDtoList.stream().mapToInt(StudentDto::getId).toArray();
-        int[] coursesIds = courseDtoList.stream().mapToInt(CourseDto::getId).toArray();
+        int[] studentIds = studentDtoList.stream().mapToInt(StudentDto::getStudentId).toArray();
+        int[] coursesIds = courseDtoList.stream().mapToInt(CourseDto::getCourseId).toArray();
 
         var studentCourseMap = new HashMap<Integer, Set<Integer>>();
 

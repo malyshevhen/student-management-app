@@ -35,31 +35,21 @@ class RandomModelCreatorTest {
         FileUtils fileUtils = new FileUtils();
 
         coursesNamesAndDescriptions = fileUtils.readCsvFileFromResources(COURSES_CSV);
-        groupNames = fileUtils.readCsvFileFromResources(GROUPS_CSV).stream()
-                .map(s -> s[0])
-                .toList();
-        studentNames = fileUtils.readCsvFileFromResources(STUDENT_NAMES_CSV).stream()
-                .map(s -> s[0])
-                .toList();
-        studentSurnames = fileUtils.readCsvFileFromResources(STUDENT_SURNAMES_CSV).stream()
-                .map(s -> s[0])
-                .toList();
+        groupNames = fileUtils.readCsvFileFromResources(GROUPS_CSV).stream().map(s -> s[0]).toList();
+        studentNames = fileUtils.readCsvFileFromResources(STUDENT_NAMES_CSV).stream().map(s -> s[0]).toList();
+        studentSurnames = fileUtils.readCsvFileFromResources(STUDENT_SURNAMES_CSV).stream().map(s -> s[0]).toList();
         groups = List.of(
-                GroupDto.builder().id(1).name("Group1").build(),
-                GroupDto.builder().id(2).name("Group2").build(),
-                GroupDto.builder().id(3).name("Group3").build(),
-                GroupDto.builder().id(4).name("Group4").build());
+                GroupDto.builder().groupId(1).groupName("Group1").build(),
+                GroupDto.builder().groupId(2).groupName("Group2").build(),
+                GroupDto.builder().groupId(3).groupName("Group3").build(),
+                GroupDto.builder().groupId(4).groupName("Group4").build());
         students = List.of(
-                StudentDto.builder().id(0).build(),
-                StudentDto.builder().id(1).build(),
-                StudentDto.builder().id(2).build(),
-                StudentDto.builder().id(3).build(),
-                StudentDto.builder().id(4).build(),
-                StudentDto.builder().id(5).build());
+                StudentDto.builder().studentId(0).build(), StudentDto.builder().studentId(1).build(),
+                StudentDto.builder().studentId(2).build(), StudentDto.builder().studentId(3).build(),
+                StudentDto.builder().studentId(4).build(), StudentDto.builder().studentId(5).build());
         courses = List.of(
-                CourseDto.builder().id(1).build(),
-                CourseDto.builder().id(2).build(),
-                CourseDto.builder().id(3).build());
+                CourseDto.builder().courseId(1).build(), CourseDto.builder().courseId(2).build(),
+                CourseDto.builder().courseId(3).build());
     }
 
     @Test
@@ -97,8 +87,8 @@ class RandomModelCreatorTest {
 
         // when
         var actual = students.stream()
-                .filter(student -> student.getFirstName() == null || student.getLastName() == null
-                        || student.getGroup() == null)
+                .filter(student -> student.getFirstName() == null ||
+                        student.getLastName() == null || student.getGroup() == null)
                 .toList();
 
         // then

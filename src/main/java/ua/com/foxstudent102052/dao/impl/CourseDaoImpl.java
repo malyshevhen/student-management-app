@@ -39,7 +39,9 @@ public class CourseDaoImpl implements CourseDao {
                 FROM courses
                 WHERE course_id = ?;""";
 
-        return jdbcTemplate.query(query, courseRowMapper, courseId).stream().findFirst();
+        return jdbcTemplate.query(query, courseRowMapper, courseId)
+                .stream()
+                .findFirst();
     }
 
     @Override
@@ -49,7 +51,9 @@ public class CourseDaoImpl implements CourseDao {
                 FROM courses
                 WHERE course_name = ?;""";
 
-        return jdbcTemplate.query(query, courseRowMapper, courseName).stream().findFirst();
+        return jdbcTemplate.query(query, courseRowMapper, courseName)
+                .stream()
+                .findFirst();
     }
 
     @Override

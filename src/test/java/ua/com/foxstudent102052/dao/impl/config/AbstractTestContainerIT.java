@@ -4,7 +4,6 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.PostgreSQLContainer;
@@ -13,14 +12,13 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 
 @JdbcTest
 @DirtiesContext
-@ActiveProfiles("test")
 @AutoConfigureTestDatabase(replace = Replace.NONE)
 @Testcontainers
 public abstract class AbstractTestContainerIT {
     private static final String POSTGRES_VERSION = "postgres:15";
 
     @Container
-    public static PostgreSQLContainer<?> container= new PostgreSQLContainer<>(POSTGRES_VERSION);
+    public static PostgreSQLContainer<?> container = new PostgreSQLContainer<>(POSTGRES_VERSION);
 
     @DynamicPropertySource
     public static void overrideProps(DynamicPropertyRegistry registry) {
