@@ -18,6 +18,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import ua.com.foxstudent102052.dao.interfaces.RecordDao;
 import ua.com.foxstudent102052.model.dto.CourseDto;
 import ua.com.foxstudent102052.model.dto.GroupDto;
 import ua.com.foxstudent102052.model.dto.StudentDto;
@@ -40,8 +41,7 @@ class TestDataInitializerTest {
     private GroupService groupService;
 
     @Mock
-    private QueryPostService queryPostService;
-
+    private RecordDao postDao;
     @Mock
     private RandomModelCreator randomModelCreator;
 
@@ -51,7 +51,7 @@ class TestDataInitializerTest {
     void setUp() {
         var fileUtils = new FileUtils();
 
-        testDataInitializer = new TestDataInitializer(studentService, courseService, groupService, queryPostService,
+        testDataInitializer = new TestDataInitializer(postDao, studentService, courseService, groupService,
                 randomModelCreator, fileUtils);
     }
 

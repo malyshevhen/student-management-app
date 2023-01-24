@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import ua.com.foxstudent102052.dao.interfaces.RecordDao;
 import ua.com.foxstudent102052.model.dto.CourseDto;
 import ua.com.foxstudent102052.model.dto.GroupDto;
 import ua.com.foxstudent102052.model.dto.StudentDto;
@@ -23,7 +24,6 @@ import ua.com.foxstudent102052.utils.RandomModelCreator;
 @Slf4j
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class TestDataInitializer {
-    public static final String SCRIPTS_DDL_TABLE_CREATION = "scripts/ddl/clear_tables.sql";
     public static final String COURSES_CSV = "csv/courses.csv";
     public static final String GROUPS_CSV = "csv/groups.csv";
     public static final String STUDENT_NAMES_CSV = "csv/student_names.csv";
@@ -31,10 +31,10 @@ public class TestDataInitializer {
     public static final int STUDENTS_COUNT = 200;
     public static final int MAX_COUNT_OF_COURSES = 3;
 
+    private final RecordDao dao;
     private final StudentService studentService;
     private final CourseService courseService;
     private final GroupService groupService;
-    private final QueryPostService queryPostService;
     private final RandomModelCreator randomModelCreator;
     private final FileUtils fileUtils;
 
@@ -44,7 +44,7 @@ public class TestDataInitializer {
         var studentNames = fileUtils.readCsvFileFromResources(STUDENT_NAMES_CSV).stream().map(s -> s[0]).toList();
         var studentSurnames = fileUtils.readCsvFileFromResources(STUDENT_SURNAMES_CSV).stream().map(s -> s[0]).toList();
 
-        runDdlScript(queryPostService);
+        deleteAllRecords(dao);
 
         var courses = randomModelCreator.getCourses(coursesNamesAndDescriptions);
         addCourses(courses);
@@ -61,11 +61,9 @@ public class TestDataInitializer {
         addStudentsToCourses(studentsFromDB, coursesFromBD);
     }
 
-    private void runDdlScript(QueryPostService queryPostService) {
+    private void deleteAllRecords(RecordDao dao) {
         try {
-            var query = fileUtils.readFileFromResourcesAsString(SCRIPTS_DDL_TABLE_CREATION);
-
-            queryPostService.executeQuery(query);
+            dao.removeAll();
         } catch (DataAccessException e) {
             log.error(e.getMessage());
         }
