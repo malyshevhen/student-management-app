@@ -22,7 +22,7 @@ public class TestDataRepository {
     private final StudentDao studentDao;
     private final CourseDao courseDao;
     private final GroupDao groupDao;
-    private final RecordDaoImpl recordDaoImpl;
+    private final RecordDao recordDaoImpl;
 
     public void postTestRecords(List<Student> students, List<Course> courses, List<Group> groups) {
         recordDaoImpl.removeAll();

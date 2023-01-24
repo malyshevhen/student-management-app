@@ -9,7 +9,7 @@ import lombok.RequiredArgsConstructor;
 
 @Repository
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
-class RecordDaoImpl {
+class RecordDao {
 
     private final JdbcTemplate jdbcTemplate;
 

@@ -33,7 +33,7 @@ public class TestDataRepositoryTest {
     private GroupDao groupDao;
 
     @Mock
-    private RecordDaoImpl recordDaoImpl;
+    private RecordDao recordDaoImpl;
 
     private TestDataRepository testDataRepository;
 
