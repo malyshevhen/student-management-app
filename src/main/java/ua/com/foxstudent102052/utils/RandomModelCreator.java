@@ -10,19 +10,19 @@ import java.util.Set;
 
 import org.springframework.stereotype.Component;
 
-import ua.com.foxstudent102052.model.dto.CourseDto;
-import ua.com.foxstudent102052.model.dto.GroupDto;
-import ua.com.foxstudent102052.model.dto.StudentDto;
+import ua.com.foxstudent102052.model.entity.Course;
+import ua.com.foxstudent102052.model.entity.Group;
+import ua.com.foxstudent102052.model.entity.Student;
 
 @Component
 public class RandomModelCreator {
     private static final Random random = new Random();
 
-    public List<GroupDto> getGroups(List<String> groupNames) {
-        var groupList = new ArrayList<GroupDto>();
+    public List<Group> getGroups(List<String> groupNames) {
+        var groupList = new ArrayList<Group>();
 
         for (String groupName : groupNames) {
-            var group = GroupDto.builder()
+            var group = Group.builder()
                     .groupName(groupName)
                     .build();
             groupList.add(group);
@@ -31,40 +31,35 @@ public class RandomModelCreator {
         return groupList;
     }
 
-    public List<CourseDto> getCourses(List<String[]> courses) {
-        var courseDtoArrayList = new ArrayList<CourseDto>();
+    public List<Course> getCourses(List<String[]> courses) {
+        var courseDtoArrayList = new ArrayList<Course>();
 
         for (var courseString : courses) {
-            var courseDto = CourseDto.builder()
+            var course = Course.builder()
                     .courseName(courseString[0])
                     .courseDescription(courseString[1])
                     .build();
-            courseDtoArrayList.add(courseDto);
+            courseDtoArrayList.add(course);
         }
 
         return courseDtoArrayList;
     }
 
-    public List<StudentDto> getStudents(List<String> names, List<String> surnames, List<GroupDto> groupDtoList,
-            int studentsCount) {
-        var studentDtoList = new ArrayList<StudentDto>();
-        int groupCount = groupDtoList.size();
+    public List<Student> getStudents(List<String> names, List<String> surnames, int studentsCount) {
+        var studentList = new ArrayList<Student>();
 
         for (int i = 0; i < studentsCount; i++) {
-            studentDtoList.add(StudentDto.builder()
-                    .group(groupDtoList.get(random.nextInt(groupCount)))
+            studentList.add(Student.builder()
                     .firstName(names.get(random.nextInt(names.size())))
                     .lastName(surnames.get(random.nextInt(surnames.size())))
                     .build());
         }
 
-        return studentDtoList;
+        return studentList;
     }
 
-    public Map<Integer, Set<Integer>> getStudentsCoursesRelations(List<StudentDto> studentDtoList,
-            List<CourseDto> courseDtoList, int maxCoursesCount) {
-        int[] studentIds = studentDtoList.stream().mapToInt(StudentDto::getStudentId).toArray();
-        int[] coursesIds = courseDtoList.stream().mapToInt(CourseDto::getCourseId).toArray();
+    public Map<Integer, Set<Integer>> getStudentsCoursesRelations(int[] studentIds, int[] coursesIds,
+            int maxCoursesCount) {
 
         var studentCourseMap = new HashMap<Integer, Set<Integer>>();
 

@@ -1,6 +1,5 @@
 package ua.com.foxstudent102052.service;
 
-import java.util.List;
 import java.util.NoSuchElementException;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,13 +8,10 @@ import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import ua.com.foxstudent102052.dao.interfaces.RecordDao;
+import ua.com.foxstudent102052.dao.testinit.TestDataRepository;
 import ua.com.foxstudent102052.model.dto.CourseDto;
-import ua.com.foxstudent102052.model.dto.GroupDto;
 import ua.com.foxstudent102052.model.dto.StudentDto;
-import ua.com.foxstudent102052.service.exceptions.ElementAlreadyExistException;
 import ua.com.foxstudent102052.service.interfaces.CourseService;
-import ua.com.foxstudent102052.service.interfaces.GroupService;
 import ua.com.foxstudent102052.service.interfaces.StudentService;
 import ua.com.foxstudent102052.utils.FileUtils;
 import ua.com.foxstudent102052.utils.RandomModelCreator;
@@ -31,10 +27,9 @@ public class TestDataInitializer {
     public static final int STUDENTS_COUNT = 200;
     public static final int MAX_COUNT_OF_COURSES = 3;
 
-    private final RecordDao dao;
+    private final TestDataRepository testDataRepository;
     private final StudentService studentService;
     private final CourseService courseService;
-    private final GroupService groupService;
     private final RandomModelCreator randomModelCreator;
     private final FileUtils fileUtils;
 
@@ -44,64 +39,21 @@ public class TestDataInitializer {
         var studentNames = fileUtils.readCsvFileFromResources(STUDENT_NAMES_CSV).stream().map(s -> s[0]).toList();
         var studentSurnames = fileUtils.readCsvFileFromResources(STUDENT_SURNAMES_CSV).stream().map(s -> s[0]).toList();
 
-        deleteAllRecords(dao);
-
+        var students = randomModelCreator.getStudents(studentNames, studentSurnames, STUDENTS_COUNT);
         var courses = randomModelCreator.getCourses(coursesNamesAndDescriptions);
-        addCourses(courses);
-
         var groups = randomModelCreator.getGroups(groupNames);
-        addGroups(groups);
 
-        var groupsFromDB = groupService.getAll();
-        var students = randomModelCreator.getStudents(studentNames, studentSurnames, groupsFromDB, STUDENTS_COUNT);
-        addStudents(students);
+        testDataRepository.postTestRecords(students, courses, groups);
 
-        var coursesFromBD = courseService.getAll();
-        var studentsFromDB = studentService.getAll();
-        addStudentsToCourses(studentsFromDB, coursesFromBD);
+        var coursesIds = courseService.getAll().stream().mapToInt(CourseDto::getCourseId).toArray();
+        var studentIds = studentService.getAll().stream().mapToInt(StudentDto::getStudentId).toArray();
+
+        addStudentsToCourses(studentIds, coursesIds);
     }
 
-    private void deleteAllRecords(RecordDao dao) {
-        try {
-            dao.removeAll();
-        } catch (DataAccessException e) {
-            log.error(e.getMessage());
-        }
-    }
-
-    private void addCourses(List<CourseDto> courses) {
-        for (var course : courses) {
-            try {
-                courseService.addCourse(course);
-            } catch (DataAccessException | ElementAlreadyExistException e) {
-                log.error("Error while adding courses", e);
-            }
-        }
-    }
-
-    private void addGroups(List<GroupDto> groups) {
-        for (var group : groups) {
-            try {
-                groupService.addGroup(group);
-            } catch (DataAccessException | ElementAlreadyExistException e) {
-                log.error("Error while adding groups", e);
-            }
-        }
-    }
-
-    private void addStudents(List<StudentDto> students) {
-        for (var student : students) {
-            try {
-                studentService.addStudent(student);
-            } catch (DataAccessException e) {
-                log.error("Error while adding students", e);
-            }
-        }
-    }
-
-    private void addStudentsToCourses(List<StudentDto> studentDtoList, List<CourseDto> courseDtoList) {
+    private void addStudentsToCourses(int[] studentIds, int[] coursesIds) {
         var relationMap = randomModelCreator
-                .getStudentsCoursesRelations(studentDtoList, courseDtoList, MAX_COUNT_OF_COURSES);
+                .getStudentsCoursesRelations(studentIds, coursesIds, MAX_COUNT_OF_COURSES);
 
         for (var relation : relationMap.entrySet()) {
             int studentId = relation.getKey();

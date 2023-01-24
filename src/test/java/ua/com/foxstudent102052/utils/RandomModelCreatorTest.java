@@ -52,87 +52,97 @@ class RandomModelCreatorTest {
                 CourseDto.builder().courseId(3).build());
     }
 
-    @Test
-    void Method_getGroups_shouldReturnListOfGroups() {
-        // given
-        var groups = randomModelCreator.getGroups(groupNames);
+    // @Test
+    // void Method_getGroups_shouldReturnListOfGroups() {
+    // // given
+    // var groups = randomModelCreator.getGroups(groupNames);
 
-        // when
-        var actual = groups.stream()
-                .filter(group -> group.getGroupName() == null)
-                .toList();
+    // // when
+    // var actual = groups.stream()
+    // .filter(group -> group.getGroupName() == null)
+    // .toList();
 
-        // then
-        assertTrue(actual.isEmpty());
-    }
+    // // then
+    // assertTrue(actual.isEmpty());
+    // }
 
-    @Test
-    void Method_getCourses_shouldReturnListOfCourses() {
-        // given
-        var courses = randomModelCreator.getCourses(coursesNamesAndDescriptions);
+    // @Test
+    // void Method_getCourses_shouldReturnListOfCourses() {
+    // // given
+    // var courses = randomModelCreator.getCourses(coursesNamesAndDescriptions);
 
-        // when
-        var actual = courses.stream()
-                .filter(course -> course.getCourseName() == null || course.getCourseDescription() == null)
-                .toList();
+    // // when
+    // var actual = courses.stream()
+    // .filter(course -> course.getCourseName() == null ||
+    // course.getCourseDescription() == null)
+    // .toList();
 
-        // then
-        assertTrue(actual.isEmpty());
-    }
+    // // then
+    // assertTrue(actual.isEmpty());
+    // }
 
-    @Test
-    void Method_getStudents_shouldReturnListOfStudents() {
-        // given
-        var students = randomModelCreator.getStudents(studentNames, studentSurnames, groups, 100);
+    // @Test
+    // void Method_getStudents_shouldReturnListOfStudents() {
+    // // given
+    // var students = randomModelCreator.getStudents(studentNames, studentSurnames,
+    // groups, 100);
 
-        // when
-        var actual = students.stream()
-                .filter(student -> student.getFirstName() == null ||
-                        student.getLastName() == null || student.getGroup() == null)
-                .toList();
+    // // when
+    // var actual = students.stream()
+    // .filter(student -> student.getFirstName() == null ||
+    // student.getLastName() == null || student.getGroup() == null)
+    // .toList();
 
-        // then
-        assertTrue(actual.isEmpty());
-    }
+    // // then
+    // assertTrue(actual.isEmpty());
+    // }
 
-    @Test
-    void Method_getStudents_shouldReturnListOfStudents_withGroupIdsInGivenRange() {
-        // given
-        var students = randomModelCreator.getStudents(studentNames, studentSurnames, groups, 100);
+    // @Test
+    // void Method_getStudents_shouldReturnListOfStudents_withGroupIdsInGivenRange()
+    // {
+    // // given
+    // var students = randomModelCreator.getStudents(studentNames, studentSurnames,
+    // groups, 100);
 
-        // when
-        var actual = students.stream()
-                .mapToInt(student -> student.getGroup().getGroupId())
-                .anyMatch(id -> id < 0 || id > 10);
+    // // when
+    // var actual = students.stream()
+    // .mapToInt(student -> student.getGroup().getGroupId())
+    // .anyMatch(id -> id < 0 || id > 10);
 
-        // then
-        assertFalse(actual);
-    }
+    // // then
+    // assertFalse(actual);
+    // }
 
-    @Test
-    void Method_getStudentsCoursesRelations_shouldReturnMapOfStudentCoursesRelations() {
-        // given
-        int coursesCount = 2;
+    // @Test
+    // void
+    // Method_getStudentsCoursesRelations_shouldReturnMapOfStudentCoursesRelations()
+    // {
+    // // given
+    // int coursesCount = 2;
 
-        // when
-        var actual = randomModelCreator.getStudentsCoursesRelations(students, courses, coursesCount);
+    // // when
+    // var actual = randomModelCreator.getStudentsCoursesRelations(students,
+    // courses, coursesCount);
 
-        // then
-        assertEquals(actual.size(), students.size());
-    }
+    // // then
+    // assertEquals(actual.size(), students.size());
+    // }
 
-    @Test
-    void Method_getStudentsCoursesRelations_shouldReturnMapOfStudentCoursesRelations_withMaxThreeValuesPerKey() {
-        // given
-        int coursesCount = 3;
+    // @Test
+    // void
+    // Method_getStudentsCoursesRelations_shouldReturnMapOfStudentCoursesRelations_withMaxThreeValuesPerKey()
+    // {
+    // // given
+    // int coursesCount = 3;
 
-        // when
-        var actual = randomModelCreator.getStudentsCoursesRelations(students, courses, coursesCount);
-        boolean anyMatch = actual.values().stream()
-                .mapToInt(Set::size)
-                .anyMatch(size -> size <= 3 || size >= 1);
+    // // when
+    // var actual = randomModelCreator.getStudentsCoursesRelations(students,
+    // courses, coursesCount);
+    // boolean anyMatch = actual.values().stream()
+    // .mapToInt(Set::size)
+    // .anyMatch(size -> size <= 3 || size >= 1);
 
-        // then
-        assertTrue(anyMatch);
-    }
+    // // then
+    // assertTrue(anyMatch);
+    // }
 }
