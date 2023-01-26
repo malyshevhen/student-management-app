@@ -84,6 +84,6 @@ public class ConsoleUtils {
     }
 
     public void print(String userMsg) {
-        System.out.println(userMsg);
+        log.error(userMsg);
     }
 }
