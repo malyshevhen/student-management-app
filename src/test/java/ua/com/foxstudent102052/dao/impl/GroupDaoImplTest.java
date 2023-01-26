@@ -48,7 +48,10 @@ class GroupDaoImplTest extends AbstractTestContainerIT {
     @Test
     void MethodGetGroup_ById_ShouldReturnGroupById() {
         // given
-        var expected = Group.builder().groupId(1).groupName("Group 1").build();
+        var expected = Group.builder()
+                .groupId(1)
+                .groupName("Group 1")
+                .build();
 
         // when
         var actual = groupDao.getGroupById(1).get();
@@ -60,7 +63,10 @@ class GroupDaoImplTest extends AbstractTestContainerIT {
     @Test
     void MethodGetGroup_ByName_ShouldReturnGroupByName() {
         // given
-        var expected = Group.builder().groupId(1).groupName("Group 1").build();
+        var expected = Group.builder()
+                .groupId(1)
+                .groupName("Group 1")
+                .build();
 
         // when
         var actual = groupDao.getGroupByName("Group 1").get();

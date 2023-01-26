@@ -38,17 +38,51 @@ class RandomModelCreatorTest {
         studentNames = fileUtils.readCsvFileFromResources(STUDENT_NAMES_CSV).stream().map(s -> s[0]).toList();
         studentSurnames = fileUtils.readCsvFileFromResources(STUDENT_SURNAMES_CSV).stream().map(s -> s[0]).toList();
         groups = List.of(
-                Group.builder().groupId(1).groupName("Group1").build(),
-                Group.builder().groupId(2).groupName("Group2").build(),
-                Group.builder().groupId(3).groupName("Group3").build(),
-                Group.builder().groupId(4).groupName("Group4").build());
+                Group.builder()
+                        .groupId(1)
+                        .groupName("Group1")
+                        .build(),
+                Group.builder()
+                        .groupId(2)
+                        .groupName("Group2")
+                        .build(),
+                Group.builder()
+                        .groupId(3)
+                        .groupName("Group3")
+                        .build(),
+                Group.builder()
+                        .groupId(4)
+                        .groupName("Group4")
+                        .build());
         students = List.of(
-                Student.builder().studentId(0).build(), Student.builder().studentId(1).build(),
-                Student.builder().studentId(2).build(), Student.builder().studentId(3).build(),
-                Student.builder().studentId(4).build(), Student.builder().studentId(5).build());
+                Student.builder()
+                        .studentId(0)
+                        .build(),
+                Student.builder()
+                        .studentId(1)
+                        .build(),
+                Student.builder()
+                        .studentId(2)
+                        .build(),
+                Student.builder()
+                        .studentId(3)
+                        .build(),
+                Student.builder()
+                        .studentId(4)
+                        .build(),
+                Student.builder()
+                        .studentId(5)
+                        .build());
         courses = List.of(
-                Course.builder().courseId(1).build(), Course.builder().courseId(2).build(),
-                Course.builder().courseId(3).build());
+                Course.builder()
+                        .courseId(1)
+                        .build(),
+                Course.builder()
+                        .courseId(2)
+                        .build(),
+                Course.builder()
+                        .courseId(3)
+                        .build());
     }
 
     @Test

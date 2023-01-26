@@ -28,7 +28,9 @@ class CourseDaoImplTest extends AbstractTestContainerIT {
     @Test
     void MethodAddCourse_ShouldAddCourseToDb() {
         // given
-        var course = Course.builder().courseName("Course 4").courseDescription("Some courseDescription for course 4")
+        var course = Course.builder()
+                .courseName("Course 4")
+                .courseDescription("Some courseDescription for course 4")
                 .build();
 
         // when
@@ -52,8 +54,11 @@ class CourseDaoImplTest extends AbstractTestContainerIT {
     @Test
     void MethodGetCourse_ById_ShouldReturnCourseFromDb() {
         // given
-        var expected = Course.builder().courseId(1).courseName("Course 1")
-                .courseDescription("Some description for course 1").build();
+        var expected = Course.builder()
+                .courseId(1)
+                .courseName("Course 1")
+                .courseDescription("Some description for course 1")
+                .build();
 
         // when
         var actual = courseDao.getCourseById(1).get();
@@ -65,8 +70,11 @@ class CourseDaoImplTest extends AbstractTestContainerIT {
     @Test
     void MethodGetCourse_ByName_ShouldReturnCourseFromDb() {
         // given
-        var expected = Course.builder().courseId(1).courseName("Course 1")
-                .courseDescription("Some description for course 1").build();
+        var expected = Course.builder()
+                .courseId(1)
+                .courseName("Course 1")
+                .courseDescription("Some description for course 1")
+                .build();
 
         // when
         var actual = courseDao.getCourseByName(expected.getCourseName()).orElseThrow();
@@ -79,9 +87,15 @@ class CourseDaoImplTest extends AbstractTestContainerIT {
     void MethodGetCourses_ByStudentId_ShouldReturnCourseListFromDb() {
         // given
         var expected = List.of(
-                Course.builder().courseId(1).courseName("Course 1").courseDescription("Some description for course 1")
+                Course.builder()
+                        .courseId(1)
+                        .courseName("Course 1")
+                        .courseDescription("Some description for course 1")
                         .build(),
-                Course.builder().courseId(2).courseName("Course 2").courseDescription("Some description for course 2")
+                Course.builder()
+                        .courseId(2)
+                        .courseName("Course 2")
+                        .courseDescription("Some description for course 2")
                         .build());
 
         // when

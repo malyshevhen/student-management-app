@@ -35,7 +35,9 @@ class GroupServiceImplTest {
     @Test
     void MethodAddGroup_ShouldPassGroupToRepository() {
         // given
-        var group = Group.builder().groupName("SomeGroup").build();
+        var group = Group.builder()
+                .groupName("SomeGroup")
+                .build();
         var groupDto = modelMapper.map(group, GroupDto.class);
 
         // when
@@ -49,9 +51,15 @@ class GroupServiceImplTest {
     void MethodGetAllGroups_ShouldReturnAllGroupsFromDb() {
         // given
         var groups = List.of(
-                Group.builder().groupName("SomeGroup1").build(),
-                Group.builder().groupName("SomeGroup2").build(),
-                Group.builder().groupName("SomeGroup3").build());
+                Group.builder()
+                        .groupName("SomeGroup1")
+                        .build(),
+                Group.builder()
+                        .groupName("SomeGroup2")
+                        .build(),
+                Group.builder()
+                        .groupName("SomeGroup3")
+                        .build());
 
         var expected = groups.stream()
                 .map(group -> modelMapper.map(group, GroupDto.class))
@@ -68,7 +76,10 @@ class GroupServiceImplTest {
 
     @Test
     void MethodGetGroupById_ShouldReturnGroupFromDb() {
-        var optionalGroup = Optional.of(Group.builder().groupName("SomeGroup").build());
+        var optionalGroup = Optional.of(
+                Group.builder()
+                        .groupName("SomeGroup")
+                        .build());
         when(groupDao.getGroupById(1)).thenReturn(optionalGroup);
 
         var expected = optionalGroup.map(group -> modelMapper.map(group, GroupDto.class)).orElseThrow();
@@ -80,7 +91,10 @@ class GroupServiceImplTest {
 
     @Test
     void MethodGetGroupByName_ShouldReturnGroupFromDb() {
-        var optionalGroup = Optional.of(Group.builder().groupName("SomeGroup").build());
+        var optionalGroup = Optional.of(
+                Group.builder()
+                        .groupName("SomeGroup")
+                        .build());
         when(groupDao.getGroupByName("SomeGroup")).thenReturn(optionalGroup);
 
         var expected = optionalGroup.map(group -> modelMapper.map(group, GroupDto.class)).orElseThrow();
@@ -94,9 +108,15 @@ class GroupServiceImplTest {
     void MethodGetGroupsSmallerThen_ShouldReturnGroupsFromDb() {
         // given
         var groups = List.of(
-                Group.builder().groupName("SomeGroup1").build(),
-                Group.builder().groupName("SomeGroup2").build(),
-                Group.builder().groupName("SomeGroup3").build());
+                Group.builder()
+                        .groupName("SomeGroup1")
+                        .build(),
+                Group.builder()
+                        .groupName("SomeGroup2")
+                        .build(),
+                Group.builder()
+                        .groupName("SomeGroup3")
+                        .build());
 
         var expected = groups.stream()
                 .map(group -> modelMapper.map(group, GroupDto.class))

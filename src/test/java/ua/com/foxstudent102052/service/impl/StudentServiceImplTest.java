@@ -37,7 +37,10 @@ class StudentServiceImplTest {
     @Test
     void MethodAddStudent_ShouldPassNewStudentToRepository() {
         // given
-        var studentDto = StudentDto.builder().firstName("John").lastName("Doe").build();
+        var studentDto = StudentDto.builder()
+                .firstName("John")
+                .lastName("Doe")
+                .build();
         var student = modelMapper.map(studentDto, Student.class);
 
         // when
@@ -113,7 +116,11 @@ class StudentServiceImplTest {
     @Test
     void MethodAddStudentToCourse_ShouldAddExistingStudentToExistingCourse() {
         // given
-        Student newStudent = Student.builder().studentId(1).firstName("John").lastName("Doe").build();
+        Student newStudent = Student.builder()
+                .studentId(1)
+                .firstName("John")
+                .lastName("Doe")
+                .build();
 
         // when
         when(studentDao.getStudent(newStudent.getStudentId())).thenReturn(Optional.of(newStudent));
