@@ -15,7 +15,7 @@ import ua.com.foxstudent102052.model.entity.Course;
 import ua.com.foxstudent102052.model.entity.Group;
 import ua.com.foxstudent102052.model.entity.Student;
 
-@Slf4j
+@Slf4j(topic = "FILE")
 @Repository
 @RequiredArgsConstructor
 public class TestDataRepository {
@@ -45,7 +45,7 @@ public class TestDataRepository {
             try {
                 studentDao.addStudent(student);
             } catch (DataAccessException e) {
-                log.info("Error while adding student : " + e.getMessage());
+                log.debug("Error while adding test student : " + e.getMessage());
             }
         }
     }
@@ -56,7 +56,7 @@ public class TestDataRepository {
                 courseDao.addCourse(course);
             }
         } catch (DataAccessException e) {
-            log.info("Error while adding course : " + e.getMessage());
+            log.debug("Error while adding test course : " + e.getMessage());
         }
     }
 
@@ -66,7 +66,7 @@ public class TestDataRepository {
                 groupDao.addGroup(group);
             }
         } catch (DataAccessException e) {
-            log.info("Error while adding group : " + e.getMessage());
+            log.debug("Error while adding test group : " + e.getMessage());
         }
     }
 }

@@ -11,8 +11,14 @@ import org.springframework.stereotype.Component;
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvException;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j(topic = "FILE")
 @Component
 public class FileUtils {
+    private static final String FILE_NOT_FOUND = "File not found: ";
+    private static final String FILE_NOT_FOUND_LOG_MSG = "File not found: {}";
+
     public String readFileFromResourcesAsString(String filePath) {
         try (var inputStream = getFileFromResourceAsStream(filePath);
                 var bufferedReader = new BufferedReader(new InputStreamReader(inputStream))) {
@@ -27,7 +33,9 @@ public class FileUtils {
 
             return stringBuilder.toString();
         } catch (IOException e) {
-            throw new IllegalArgumentException("File not found: " + filePath);
+            log.error(FILE_NOT_FOUND_LOG_MSG, filePath, e);
+
+            throw new IllegalArgumentException(FILE_NOT_FOUND + filePath);
         }
     }
 
@@ -37,7 +45,9 @@ public class FileUtils {
                 var csvReader = new CSVReader(bufferedReader)) {
             return csvReader.readAll();
         } catch (IOException | CsvException e) {
-            throw new IllegalArgumentException("File not found: " + filePath);
+            log.error(FILE_NOT_FOUND_LOG_MSG, filePath, e);
+
+            throw new IllegalArgumentException(FILE_NOT_FOUND + filePath);
         }
     }
 
@@ -46,7 +56,9 @@ public class FileUtils {
         var inputStream = classLoader.getResourceAsStream(filename);
 
         if (inputStream == null) {
-            throw new IllegalArgumentException("File not found:" + filename);
+            log.error(FILE_NOT_FOUND_LOG_MSG, filename);
+
+            throw new IllegalArgumentException(FILE_NOT_FOUND + filename);
         } else {
             return inputStream;
         }

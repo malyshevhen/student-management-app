@@ -16,8 +16,8 @@ import ua.com.foxstudent102052.service.interfaces.StudentService;
 import ua.com.foxstudent102052.utils.FileUtils;
 import ua.com.foxstudent102052.utils.RandomModelCreator;
 
+@Slf4j(topic = "FILE")
 @Service
-@Slf4j
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class TestDataInitializer {
     public static final String COURSES_CSV = "csv/courses.csv";
@@ -45,10 +45,14 @@ public class TestDataInitializer {
 
         testDataRepository.postTestRecords(students, courses, groups);
 
+        log.debug("TEST DATA INITIALIZATION FINISHED!");
+
         var coursesIds = courseService.getAll().stream().mapToInt(CourseDto::getCourseId).toArray();
         var studentIds = studentService.getAll().stream().mapToInt(StudentDto::getStudentId).toArray();
 
         addStudentsToCourses(studentIds, coursesIds);
+
+        log.debug("COURSE-STUDENT RELATIONS POST TO DB!");
     }
 
     private void addStudentsToCourses(int[] studentIds, int[] coursesIds) {
@@ -63,7 +67,7 @@ public class TestDataInitializer {
                 try {
                     studentService.addStudentToCourse(studentId, courseId);
                 } catch (NoSuchElementException | DataAccessException e) {
-                    log.error("Error while adding students to courses", e);
+                    log.debug("Error while adding students to courses", e);
                 }
             }
         }

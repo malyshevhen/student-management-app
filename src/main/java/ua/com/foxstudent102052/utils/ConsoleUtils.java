@@ -4,14 +4,20 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Reader;
 
+import org.slf4j.LoggerFactory;
+import org.slf4j.Marker;
+import org.slf4j.MarkerFactory;
 import org.springframework.stereotype.Component;
 
 import lombok.extern.slf4j.Slf4j;
 
+@Slf4j(topic = "FILE")
 @Component
-@Slf4j
 public class ConsoleUtils {
+    private static final Marker STDOUT = MarkerFactory.getMarker("STDOUT");
+
     public String getInputString(String messageToPrint, Reader in) {
+
         print(messageToPrint);
 
         String inputString;
@@ -23,11 +29,11 @@ public class ConsoleUtils {
             if (inputString.isEmpty()) {
                 print("You entered an empty string. Try again.");
 
-                log.info("User entered an empty string");
+                log.debug("User entered an empty string");
 
                 return getInputString(messageToPrint, in);
             } else {
-                log.info("User entered: {}", inputString);
+                log.debug("User entered: {}", inputString);
 
                 return inputString;
             }
@@ -55,13 +61,13 @@ public class ConsoleUtils {
 
                 print("You entered an empty string. Try again.");
 
-                log.info("User entered an empty string");
+                log.debug("User entered an empty string");
 
                 return getInputInt(messageToPrint, in);
             } else {
                 inputDigit = Integer.parseInt(readLine);
 
-                log.info("User entered: {}", inputDigit);
+                log.debug("User entered: {}", inputDigit);
             }
         } catch (IOException e) {
             var msg = "Error while reading input";
@@ -75,7 +81,7 @@ public class ConsoleUtils {
 
             print("You entered not number, try again:");
 
-            log.info("User entered not number");
+            log.debug("User entered not number");
 
             return getInputInt(messageToPrint, in);
         }
@@ -84,6 +90,8 @@ public class ConsoleUtils {
     }
 
     public void print(String userMsg) {
-        log.error(userMsg);
+        var consoleLog = LoggerFactory.getLogger("CONSOLE");
+
+        consoleLog.info(STDOUT, userMsg);
     }
 }

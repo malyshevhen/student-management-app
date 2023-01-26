@@ -3,11 +3,18 @@
 
     <property name="DEV_HOME" value="logs" />
 
-    <appender name="FILE-AUDIT" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <appender name="FILE-AUDIT" class="ch.qos.logback.core.FileAppender">
+        <turboFilter class="ch.qos.logback.classic.turbo.MarkerFilter">
+            <name>STDOUT_DENY_FILTER</name>
+            <Marker>STDOUT</Marker>
+            <onMatch>DENY</onMatch>
+        </turboFilter>
+
         <file>${DEV_HOME}/student-management-app-log.log</file>
-        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+
+        <encoder>
             <Pattern>
-				%d{yyyy-MM-dd HH:mm:ss} - %msg%n
+				%d{yyyy-MM-dd HH:mm:ss} [%level] - %msg%n
             </Pattern>
         </encoder>
 
@@ -20,9 +27,12 @@
     </appender>
 
     <appender name = "STDOUT" class = "ch.qos.logback.core.ConsoleAppender">
-        <filter class = "ch.qos.logback.classic.filter.ThresholdFilter">
-            <level>ERROR</level>
-        </filter>
+        <turboFilter class="ch.qos.logback.classic.turbo.MarkerFilter">
+            <name>STDOUT_ACCEPT_FILTER</name>
+            <Marker>STDOUT</Marker>
+            <onMatch>ACCEPT</onMatch>
+        </turboFilter>
+
         <encoder>
             <pattern>
                 %msg%n
@@ -30,9 +40,15 @@
         </encoder>
     </appender>
 
-    <root level="DEBUG">
-        <appender-ref ref="FILE-AUDIT" />
-        <appender-ref ref="STDOUT"/>
-    </root>
+    <logger name = "CONSOLE" level = "INFO">
+        <appender-ref ref = "STDOUT" />
+    </logger>
 
+    <logger name = "FILE" level = "DEBUG">
+        <appender-ref ref = "FILE-AUDIT" />
+    </logger>
+
+    <logger name = "org.springframework" level = "ERROR">
+        <appender-ref ref = "FILE-AUDIT" />
+    </logger>
 </configuration>
