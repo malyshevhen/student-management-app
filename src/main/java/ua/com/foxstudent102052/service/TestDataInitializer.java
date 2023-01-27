@@ -16,7 +16,7 @@ import ua.com.foxstudent102052.service.interfaces.StudentService;
 import ua.com.foxstudent102052.utils.FileUtils;
 import ua.com.foxstudent102052.utils.RandomModelCreator;
 
-@Slf4j(topic = "FILE")
+@Slf4j
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class TestDataInitializer {
@@ -67,7 +67,7 @@ public class TestDataInitializer {
                 try {
                     studentService.addStudentToCourse(studentId, courseId);
                 } catch (NoSuchElementException | DataAccessException e) {
-                    log.debug("Error while adding students to courses", e);
+                    log.error("Error while adding students to courses", e);
                 }
             }
         }

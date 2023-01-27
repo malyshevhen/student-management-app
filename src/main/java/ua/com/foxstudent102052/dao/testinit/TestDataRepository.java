@@ -15,7 +15,7 @@ import ua.com.foxstudent102052.model.entity.Course;
 import ua.com.foxstudent102052.model.entity.Group;
 import ua.com.foxstudent102052.model.entity.Student;
 
-@Slf4j(topic = "FILE")
+@Slf4j
 @Repository
 @RequiredArgsConstructor
 public class TestDataRepository {

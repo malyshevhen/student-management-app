@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Reader;
 
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Marker;
 import org.slf4j.MarkerFactory;
@@ -11,9 +12,10 @@ import org.springframework.stereotype.Component;
 
 import lombok.extern.slf4j.Slf4j;
 
-@Slf4j(topic = "FILE")
+@Slf4j
 @Component
 public class ConsoleUtils {
+    private static final Logger consoleLog = LoggerFactory.getLogger("CONSOLE");
     private static final Marker STDOUT = MarkerFactory.getMarker("STDOUT");
 
     public String getInputString(String messageToPrint, Reader in) {
@@ -90,8 +92,6 @@ public class ConsoleUtils {
     }
 
     public void print(String userMsg) {
-        var consoleLog = LoggerFactory.getLogger("CONSOLE");
-
         consoleLog.info(STDOUT, userMsg);
     }
 }

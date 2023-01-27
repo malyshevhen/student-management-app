@@ -13,7 +13,7 @@ import com.opencsv.exceptions.CsvException;
 
 import lombok.extern.slf4j.Slf4j;
 
-@Slf4j(topic = "FILE")
+@Slf4j
 @Component
 public class FileUtils {
     private static final String FILE_NOT_FOUND = "File not found: ";
