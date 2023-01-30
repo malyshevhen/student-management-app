@@ -45,7 +45,7 @@ public class TestDataRepository {
             try {
                 studentDao.addStudent(student);
             } catch (DataAccessException e) {
-                log.debug("Error while adding test student : " + e.getMessage());
+                log.error("Error while adding test student : " + e.getMessage());
             }
         }
     }
@@ -56,7 +56,7 @@ public class TestDataRepository {
                 courseDao.addCourse(course);
             }
         } catch (DataAccessException e) {
-            log.debug("Error while adding test course : " + e.getMessage());
+            log.error("Error while adding test course : " + e.getMessage());
         }
     }
 
@@ -66,7 +66,7 @@ public class TestDataRepository {
                 groupDao.addGroup(group);
             }
         } catch (DataAccessException e) {
-            log.debug("Error while adding test group : " + e.getMessage());
+            log.error("Error while adding test group : " + e.getMessage());
         }
     }
 }
