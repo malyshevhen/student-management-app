@@ -1,7 +1,9 @@
 package ua.com.foxstudent102052.dao.testinit;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
+import java.util.Set;
 
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Repository;
@@ -14,6 +16,7 @@ import ua.com.foxstudent102052.dao.interfaces.StudentDao;
 import ua.com.foxstudent102052.model.entity.Course;
 import ua.com.foxstudent102052.model.entity.Group;
 import ua.com.foxstudent102052.model.entity.Student;
+import ua.com.foxstudent102052.utils.RandomModelCreator;
 
 @Slf4j
 @Repository
@@ -22,25 +25,47 @@ public class TestDataRepository {
     private final StudentDao studentDao;
     private final CourseDao courseDao;
     private final GroupDao groupDao;
-    private final RecordDao recordDaoImpl;
+    private final RandomModelCreator randomModelCreator;
 
     public void postTestRecords(List<Student> students, List<Course> courses, List<Group> groups) {
-        recordDaoImpl.removeAll();
-
         addCourses(courses);
 
         addGroups(groups);
 
         addStudents(students);
+
+        addStudentsToGroups();
+
+        addStudentsToCourses();
+    }
+
+    private void addStudentsToCourses() {
+        var coursesIds = courseDao.getAll().stream().mapToInt(Course::getCourseId).toArray();
+        var studentsIds = studentDao.getAll().stream().mapToInt(Student::getStudentId).toArray();
+
+        Map<Integer, Set<Integer>> studentsCoursesRelations = randomModelCreator
+                .getStudentsCoursesRelations(studentsIds, coursesIds, 3);
+
+        for (var entry : studentsCoursesRelations.entrySet()) {
+            for (var courseId : entry.getValue()) {
+                studentDao.addStudentToCourse(entry.getKey(), courseId);
+            }
+        }
+    }
+
+    private void addStudentsToGroups() {
+        Random random = new Random();
+
+        var groups = groupDao.getAll();
+        var students = studentDao.getAll();
+
+        for (var student : students) {
+            studentDao.addStudentToGroup(student.getStudentId(),
+                    groups.get(random.nextInt(groups.size())).getGroupId());
+        }
     }
 
     private void addStudents(List<Student> students) {
-        Random random = new Random();
-
-        var groupIdArray = groupDao.getAll().stream().mapToInt(Group::getGroupId).toArray();
-
-        students.forEach(student -> student.setGroupId(groupIdArray[random.nextInt(groupIdArray.length)]));
-
         for (var student : students) {
             try {
                 studentDao.addStudent(student);

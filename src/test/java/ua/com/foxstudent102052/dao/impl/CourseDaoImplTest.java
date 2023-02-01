@@ -6,10 +6,9 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
+import org.springframework.test.util.ReflectionTestUtils;
 
+import jakarta.persistence.EntityManager;
 import ua.com.foxstudent102052.dao.impl.config.AbstractTestContainerIT;
 import ua.com.foxstudent102052.dao.interfaces.CourseDao;
 import ua.com.foxstudent102052.model.entity.Course;
@@ -18,11 +17,10 @@ class CourseDaoImplTest extends AbstractTestContainerIT {
 
     private final CourseDao courseDao;
 
-    private RowMapper<Course> courseRowMapper = BeanPropertyRowMapper.newInstance(Course.class);;
-
     @Autowired
-    public CourseDaoImplTest(JdbcTemplate jdbcTemplate) {
-        courseDao = new CourseDaoImpl(jdbcTemplate, courseRowMapper);
+    public CourseDaoImplTest(EntityManager entityManager) {
+        courseDao = new CourseDaoImpl();
+        ReflectionTestUtils.setField(courseDao, "entityManager", entityManager);
     }
 
     @Test
@@ -64,7 +62,7 @@ class CourseDaoImplTest extends AbstractTestContainerIT {
         var actual = courseDao.getCourseById(1).get();
 
         // then
-        assertEquals(expected, actual);
+        assertEquals(expected.toString(), actual.toString());
     }
 
     @Test
@@ -80,7 +78,7 @@ class CourseDaoImplTest extends AbstractTestContainerIT {
         var actual = courseDao.getCourseByName(expected.getCourseName()).orElseThrow();
 
         // then
-        assertEquals(expected, actual);
+        assertEquals(expected.toString(), actual.toString());
     }
 
     @Test
@@ -102,6 +100,6 @@ class CourseDaoImplTest extends AbstractTestContainerIT {
         var actual = courseDao.getCoursesByStudentId(2);
 
         // then
-        assertEquals(expected, actual);
+        assertEquals(expected.toString(), actual.toString());
     }
 }

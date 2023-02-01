@@ -14,7 +14,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import ua.com.foxstudent102052.model.dto.CourseDto;
 import ua.com.foxstudent102052.model.dto.StudentDto;
 import ua.com.foxstudent102052.service.interfaces.CourseService;
-import ua.com.foxstudent102052.service.interfaces.StudentService;
 
 @ExtendWith(MockitoExtension.class)
 class CourseControllerTest {
@@ -22,14 +21,11 @@ class CourseControllerTest {
     @Mock
     private CourseService courseService;
 
-    @Mock
-    private StudentService studentService;
-
     private CourseController courseController;
 
     @BeforeEach
     void setUp() {
-        courseController = new CourseController(courseService, studentService);
+        courseController = new CourseController(courseService);
     }
 
     @Test

@@ -3,79 +3,61 @@ package ua.com.foxstudent102052.dao.impl;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.dao.DataAccessException;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
-import lombok.RequiredArgsConstructor;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import ua.com.foxstudent102052.dao.interfaces.CourseDao;
 import ua.com.foxstudent102052.model.entity.Course;
+import ua.com.foxstudent102052.model.entity.Student;
 
 @Repository
-@RequiredArgsConstructor(onConstructor = @__(@Autowired))
+@Transactional
 public class CourseDaoImpl implements CourseDao {
-    private final JdbcTemplate jdbcTemplate;
 
-    @Qualifier("courseRowMapper")
-    private final RowMapper<Course> courseRowMapper;
+    @PersistenceContext
+    private EntityManager entityManager;
 
     @Override
     public void addCourse(Course course) throws DataAccessException {
-        var query = """
-                INSERT
-                INTO courses (course_name, course_description)
-                VALUES (?, ?);""";
-
-        jdbcTemplate.update(query, course.getCourseName(), course.getCourseDescription());
+        entityManager.persist(course);
     }
 
     @Override
     public Optional<Course> getCourseById(int courseId) throws DataAccessException {
-        var query = """
-                SELECT course_id, course_name, course_description
-                FROM courses
-                WHERE course_id = ?;""";
+        var course = entityManager.find(Course.class, courseId);
 
-        return jdbcTemplate.query(query, courseRowMapper, courseId)
-                .stream()
-                .findFirst();
+        return Optional.ofNullable(course);
     }
 
     @Override
     public Optional<Course> getCourseByName(String courseName) throws DataAccessException {
         var query = """
-                SELECT course_id, course_name, course_description
-                FROM courses
-                WHERE course_name = ?;""";
+                SELECT c
+                FROM Course c
+                WHERE c.courseName =: courseName""";
 
-        return jdbcTemplate.query(query, courseRowMapper, courseName)
-                .stream()
-                .findFirst();
+        var course = entityManager.createQuery(query, Course.class).setParameter("courseName", courseName)
+                .getSingleResult();
+
+        return Optional.ofNullable(course);
     }
 
     @Override
     public List<Course> getAll() throws DataAccessException {
         var query = """
-                SELECT course_id, course_name, course_description
-                FROM courses;""";
+                SELECT c
+                FROM Course c""";
 
-        return jdbcTemplate.query(query, courseRowMapper);
+        return entityManager.createQuery(query, Course.class).getResultList();
     }
 
     @Override
     public List<Course> getCoursesByStudentId(int studentId) throws DataAccessException {
-        var query = """
-                SELECT course_id, course_name, course_description
-                FROM courses
-                WHERE course_id
-                IN (
-                    SELECT course_id
-                    FROM students_courses
-                    WHERE student_id = ?);""";
+        var student = entityManager.find(Student.class, studentId);
 
-        return jdbcTemplate.query(query, courseRowMapper, studentId);
+        return student.getCourses();
     }
 }

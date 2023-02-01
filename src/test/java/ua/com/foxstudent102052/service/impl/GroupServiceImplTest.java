@@ -37,6 +37,7 @@ class GroupServiceImplTest {
         // given
         var group = Group.builder()
                 .groupName("SomeGroup")
+                .students(List.of())
                 .build();
         var groupDto = modelMapper.map(group, GroupDto.class);
 

@@ -134,15 +134,15 @@ class StudentServiceImplTest {
     void MethodRemoveStudentFromCourse_ShouldRemoveExistingStudentFromExistingCourse() {
         // given
         int studentId = 1;
-        int groupId = 1;
-        var student = new Student(studentId, groupId, "", "");
+        int courseId = 1;
+        var student = new Student(studentId, null, "", "", null);
 
         // when
-        when(studentDao.getStudentsByCourse(groupId)).thenReturn(List.of(student));
-        studentService.removeStudentFromCourse(studentId, groupId);
+        when(studentDao.getStudentsByCourse(courseId)).thenReturn(List.of(student));
+        studentService.removeStudentFromCourse(studentId, courseId);
 
         // then
-        verify(studentDao).removeStudentFromCourse(studentId, groupId);
+        verify(studentDao).removeStudentFromCourse(studentId, courseId);
     }
 
     @Test

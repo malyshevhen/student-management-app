@@ -11,37 +11,19 @@ import lombok.RequiredArgsConstructor;
 import ua.com.foxstudent102052.model.dto.GroupDto;
 import ua.com.foxstudent102052.service.exceptions.ElementAlreadyExistException;
 import ua.com.foxstudent102052.service.interfaces.GroupService;
-import ua.com.foxstudent102052.service.interfaces.StudentService;
 
 @Controller
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class GroupController {
     private final GroupService groupService;
-    private final StudentService studentService;
 
     public List<GroupDto> getAllGroups()
             throws NoSuchElementException, ElementAlreadyExistException, DataAccessException {
-        return groupService.getAll().stream()
-                .map(this::setStudentsToGroups)
-                .toList();
+        return groupService.getAll();
     }
 
     public List<GroupDto> getGroupsSmallerThen(int numberOfStudents)
             throws NoSuchElementException, ElementAlreadyExistException, DataAccessException {
-        return groupService.getGroupsLessThen(numberOfStudents).stream()
-                .map(this::setStudentsToGroups)
-                .toList();
-    }
-
-    private GroupDto setStudentsToGroups(GroupDto groupDto) {
-        try {
-            var result = studentService.getStudentsByGroup(groupDto.getGroupId());
-            groupDto.setStudentList(result);
-
-            return groupDto;
-        } catch (NoSuchElementException | DataAccessException e) {
-            return groupDto;
-        }
-
+        return groupService.getGroupsLessThen(numberOfStudents);
     }
 }

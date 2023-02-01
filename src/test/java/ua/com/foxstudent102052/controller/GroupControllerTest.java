@@ -15,7 +15,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import ua.com.foxstudent102052.model.dto.GroupDto;
 import ua.com.foxstudent102052.model.dto.StudentDto;
 import ua.com.foxstudent102052.service.interfaces.GroupService;
-import ua.com.foxstudent102052.service.interfaces.StudentService;
 
 @ExtendWith(MockitoExtension.class)
 class GroupControllerTest {
@@ -23,14 +22,11 @@ class GroupControllerTest {
     @Mock
     private GroupService groupService;
 
-    @Mock
-    private StudentService studentService;
-
     private GroupController groupController;
 
     @BeforeEach
     void setUp() {
-        groupController = new GroupController(groupService, studentService);
+        groupController = new GroupController(groupService);
     }
 
     @Test

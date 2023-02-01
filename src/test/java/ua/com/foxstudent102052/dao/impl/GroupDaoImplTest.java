@@ -4,10 +4,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
+import org.springframework.test.util.ReflectionTestUtils;
 
+import jakarta.persistence.EntityManager;
 import ua.com.foxstudent102052.dao.impl.config.AbstractTestContainerIT;
 import ua.com.foxstudent102052.dao.interfaces.GroupDao;
 import ua.com.foxstudent102052.model.entity.Group;
@@ -16,11 +15,10 @@ class GroupDaoImplTest extends AbstractTestContainerIT {
 
     private final GroupDao groupDao;
 
-    private RowMapper<Group> groupRowMapper = BeanPropertyRowMapper.newInstance(Group.class);
-
     @Autowired
-    public GroupDaoImplTest(JdbcTemplate jdbcTemplate) {
-        groupDao = new GroupDaoImpl(jdbcTemplate, groupRowMapper);
+    public GroupDaoImplTest(EntityManager entityManager) {
+        groupDao = new GroupDaoImpl();
+        ReflectionTestUtils.setField(groupDao, "entityManager", entityManager);
     }
 
     @Test
@@ -57,7 +55,7 @@ class GroupDaoImplTest extends AbstractTestContainerIT {
         var actual = groupDao.getGroupById(1).get();
 
         // then
-        assertEquals(expected, actual);
+        assertEquals(expected.toString(), actual.toString());
     }
 
     @Test
@@ -72,7 +70,7 @@ class GroupDaoImplTest extends AbstractTestContainerIT {
         var actual = groupDao.getGroupByName("Group 1").get();
 
         // then
-        assertEquals(expected, actual);
+        assertEquals(expected.toString(), actual.toString());
     }
 
     @Test

@@ -38,6 +38,7 @@ class CourseServiceImplTest {
         Course courseFromDb = Course.builder()
                 .courseName("Java")
                 .courseDescription("Java course")
+                .students(List.of())
                 .build();
         CourseDto newCourse = modelMapper.map(courseFromDb, CourseDto.class);
 

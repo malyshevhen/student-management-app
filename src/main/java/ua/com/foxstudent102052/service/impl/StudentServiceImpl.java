@@ -7,6 +7,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 import ua.com.foxstudent102052.dao.interfaces.StudentDao;
@@ -20,12 +21,14 @@ public class StudentServiceImpl implements StudentService {
     private final StudentDao studentDao;
     private final ModelMapper modelMapper;
 
+    @Transactional
     @Override
     public void addStudent(StudentDto studentDto) throws DataAccessException {
         var student = modelMapper.map(studentDto, Student.class);
         studentDao.addStudent(student);
     }
 
+    @Transactional
     @Override
     public void removeStudent(int studentId) throws DataAccessException {
         if (studentDao.getStudent(studentId).isPresent()) {
@@ -35,6 +38,7 @@ public class StudentServiceImpl implements StudentService {
         }
     }
 
+    @Transactional
     @Override
     public void addStudentToCourse(int studentId, int courseId) throws DataAccessException {
         if (studentDao.getStudent(studentId).isPresent()) {
@@ -44,6 +48,7 @@ public class StudentServiceImpl implements StudentService {
         }
     }
 
+    @Transactional
     @Override
     public void removeStudentFromCourse(int studentId, int courseId) throws DataAccessException {
         boolean studentPresentInCourse = studentDao.getStudentsByCourse(courseId)
@@ -57,6 +62,7 @@ public class StudentServiceImpl implements StudentService {
         }
     }
 
+    @Transactional
     @Override
     public List<StudentDto> getAll() throws DataAccessException {
         var studentDtoList = studentDao.getAll()
@@ -71,6 +77,7 @@ public class StudentServiceImpl implements StudentService {
         }
     }
 
+    @Transactional
     @Override
     public List<StudentDto> getStudentsByCourse(int courseId) throws DataAccessException {
         var studentDtoList = studentDao.getStudentsByCourse(courseId)
@@ -85,6 +92,7 @@ public class StudentServiceImpl implements StudentService {
         }
     }
 
+    @Transactional
     @Override
     public List<StudentDto> getStudentsByGroup(int groupId) throws DataAccessException {
         var studentDtoList = studentDao.getStudentsByGroup(groupId)
@@ -99,6 +107,7 @@ public class StudentServiceImpl implements StudentService {
         }
     }
 
+    @Transactional
     @Override
     public List<StudentDto> getStudentsByNameAndCourse(String studentName, Integer courseId)
             throws DataAccessException {

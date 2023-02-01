@@ -17,8 +17,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import ua.com.foxstudent102052.model.dto.CourseDto;
 import ua.com.foxstudent102052.model.dto.GroupDto;
 import ua.com.foxstudent102052.model.dto.StudentDto;
-import ua.com.foxstudent102052.service.interfaces.CourseService;
-import ua.com.foxstudent102052.service.interfaces.GroupService;
 import ua.com.foxstudent102052.service.interfaces.StudentService;
 
 @ExtendWith(MockitoExtension.class)
@@ -27,17 +25,11 @@ class StudentControllerTest {
     @Mock
     private StudentService studentService;
 
-    @Mock
-    private GroupService groupService;
-
-    @Mock
-    private CourseService courseService;
-
     private StudentController studentController;
 
     @BeforeEach
     void setUp() {
-        studentController = new StudentController(studentService, groupService, courseService);
+        studentController = new StudentController(studentService);
     }
 
     @Test
@@ -83,19 +75,7 @@ class StudentControllerTest {
                 .groupId(1)
                 .groupName("Java")
                 .build();
-        var studentsDto = List.of(
-                StudentDto.builder()
-                        .studentId(1)
-                        .firstName("John")
-                        .lastName("Doe")
-                        .group(group)
-                        .build(),
-                StudentDto.builder()
-                        .studentId(2)
-                        .firstName("Jane")
-                        .lastName("Doe")
-                        .group(group)
-                        .build());
+
         var courses = List.of(
                 CourseDto.builder()
                         .courseId(1)
@@ -108,7 +88,7 @@ class StudentControllerTest {
                         .courseDescription("C# course")
                         .build());
 
-        var expected = List.of(
+        var studentsDto = List.of(
                 StudentDto.builder()
                         .studentId(1)
                         .firstName("John")
@@ -126,13 +106,11 @@ class StudentControllerTest {
 
         // when
         when(studentService.getAll()).thenReturn(studentsDto);
-        when(courseService.getCoursesByStudent(anyInt())).thenReturn(courses);
-        when(groupService.getGroupById(1)).thenReturn(group);
 
         // then
         var actual = studentController.getAllStudents();
 
-        assertEquals(expected, actual);
+        assertEquals(studentsDto, actual);
     }
 
     @Test
@@ -151,19 +129,7 @@ class StudentControllerTest {
                 .groupId(1)
                 .groupName("Java")
                 .build();
-        var studentsDto = List.of(
-                StudentDto.builder()
-                        .studentId(1)
-                        .firstName("John")
-                        .lastName("Doe")
-                        .group(group)
-                        .build(),
-                StudentDto.builder()
-                        .studentId(2)
-                        .firstName("John")
-                        .lastName("Fox")
-                        .group(group)
-                        .build());
+
         var courses = List.of(
                 CourseDto.builder()
                         .courseId(1)
@@ -176,7 +142,7 @@ class StudentControllerTest {
                         .courseDescription("C# course")
                         .build());
 
-        var expected = List.of(
+        var studentsDto = List.of(
                 StudentDto.builder()
                         .studentId(1)
                         .firstName("John")
@@ -194,13 +160,11 @@ class StudentControllerTest {
 
         // when
         when(studentService.getStudentsByNameAndCourse(anyString(), anyInt())).thenReturn(studentsDto);
-        when(courseService.getCoursesByStudent(anyInt())).thenReturn(courses);
-        when(groupService.getGroupById(1)).thenReturn(group);
 
         // then
         var actual = studentController.getStudents(anyString(), anyInt());
 
-        assertEquals(expected, actual);
+        assertEquals(studentsDto, actual);
     }
 
     @Test

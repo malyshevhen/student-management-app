@@ -6,24 +6,23 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
+import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.transaction.annotation.Transactional;
 
+import jakarta.persistence.EntityManager;
 import ua.com.foxstudent102052.dao.impl.config.AbstractTestContainerIT;
 import ua.com.foxstudent102052.dao.interfaces.StudentDao;
+import ua.com.foxstudent102052.model.entity.Group;
 import ua.com.foxstudent102052.model.entity.Student;
 
 class StudentDaoImplTest extends AbstractTestContainerIT {
 
     private final StudentDao studentDao;
 
-    private RowMapper<Student> studentRowMapper = BeanPropertyRowMapper.newInstance(Student.class);
-
     @Autowired
-    public StudentDaoImplTest(JdbcTemplate jdbcTemplate) {
-        studentDao = new StudentDaoImpl(jdbcTemplate, studentRowMapper);
+    public StudentDaoImplTest(EntityManager entityManager) {
+        studentDao = new StudentDaoImpl();
+        ReflectionTestUtils.setField(studentDao, "entityManager", entityManager);
     }
 
     @Test
@@ -31,8 +30,6 @@ class StudentDaoImplTest extends AbstractTestContainerIT {
     void MethodAddStudent_ShouldAddStudentToDb() {
         // given
         var newStudent = Student.builder()
-                .studentId(1)
-                .groupId(1)
                 .firstName("John")
                 .lastName("Doe")
                 .build();
@@ -52,7 +49,7 @@ class StudentDaoImplTest extends AbstractTestContainerIT {
         // given
         var expected = Student.builder()
                 .studentId(1)
-                .groupId(1)
+                .group(new Group(1, "Group 1", List.of()))
                 .firstName("Leia")
                 .lastName("Organa")
                 .build();
@@ -62,7 +59,7 @@ class StudentDaoImplTest extends AbstractTestContainerIT {
         var actual = studentDao.getStudentsByCourse(1).get(0);
 
         // then
-        assertEquals(expected, actual);
+        assertEquals(expected.toString(), actual.toString());
     }
 
     @Test
@@ -81,32 +78,32 @@ class StudentDaoImplTest extends AbstractTestContainerIT {
         var expected = List.of(
                 Student.builder()
                         .studentId(1)
-                        .groupId(1)
+                        .group(new Group(1, "Group 1", List.of()))
                         .firstName("Leia")
                         .lastName("Organa")
                         .build(),
                 Student.builder()
                         .studentId(2)
-                        .groupId(1)
+                        .group(new Group(1, "Group 1", List.of()))
                         .firstName("Luke")
                         .lastName("Skywalker")
                         .build(),
                 Student.builder()
                         .studentId(3)
-                        .groupId(1)
+                        .group(new Group(1, "Group 1", List.of()))
                         .firstName("Han")
                         .lastName("Solo")
                         .build(),
                 Student.builder()
                         .studentId(4)
-                        .groupId(1)
+                        .group(new Group(1, "Group 1", List.of()))
                         .firstName("Padme")
                         .lastName("Amidala")
                         .build());
 
         var actual = studentDao.getStudentsByGroup(1);
 
-        assertEquals(expected, actual);
+        assertEquals(expected.toString(), actual.toString());
     }
 
     @Test
@@ -115,44 +112,44 @@ class StudentDaoImplTest extends AbstractTestContainerIT {
         var expected = List.of(
                 Student.builder()
                         .studentId(1)
-                        .groupId(1)
+                        .group(new Group(1, "Group 1", List.of()))
                         .firstName("Leia")
                         .lastName("Organa")
                         .build(),
                 Student.builder()
                         .studentId(2)
-                        .groupId(1)
+                        .group(new Group(1, "Group 1", List.of()))
                         .firstName("Luke")
                         .lastName("Skywalker")
                         .build(),
                 Student.builder()
                         .studentId(4)
-                        .groupId(1)
+                        .group(new Group(1, "Group 1", List.of()))
                         .firstName("Padme")
                         .lastName("Amidala")
                         .build(),
                 Student.builder()
                         .studentId(5)
-                        .groupId(2)
+                        .group(new Group(2, "Group 2", List.of()))
                         .firstName("Dart")
                         .lastName("Maul")
                         .build(),
                 Student.builder()
                         .studentId(9)
-                        .groupId(2)
+                        .group(new Group(2, "Group 2", List.of()))
                         .firstName("Dart")
                         .lastName("Vader")
                         .build(),
                 Student.builder()
                         .studentId(10)
-                        .groupId(3)
+                        .group(new Group(3, "Group 3", List.of()))
                         .firstName("Jah Jah")
                         .lastName("Binks")
                         .build());
 
         var actual = studentDao.getStudentsByCourse(1);
 
-        assertEquals(expected, actual);
+        assertEquals(expected.toString(), actual.toString());
     }
 
     @Test
@@ -161,20 +158,20 @@ class StudentDaoImplTest extends AbstractTestContainerIT {
         var expected = List.of(
                 Student.builder()
                         .studentId(5)
-                        .groupId(2)
+                        .group(new Group(2, "Group 2", List.of()))
                         .firstName("Dart")
                         .lastName("Maul")
                         .build(),
                 Student.builder()
                         .studentId(9)
-                        .groupId(2)
+                        .group(new Group(2, "Group 2", List.of()))
                         .firstName("Dart")
                         .lastName("Vader")
                         .build());
 
         var actual = studentDao.getStudentsByNameAndCourse("Dart", 1);
 
-        assertEquals(expected, actual);
+        assertEquals(expected.toString(), actual.toString());
     }
 
     @Test
@@ -196,7 +193,7 @@ class StudentDaoImplTest extends AbstractTestContainerIT {
         // given
         var expected = Student.builder()
                 .studentId(1)
-                .groupId(1)
+                .group(new Group(1, "Group 1", List.of()))
                 .firstName("Leia")
                 .lastName("Organa")
                 .build();
@@ -205,7 +202,7 @@ class StudentDaoImplTest extends AbstractTestContainerIT {
         var actual = studentDao.getStudent(1).get();
 
         // then
-        assertEquals(expected, actual);
+        assertEquals(expected.toString(), actual.toString());
     }
 
     @Test

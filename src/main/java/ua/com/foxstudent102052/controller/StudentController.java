@@ -9,16 +9,12 @@ import org.springframework.stereotype.Controller;
 
 import lombok.RequiredArgsConstructor;
 import ua.com.foxstudent102052.model.dto.StudentDto;
-import ua.com.foxstudent102052.service.interfaces.CourseService;
-import ua.com.foxstudent102052.service.interfaces.GroupService;
 import ua.com.foxstudent102052.service.interfaces.StudentService;
 
 @Controller
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class StudentController {
     private final StudentService studentService;
-    private final GroupService groupService;
-    private final CourseService courseService;
 
     public void addStudent(StudentDto studentDto) throws DataAccessException {
         studentService.addStudent(studentDto);
@@ -38,43 +34,11 @@ public class StudentController {
     }
 
     public List<StudentDto> getAllStudents() throws NoSuchElementException, DataAccessException {
-        return studentService.getAll()
-                .stream()
-                .map(this::setStudentsGroup)
-                .map(this::setStudentsCourseList)
-                .toList();
+        return studentService.getAll();
     }
 
     public List<StudentDto> getStudents(String studentName, Integer courseId)
             throws NoSuchElementException, DataAccessException {
-        return studentService.getStudentsByNameAndCourse(studentName, courseId)
-                .stream()
-                .map(this::setStudentsGroup)
-                .map(this::setStudentsCourseList)
-                .toList();
-    }
-
-    private StudentDto setStudentsCourseList(StudentDto studentDto) {
-        try {
-            int studentId = studentDto.getStudentId();
-            var courseDtoList = courseService.getCoursesByStudent(studentId);
-            studentDto.setCoursesList(courseDtoList);
-
-            return studentDto;
-        } catch (NoSuchElementException | DataAccessException e) {
-            return studentDto;
-        }
-    }
-
-    private StudentDto setStudentsGroup(StudentDto studentDto) {
-        try {
-            int groupId = studentDto.getGroup().getGroupId();
-            var studentsGroup = groupService.getGroupById(groupId);
-            studentDto.setGroup(studentsGroup);
-
-            return studentDto;
-        } catch (NullPointerException | NoSuchElementException | DataAccessException e) {
-            return studentDto;
-        }
+        return studentService.getStudentsByNameAndCourse(studentName, courseId);
     }
 }

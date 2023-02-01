@@ -7,6 +7,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 import ua.com.foxstudent102052.dao.interfaces.GroupDao;
@@ -23,6 +24,7 @@ public class GroupServiceImpl implements GroupService {
     private final GroupDao groupDao;
     private final ModelMapper modelMapper;
 
+    @Transactional
     @Override
     public void addGroup(GroupDto groupDto) throws DataAccessException {
         if (groupDao.getGroupByName(groupDto.getGroupName()).isPresent()) {
@@ -32,6 +34,7 @@ public class GroupServiceImpl implements GroupService {
         }
     }
 
+    @Transactional
     @Override
     public GroupDto getGroupById(int groupId) throws DataAccessException {
         return groupDao.getGroupById(groupId)
@@ -39,6 +42,7 @@ public class GroupServiceImpl implements GroupService {
                 .orElseThrow(() -> new NoSuchElementException(GROUP_DOES_NOT_EXIST));
     }
 
+    @Transactional
     @Override
     public GroupDto getGroupByName(String groupName) throws DataAccessException {
         return groupDao.getGroupByName(groupName)
@@ -46,6 +50,7 @@ public class GroupServiceImpl implements GroupService {
                 .orElseThrow(() -> new NoSuchElementException(GROUP_DOES_NOT_EXIST));
     }
 
+    @Transactional
     @Override
     public List<GroupDto> getAll() throws DataAccessException {
         var groupDtoList = groupDao.getAll()
@@ -60,6 +65,7 @@ public class GroupServiceImpl implements GroupService {
         }
     }
 
+    @Transactional
     @Override
     public List<GroupDto> getGroupsLessThen(int numberOfStudents) throws DataAccessException {
         var groupList = groupDao.getGroupsLessThen(numberOfStudents)
