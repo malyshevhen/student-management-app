@@ -5,7 +5,6 @@ import java.util.Optional;
 
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -15,7 +14,6 @@ import ua.com.foxstudent102052.model.entity.Group;
 import ua.com.foxstudent102052.model.entity.Student;
 
 @Repository
-@Transactional
 public class StudentDaoImpl implements StudentDao {
 
     @PersistenceContext

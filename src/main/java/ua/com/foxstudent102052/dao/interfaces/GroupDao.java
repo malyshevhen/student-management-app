@@ -14,5 +14,4 @@ public interface GroupDao {
 
     Optional<Group> getGroupByName(String groupName);
 
-    List<Group> getGroupsLessThen(int numberOfStudents);
 }

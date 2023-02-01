@@ -4,6 +4,7 @@ import java.util.NoSuchElementException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 import ua.com.foxstudent102052.dao.testinit.TestDataRepository;
@@ -12,6 +13,7 @@ import ua.com.foxstudent102052.utils.FileUtils;
 import ua.com.foxstudent102052.utils.RandomModelCreator;
 
 @Service
+@Transactional
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class TestDataInitializer {
     public static final String COURSES_CSV = "csv/courses.csv";

@@ -72,11 +72,4 @@ class GroupDaoImplTest extends AbstractTestContainerIT {
         // then
         assertEquals(expected.toString(), actual.toString());
     }
-
-    @Test
-    void MethodGetGroupsLessThen_ShouldReturnGroupLessCount() {
-        var actual = groupDao.getGroupsLessThen(2);
-
-        assertEquals(1, actual.size());
-    }
 }

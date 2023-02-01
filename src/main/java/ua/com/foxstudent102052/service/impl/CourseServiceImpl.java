@@ -17,12 +17,12 @@ import ua.com.foxstudent102052.service.exceptions.ElementAlreadyExistException;
 import ua.com.foxstudent102052.service.interfaces.CourseService;
 
 @Service
+@Transactional
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class CourseServiceImpl implements CourseService {
     private final CourseDao courseDao;
     private final ModelMapper modelMapper;
 
-    @Transactional
     @Override
     public void addCourse(CourseDto courseDto) throws DataAccessException {
         var courseName = courseDto.getCourseName();
@@ -35,7 +35,6 @@ public class CourseServiceImpl implements CourseService {
         }
     }
 
-    @Transactional
     @Override
     public CourseDto getCourseById(int courseId) throws DataAccessException {
         var course = courseDao.getCourseById(courseId).orElseThrow();
@@ -43,7 +42,6 @@ public class CourseServiceImpl implements CourseService {
         return modelMapper.map(course, CourseDto.class);
     }
 
-    @Transactional
     @Override
     public List<CourseDto> getAll() throws DataAccessException {
         if (courseDao.getAll().isEmpty()) {
@@ -56,7 +54,6 @@ public class CourseServiceImpl implements CourseService {
         }
     }
 
-    @Transactional
     @Override
     public List<CourseDto> getCoursesByStudent(int studentId) throws DataAccessException {
         if (courseDao.getCoursesByStudentId(studentId).isEmpty()) {

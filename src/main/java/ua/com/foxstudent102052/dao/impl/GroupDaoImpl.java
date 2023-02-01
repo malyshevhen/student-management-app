@@ -5,7 +5,6 @@ import java.util.Optional;
 
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -13,7 +12,6 @@ import ua.com.foxstudent102052.dao.interfaces.GroupDao;
 import ua.com.foxstudent102052.model.entity.Group;
 
 @Repository
-@Transactional
 public class GroupDaoImpl implements GroupDao {
 
     @PersistenceContext
@@ -51,12 +49,5 @@ public class GroupDaoImpl implements GroupDao {
                 FROM Group g""";
 
         return entityManager.createQuery(query, Group.class).getResultList();
-    }
-
-    @Override
-    public List<Group> getGroupsLessThen(int numberOfStudents) throws DataAccessException {
-        return getAll().stream()
-                .filter(g -> g.getStudents().size() <= numberOfStudents)
-                .toList();
     }
 }

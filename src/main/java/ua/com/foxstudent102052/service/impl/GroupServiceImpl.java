@@ -17,6 +17,7 @@ import ua.com.foxstudent102052.service.exceptions.ElementAlreadyExistException;
 import ua.com.foxstudent102052.service.interfaces.GroupService;
 
 @Service
+@Transactional
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class GroupServiceImpl implements GroupService {
     public static final String GROUP_DOES_NOT_EXIST = "This group does not exist in DB";
@@ -24,7 +25,6 @@ public class GroupServiceImpl implements GroupService {
     private final GroupDao groupDao;
     private final ModelMapper modelMapper;
 
-    @Transactional
     @Override
     public void addGroup(GroupDto groupDto) throws DataAccessException {
         if (groupDao.getGroupByName(groupDto.getGroupName()).isPresent()) {
@@ -34,7 +34,6 @@ public class GroupServiceImpl implements GroupService {
         }
     }
 
-    @Transactional
     @Override
     public GroupDto getGroupById(int groupId) throws DataAccessException {
         return groupDao.getGroupById(groupId)
@@ -42,7 +41,6 @@ public class GroupServiceImpl implements GroupService {
                 .orElseThrow(() -> new NoSuchElementException(GROUP_DOES_NOT_EXIST));
     }
 
-    @Transactional
     @Override
     public GroupDto getGroupByName(String groupName) throws DataAccessException {
         return groupDao.getGroupByName(groupName)
@@ -50,7 +48,6 @@ public class GroupServiceImpl implements GroupService {
                 .orElseThrow(() -> new NoSuchElementException(GROUP_DOES_NOT_EXIST));
     }
 
-    @Transactional
     @Override
     public List<GroupDto> getAll() throws DataAccessException {
         var groupDtoList = groupDao.getAll()
@@ -65,11 +62,11 @@ public class GroupServiceImpl implements GroupService {
         }
     }
 
-    @Transactional
     @Override
     public List<GroupDto> getGroupsLessThen(int numberOfStudents) throws DataAccessException {
-        var groupList = groupDao.getGroupsLessThen(numberOfStudents)
+        var groupList = groupDao.getAll()
                 .stream()
+                .filter(g -> g.getStudents().size() <= numberOfStudents)
                 .map(group -> modelMapper.map(group, GroupDto.class))
                 .toList();
 

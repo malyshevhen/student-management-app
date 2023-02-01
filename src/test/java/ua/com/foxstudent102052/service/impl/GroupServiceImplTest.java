@@ -9,6 +9,7 @@ import org.modelmapper.ModelMapper;
 import ua.com.foxstudent102052.dao.interfaces.GroupDao;
 import ua.com.foxstudent102052.model.dto.GroupDto;
 import ua.com.foxstudent102052.model.entity.Group;
+import ua.com.foxstudent102052.model.entity.Student;
 import ua.com.foxstudent102052.service.interfaces.GroupService;
 
 import java.util.List;
@@ -110,13 +111,19 @@ class GroupServiceImplTest {
         // given
         var groups = List.of(
                 Group.builder()
+                        .groupId(1)
                         .groupName("SomeGroup1")
+                        .students(List.of(new Student(), new Student(), new Student()))
                         .build(),
                 Group.builder()
+                        .groupId(2)
                         .groupName("SomeGroup2")
+                        .students(List.of(new Student(), new Student(), new Student()))
                         .build(),
                 Group.builder()
+                        .groupId(3)
                         .groupName("SomeGroup3")
+                        .students(List.of(new Student(), new Student(), new Student()))
                         .build());
 
         var expected = groups.stream()
@@ -124,7 +131,7 @@ class GroupServiceImplTest {
                 .toList();
 
         // when
-        when(groupDao.getGroupsLessThen(3)).thenReturn(groups);
+        when(groupDao.getAll()).thenReturn(groups);
 
         var actual = groupService.getGroupsLessThen(3);
 
