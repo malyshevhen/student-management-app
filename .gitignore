@@ -48,3 +48,6 @@ db_test
 mvnw
 mvnw.cmd
 .mvn
+
+## postgeresql ##
+/postgres-data

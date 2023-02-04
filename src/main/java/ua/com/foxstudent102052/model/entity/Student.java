@@ -43,6 +43,7 @@ public final class Student {
     private String lastName;
 
     @Setter(value = AccessLevel.PRIVATE)
+    @Builder.Default
     @ManyToMany
     @JoinTable(name = "students_courses", joinColumns = @JoinColumn(name = "student_id"), inverseJoinColumns = @JoinColumn(name = "course_id"))
     private List<Course> courses = new ArrayList<>();

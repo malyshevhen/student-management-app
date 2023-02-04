@@ -36,6 +36,7 @@ public final class Course {
     private String courseDescription;
 
     @Setter(value = AccessLevel.PRIVATE)
+    @Builder.Default
     @ManyToMany(mappedBy = "courses")
     private List<Student> students = new ArrayList<>();
 

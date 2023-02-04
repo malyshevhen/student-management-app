@@ -32,6 +32,7 @@ public final class Group {
     private String groupName;
 
     @OneToMany(mappedBy = "group", fetch = FetchType.EAGER)
+    @Builder.Default
     private List<Student> students = new ArrayList<>();
 
     public void addStudent(Student student) {
