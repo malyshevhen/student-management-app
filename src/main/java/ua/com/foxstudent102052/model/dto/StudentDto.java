@@ -16,5 +16,7 @@ public class StudentDto {
     private String firstName;
     private String lastName;
     private GroupDto group;
+
+    @Builder.Default
     private List<CourseDto> coursesList = List.of();
 }

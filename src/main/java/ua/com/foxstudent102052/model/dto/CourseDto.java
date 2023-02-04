@@ -15,5 +15,7 @@ public class CourseDto {
     private int courseId;
     private String courseName;
     private String courseDescription;
+
+    @Builder.Default
     private List<StudentDto> studentList = List.of();
 }

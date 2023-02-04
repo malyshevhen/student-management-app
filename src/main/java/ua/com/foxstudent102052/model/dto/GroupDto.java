@@ -14,5 +14,7 @@ import lombok.NoArgsConstructor;
 public class GroupDto {
     private int groupId;
     private String groupName;
+
+    @Builder.Default
     private List<StudentDto> studentList = List.of();
 }
