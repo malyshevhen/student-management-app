@@ -61,16 +61,10 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public List<StudentDto> getAll() throws DataAccessException {
-        var studentDtoList = studentDao.getAll()
+        return studentDao.getAll()
                 .stream()
                 .map(student -> modelMapper.map(student, StudentDto.class))
                 .toList();
-
-        if (studentDtoList.isEmpty()) {
-            throw new NoSuchElementException("There are no students in DB");
-        } else {
-            return studentDtoList;
-        }
     }
 
     @Override

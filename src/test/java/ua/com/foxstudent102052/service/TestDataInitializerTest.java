@@ -58,7 +58,7 @@ class TestDataInitializerTest {
                 new Course(0, "C2", "Some description 2", null));
 
         // when
-        when(studentService.getAll()).thenThrow(NoSuchElementException.class);
+        when(studentService.getAll()).thenReturn(List.of());
         when(randomModelCreator.getGroups(anyList())).thenReturn(groups);
         when(randomModelCreator.getCourses(anyList())).thenReturn(courses);
         when(randomModelCreator.getStudents(anyList(), anyList(), anyInt())).thenReturn(students);

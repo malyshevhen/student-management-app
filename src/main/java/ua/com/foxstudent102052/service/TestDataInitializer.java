@@ -1,7 +1,5 @@
 package ua.com.foxstudent102052.service;
 
-import java.util.NoSuchElementException;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,9 +27,7 @@ public class TestDataInitializer {
     private final FileUtils fileUtils;
 
     public void initTestDada() {
-        try {
-            studentService.getAll();
-        } catch (NoSuchElementException e) {
+        if (studentService.getAll().isEmpty()) {
             var coursesNamesAndDescriptions = fileUtils.readCsvFileFromResources(COURSES_CSV);
             var groupNames = fileUtils.readCsvFileFromResources(GROUPS_CSV)
                     .stream()

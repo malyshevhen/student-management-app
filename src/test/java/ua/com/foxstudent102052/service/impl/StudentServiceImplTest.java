@@ -91,16 +91,6 @@ class StudentServiceImplTest {
     }
 
     @Test
-    void MethodGetStudents_ShouldThrowAnException_WhenStudentsDoesNotExist() {
-        // when
-        when(studentDao.getAll()).thenReturn(List.of());
-
-        // then
-        assertThrows(NoSuchElementException.class, () -> studentService.getAll(),
-            "Students doesn't exist");
-    }
-
-    @Test
     void MethodRemoveStudent_ShouldThrowAnException_IfStudentWasNotRemoved() {
         // given
         int studentId = 1;

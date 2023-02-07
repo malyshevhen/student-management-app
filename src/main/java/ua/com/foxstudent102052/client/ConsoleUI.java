@@ -225,9 +225,14 @@ public class ConsoleUI {
 
         try {
             var allStudents = studentController.getAllStudents();
-            var studentTable = tableFactory.buildTable(allStudents, new ExpandedStudentTableBuilder());
 
-            consoleUtils.print(studentTable);
+            if (allStudents.isEmpty()) {
+                consoleUtils.print("There are no students in database");
+            } else {
+                var studentTable = tableFactory.buildTable(allStudents, new ExpandedStudentTableBuilder());
+
+                consoleUtils.print(studentTable);
+            }
         } catch (DataAccessException | NoSuchElementException e) {
             consoleUtils.print(e.getMessage());
         } finally {
