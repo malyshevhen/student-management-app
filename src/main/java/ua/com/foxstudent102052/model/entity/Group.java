@@ -13,13 +13,19 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 @Entity
 @Table(name = "groups")
 @Builder
-@Data
+@Getter
+@Setter
+@ToString(exclude = "students")
+@EqualsAndHashCode(exclude = "students")
 @AllArgsConstructor
 @NoArgsConstructor
 public final class Group {
@@ -37,10 +43,5 @@ public final class Group {
 
     public void addStudent(Student student) {
         students.add(student);
-    }
-
-    @Override
-    public String toString() {
-        return "Group [groupId=" + groupId + ", groupName=" + groupName + "]";
     }
 }

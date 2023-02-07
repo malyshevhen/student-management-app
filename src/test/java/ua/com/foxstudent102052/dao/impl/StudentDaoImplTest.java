@@ -59,7 +59,7 @@ class StudentDaoImplTest extends AbstractTestContainerIT {
         var actual = studentDao.getStudentsByCourse(1).get(0);
 
         // then
-        assertEquals(expected.toString(), actual.toString());
+        assertEquals(expected, actual);
     }
 
     @Test
@@ -103,7 +103,7 @@ class StudentDaoImplTest extends AbstractTestContainerIT {
 
         var actual = studentDao.getStudentsByGroup(1);
 
-        assertEquals(expected.toString(), actual.toString());
+        assertEquals(expected, actual);
     }
 
     @Test
@@ -149,7 +149,7 @@ class StudentDaoImplTest extends AbstractTestContainerIT {
 
         var actual = studentDao.getStudentsByCourse(1);
 
-        assertEquals(expected.toString(), actual.toString());
+        assertEquals(expected, actual);
     }
 
     @Test
@@ -171,7 +171,7 @@ class StudentDaoImplTest extends AbstractTestContainerIT {
 
         var actual = studentDao.getStudentsByNameAndCourse("Dart", 1);
 
-        assertEquals(expected.toString(), actual.toString());
+        assertEquals(expected, actual);
     }
 
     @Test
@@ -202,7 +202,7 @@ class StudentDaoImplTest extends AbstractTestContainerIT {
         var actual = studentDao.getStudent(1).get();
 
         // then
-        assertEquals(expected.toString(), actual.toString());
+        assertEquals(expected, actual);
     }
 
     @Test

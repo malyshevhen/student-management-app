@@ -62,7 +62,7 @@ class CourseDaoImplTest extends AbstractTestContainerIT {
         var actual = courseDao.getCourseById(1).get();
 
         // then
-        assertEquals(expected.toString(), actual.toString());
+        assertEquals(expected, actual);
     }
 
     @Test
@@ -78,7 +78,7 @@ class CourseDaoImplTest extends AbstractTestContainerIT {
         var actual = courseDao.getCourseByName(expected.getCourseName()).orElseThrow();
 
         // then
-        assertEquals(expected.toString(), actual.toString());
+        assertEquals(expected, actual);
     }
 
     @Test
@@ -100,6 +100,6 @@ class CourseDaoImplTest extends AbstractTestContainerIT {
         var actual = courseDao.getCoursesByStudentId(2);
 
         // then
-        assertEquals(expected.toString(), actual.toString());
+        assertEquals(expected, actual);
     }
 }

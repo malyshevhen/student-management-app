@@ -55,7 +55,7 @@ class GroupDaoImplTest extends AbstractTestContainerIT {
         var actual = groupDao.getGroupById(1).get();
 
         // then
-        assertEquals(expected.toString(), actual.toString());
+        assertEquals(expected, actual);
     }
 
     @Test
@@ -70,6 +70,6 @@ class GroupDaoImplTest extends AbstractTestContainerIT {
         var actual = groupDao.getGroupByName("Group 1").get();
 
         // then
-        assertEquals(expected.toString(), actual.toString());
+        assertEquals(expected, actual);
     }
 }

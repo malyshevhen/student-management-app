@@ -13,14 +13,19 @@ import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 @Entity
 @Table(name = "courses")
 @Builder
-@Data
+@Getter
+@Setter
+@EqualsAndHashCode(exclude = "students")
+@ToString(exclude = "students")
 @NoArgsConstructor
 @AllArgsConstructor
 public final class Course {
@@ -46,11 +51,5 @@ public final class Course {
 
     public void removeStudent(Student student) {
         students.remove(student);
-    }
-
-    @Override
-    public String toString() {
-        return "Course [courseId=" + courseId + ", courseName=" + courseName + ", courseDescription="
-                + courseDescription + "]";
     }
 }
