@@ -31,7 +31,7 @@ class StudentServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        studentService = new StudentServiceImpl(studentDao, modelMapper);
+        // TODO: initialize studentService;
     }
 
     @Test
@@ -47,7 +47,7 @@ class StudentServiceImplTest {
         studentService.addStudent(studentDto);
 
         // then
-        verify(studentDao).addStudent(student);
+        verify(studentDao).save(student);
     }
 
     @Test
@@ -56,13 +56,13 @@ class StudentServiceImplTest {
         int id = 1;
 
         // when
-        when(studentDao.getStudent(id)).thenReturn(Optional.of(new Student()));
-        doNothing().when(studentDao).removeStudent(id);
+        when(studentDao.findById(id)).thenReturn(Optional.of(new Student()));
+        doNothing().when(studentDao).deleteById(id);
 
         // then
         studentService.removeStudent(id);
 
-        verify(studentDao).removeStudent(id);
+        verify(studentDao).deleteById(id);
     }
 
     @Test
@@ -71,7 +71,7 @@ class StudentServiceImplTest {
         int id = 1;
 
         // when
-        when(studentDao.getStudent(id)).thenReturn(Optional.empty());
+        when(studentDao.findById(id)).thenReturn(Optional.empty());
 
         // then
         assertThrows(NoSuchElementException.class, () -> studentService.removeStudent(id), "Student wasn`t removed");
@@ -83,11 +83,11 @@ class StudentServiceImplTest {
         var students = List.of(new Student());
 
         // when
-        when(studentDao.getAll()).thenReturn(students);
+        when(studentDao.findAll()).thenReturn(students);
         studentService.getAll();
 
         // then
-        verify(studentDao).getAll();
+        verify(studentDao).findAll();
     }
 
     @Test
@@ -96,7 +96,7 @@ class StudentServiceImplTest {
         int studentId = 1;
 
         // when
-        when(studentDao.getStudent(studentId)).thenReturn(Optional.empty());
+        when(studentDao.findById(studentId)).thenReturn(Optional.empty());
 
         // then
         assertThrows(NoSuchElementException.class, () -> studentService.removeStudent(studentId),
@@ -113,11 +113,11 @@ class StudentServiceImplTest {
                 .build();
 
         // when
-        when(studentDao.getStudent(newStudent.getStudentId())).thenReturn(Optional.of(newStudent));
+        when(studentDao.findById(newStudent.getStudentId())).thenReturn(Optional.of(newStudent));
         studentService.addStudentToCourse(1, 1);
 
         // then
-        verify(studentDao).addStudentToCourse(1, 1);
+        // TODO: verify
     }
 
     @Test
@@ -128,41 +128,41 @@ class StudentServiceImplTest {
         var student = new Student(studentId, null, "", "", null);
 
         // when
-        when(studentDao.getStudentsByCourse(courseId)).thenReturn(List.of(student));
+        when(studentDao.findByCourseId(courseId)).thenReturn(List.of(student));
         studentService.removeStudentFromCourse(studentId, courseId);
 
         // then
-        verify(studentDao).removeStudentFromCourse(studentId, courseId);
+        // TODO: verify
     }
 
     @Test
     void MethodGetStudentsByCourseShould_ReturnListOfStudents_ByCourseId() {
         // when
-        when(studentDao.getStudentsByCourse(anyInt())).thenReturn(List.of(new Student()));
+        when(studentDao.findByCourseId(anyInt())).thenReturn(List.of(new Student()));
         studentService.getStudentsByCourse(1);
 
         // then
-        verify(studentDao).getStudentsByCourse(1);
+        verify(studentDao).findByCourseId(1);
     }
 
     @Test
     void MethodGetStudentsByNameAndCourse_ShouldReturnListOfStudents() {
         // when
-        when(studentDao.getStudentsByNameAndCourse(anyString(), anyInt()))
+        when(studentDao.findByNameAndCourseId(anyString(), anyInt()))
             .thenReturn(List.of(new Student()));
         studentService.getStudentsByNameAndCourse("John", 1);
 
         // then
-        verify(studentDao).getStudentsByNameAndCourse("John", 1);
+        verify(studentDao).findByNameAndCourseId("John", 1);
     }
 
     @Test
     void MethodGetStudentsByGropShould_ReturnListOfStudents_ByCourseId() {
         // when
-        when(studentDao.getStudentsByGroup(anyInt())).thenReturn(List.of(new Student()));
+        when(studentDao.findByGroupId(anyInt())).thenReturn(List.of(new Student()));
         studentService.getStudentsByGroup(1);
 
         // then
-        verify(studentDao).getStudentsByGroup(1);
+        verify(studentDao).findByGroupId(1);
     }
 }

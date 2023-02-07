@@ -1,29 +1,17 @@
 package ua.com.foxstudent102052.dao.interfaces;
 
 import java.util.List;
-import java.util.Optional;
+
+import org.springframework.data.jpa.repository.JpaRepository;
 
 import ua.com.foxstudent102052.model.entity.Student;
 
-public interface StudentDao {
+public interface StudentDao extends JpaRepository<Student, Integer> {
 
-    void addStudent(Student student);
+    List<Student> findByCourseId(int courseId);
 
-    void removeStudent(int id);
+    List<Student> findByGroupId(int groupId);
 
-    void addStudentToGroup(int studentId, int groupId);
+    List<Student> findByNameAndCourseId(String studentName, int courseId);
 
-    void addStudentToCourse(int studentId, int courseId);
-
-    void removeStudentFromCourse(int studentId, int groupId);
-
-    List<Student> getAll();
-
-    List<Student> getStudentsByCourse(int courseId);
-
-    List<Student> getStudentsByGroup(int groupId);
-
-    List<Student> getStudentsByNameAndCourse(String studentName, int courseId);
-
-    Optional<Student> getStudent(int id);
 }

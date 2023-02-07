@@ -3,16 +3,13 @@ package ua.com.foxstudent102052.dao.interfaces;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.jpa.repository.JpaRepository;
+
 import ua.com.foxstudent102052.model.entity.Course;
 
-public interface CourseDao {
-    void addCourse(Course course);
+public interface CourseDao extends JpaRepository<Course, Integer> {
 
-    List<Course> getAll();
+    Optional<Course> findByName(String courseName);
 
-    Optional<Course> getCourseById(int courseId);
-
-    Optional<Course> getCourseByName(String courseName);
-
-    List<Course> getCoursesByStudentId(int studentId);
+    List<Course> findByStudentId(int studentId);
 }

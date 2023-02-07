@@ -15,13 +15,13 @@ import ua.com.foxstudent102052.dao.interfaces.StudentDao;
 import ua.com.foxstudent102052.model.entity.Group;
 import ua.com.foxstudent102052.model.entity.Student;
 
-class StudentDaoImplTest extends AbstractTestContainerIT {
+class StudentDaoTest extends AbstractTestContainerIT {
 
     private final StudentDao studentDao;
 
     @Autowired
-    public StudentDaoImplTest(EntityManager entityManager) {
-        studentDao = new StudentDaoImpl();
+    public StudentDaoTest(StudentDao studentDao, EntityManager entityManager) {
+        this.studentDao = studentDao;
         ReflectionTestUtils.setField(studentDao, "entityManager", entityManager);
     }
 
@@ -35,28 +35,9 @@ class StudentDaoImplTest extends AbstractTestContainerIT {
                 .build();
 
         // when
-        studentDao.addStudent(newStudent);
-        int expected = studentDao.getAll().size();
+        studentDao.save(newStudent);
+        int expected = studentDao.findAll().size();
         int actual = 11;
-
-        // then
-        assertEquals(expected, actual);
-    }
-
-    @Test
-    @Transactional
-    void MethodAddStudentToCourse_ShouldAddStudentToNewCourse() {
-        // given
-        var expected = Student.builder()
-                .studentId(1)
-                .group(new Group(1, "Group 1", List.of()))
-                .firstName("Leia")
-                .lastName("Organa")
-                .build();
-
-        // when
-        studentDao.addStudentToCourse(1, 2);
-        var actual = studentDao.getStudentsByCourse(1).get(0);
 
         // then
         assertEquals(expected, actual);
@@ -66,7 +47,7 @@ class StudentDaoImplTest extends AbstractTestContainerIT {
     @Transactional
     void MethodGetAllStudents_ShouldReturnAllStudents() {
         // when
-        var actual = studentDao.getAll().size();
+        var actual = studentDao.findAll().size();
 
         // then
         assertEquals(10, actual);
@@ -74,7 +55,7 @@ class StudentDaoImplTest extends AbstractTestContainerIT {
 
     @Test
     @Transactional
-    void MethodGetStudentsByCourseId_ShouldReturnStudentByCourseId() {
+    void MethodGetStudentsByCourseId_ShouldReturnStudentByGroupId() {
         var expected = List.of(
                 Student.builder()
                         .studentId(1)
@@ -101,14 +82,14 @@ class StudentDaoImplTest extends AbstractTestContainerIT {
                         .lastName("Amidala")
                         .build());
 
-        var actual = studentDao.getStudentsByGroup(1);
+        var actual = studentDao.findByGroupId(1);
 
         assertEquals(expected, actual);
     }
 
     @Test
     @Transactional
-    void MethodGetStudentsByGroup_ShouldReturnStudentByGroupId() {
+    void MethodGetStudentsByGroup_ShouldReturnStudentByCourseId() {
         var expected = List.of(
                 Student.builder()
                         .studentId(1)
@@ -147,7 +128,7 @@ class StudentDaoImplTest extends AbstractTestContainerIT {
                         .lastName("Binks")
                         .build());
 
-        var actual = studentDao.getStudentsByCourse(1);
+        var actual = studentDao.findByCourseId(1);
 
         assertEquals(expected, actual);
     }
@@ -169,53 +150,8 @@ class StudentDaoImplTest extends AbstractTestContainerIT {
                         .lastName("Vader")
                         .build());
 
-        var actual = studentDao.getStudentsByNameAndCourse("Dart", 1);
+        var actual = studentDao.findByNameAndCourseId("Dart", 1);
 
-        assertEquals(expected, actual);
-    }
-
-    @Test
-    @Transactional
-    void MethodRemoveStudent_ShouldRemoveStudent_IfItInDataBase() {
-        // when
-        studentDao.removeStudent(1);
-
-        int expected = 9;
-        int actual = studentDao.getAll().size();
-
-        // then
-        assertEquals(expected, actual);
-    }
-
-    @Test
-    @Transactional
-    void MethodGetStudentById_ShouldReturnStudentFromDb() {
-        // given
-        var expected = Student.builder()
-                .studentId(1)
-                .group(new Group(1, "Group 1", List.of()))
-                .firstName("Leia")
-                .lastName("Organa")
-                .build();
-
-        // when
-        var actual = studentDao.getStudent(1).get();
-
-        // then
-        assertEquals(expected, actual);
-    }
-
-    @Test
-    @Transactional
-    void MethodRemoveStudentFromCourse_ShouldRemoveStudentCourseRelation_IfExist() {
-        // given
-        studentDao.removeStudentFromCourse(1, 1);
-        var expected = List.of();
-
-        // when
-        var actual = studentDao.getStudentsByNameAndCourse("Leia", 1);
-
-        // then
         assertEquals(expected, actual);
     }
 }

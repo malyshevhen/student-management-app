@@ -11,13 +11,13 @@ import ua.com.foxstudent102052.dao.impl.config.AbstractTestContainerIT;
 import ua.com.foxstudent102052.dao.interfaces.GroupDao;
 import ua.com.foxstudent102052.model.entity.Group;
 
-class GroupDaoImplTest extends AbstractTestContainerIT {
+class GroupDaoTest extends AbstractTestContainerIT {
 
     private final GroupDao groupDao;
 
     @Autowired
-    public GroupDaoImplTest(EntityManager entityManager) {
-        groupDao = new GroupDaoImpl();
+    public GroupDaoTest(GroupDao groupDao, EntityManager entityManager) {
+        this.groupDao = groupDao;
         ReflectionTestUtils.setField(groupDao, "entityManager", entityManager);
     }
 
@@ -25,10 +25,10 @@ class GroupDaoImplTest extends AbstractTestContainerIT {
     void MethodAddGroup_ShouldAddGroupToDb() {
         // given
         var group = Group.builder().groupName("New Group").build();
-        groupDao.addGroup(group);
+        groupDao.save(group);
 
         // when
-        var allGroups = groupDao.getAll();
+        var allGroups = groupDao.findAll();
 
         // then
         assertEquals(4, allGroups.size());
@@ -37,7 +37,7 @@ class GroupDaoImplTest extends AbstractTestContainerIT {
     @Test
     void MethodGetGroups_ShouldReturnAllGroupsFromDb() {
         // when
-        var allGroups = groupDao.getAll();
+        var allGroups = groupDao.findAll();
 
         // then
         assertEquals(3, allGroups.size());
@@ -52,7 +52,7 @@ class GroupDaoImplTest extends AbstractTestContainerIT {
                 .build();
 
         // when
-        var actual = groupDao.getGroupById(1).get();
+        var actual = groupDao.findById(1).get();
 
         // then
         assertEquals(expected, actual);
@@ -67,7 +67,7 @@ class GroupDaoImplTest extends AbstractTestContainerIT {
                 .build();
 
         // when
-        var actual = groupDao.getGroupByName("Group 1").get();
+        var actual = groupDao.findByName("Group 1").get();
 
         // then
         assertEquals(expected, actual);

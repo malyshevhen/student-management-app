@@ -40,15 +40,21 @@ public class TestDataRepository {
     }
 
     private void addStudentsToCourses() {
-        var coursesIds = courseDao.getAll().stream().mapToInt(Course::getCourseId).toArray();
-        var studentsIds = studentDao.getAll().stream().mapToInt(Student::getStudentId).toArray();
+        var coursesIds = courseDao.findAll().stream().mapToInt(Course::getCourseId).toArray();
+        var studentsIds = studentDao.findAll().stream().mapToInt(Student::getStudentId).toArray();
 
         Map<Integer, Set<Integer>> studentsCoursesRelations = randomModelCreator
                 .getStudentsCoursesRelations(studentsIds, coursesIds, 3);
 
         for (var entry : studentsCoursesRelations.entrySet()) {
             for (var courseId : entry.getValue()) {
-                studentDao.addStudentToCourse(entry.getKey(), courseId);
+                var student = studentDao.findById(entry.getKey()).orElseThrow();
+                var course = courseDao.findById(courseId).orElseThrow();
+
+                student.addCourse(course);
+
+                studentDao.save(student);
+                courseDao.save(course);
             }
         }
     }
@@ -56,19 +62,21 @@ public class TestDataRepository {
     private void addStudentsToGroups() {
         Random random = new Random();
 
-        var groups = groupDao.getAll();
-        var students = studentDao.getAll();
+        var groups = groupDao.findAll();
+        var students = studentDao.findAll();
 
         for (var student : students) {
-            studentDao.addStudentToGroup(student.getStudentId(),
-                    groups.get(random.nextInt(groups.size())).getGroupId());
+            student.setGroup(groups.get(random.nextInt(groups.size())));
         }
+
+        studentDao.saveAll(students);
+        groupDao.saveAll(groups);
     }
 
     private void addStudents(List<Student> students) {
         for (var student : students) {
             try {
-                studentDao.addStudent(student);
+                studentDao.save(student);
             } catch (DataAccessException e) {
                 log.error("Error while adding test student : " + e.getMessage());
             }
@@ -78,7 +86,7 @@ public class TestDataRepository {
     private void addCourses(List<Course> courses) {
         try {
             for (var course : courses) {
-                courseDao.addCourse(course);
+                courseDao.save(course);
             }
         } catch (DataAccessException e) {
             log.error("Error while adding test course : " + e.getMessage());
@@ -88,7 +96,7 @@ public class TestDataRepository {
     private void addGroups(List<Group> groups) {
         try {
             for (var group : groups) {
-                groupDao.addGroup(group);
+                groupDao.save(group);
             }
         } catch (DataAccessException e) {
             log.error("Error while adding test group : " + e.getMessage());

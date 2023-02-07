@@ -56,13 +56,13 @@ public class TestDataRepositoryTest {
                 new Course(0, "C2", "Some description 2", null));
 
         // when
-        when(groupDao.getAll()).thenReturn(groups);
+        when(groupDao.findAll()).thenReturn(groups);
 
         testDataRepository.postTestRecords(students, courses, groups);
 
         // then
-        verify(studentDao, times(2)).addStudent(any(Student.class));
-        verify(courseDao, times(2)).addCourse(any(Course.class));
-        verify(groupDao, times(2)).addGroup(any(Group.class));
+        verify(studentDao, times(2)).save(any(Student.class));
+        verify(courseDao, times(2)).save(any(Course.class));
+        verify(groupDao, times(2)).save(any(Group.class));
     }
 }

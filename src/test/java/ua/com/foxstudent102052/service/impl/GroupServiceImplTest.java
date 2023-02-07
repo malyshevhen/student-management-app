@@ -46,7 +46,7 @@ class GroupServiceImplTest {
         groupService.addGroup(groupDto);
 
         // then
-        verify(groupDao).addGroup(group);
+        verify(groupDao).save(group);
     }
 
     @Test
@@ -68,7 +68,7 @@ class GroupServiceImplTest {
                 .toList();
 
         // when
-        when(groupDao.getAll()).thenReturn(groups);
+        when(groupDao.findAll()).thenReturn(groups);
 
         var actual = groupService.getAll();
 
@@ -82,7 +82,7 @@ class GroupServiceImplTest {
                 Group.builder()
                         .groupName("SomeGroup")
                         .build());
-        when(groupDao.getGroupById(1)).thenReturn(optionalGroup);
+        when(groupDao.findById(1)).thenReturn(optionalGroup);
 
         var expected = optionalGroup.map(group -> modelMapper.map(group, GroupDto.class)).orElseThrow();
 
@@ -97,7 +97,7 @@ class GroupServiceImplTest {
                 Group.builder()
                         .groupName("SomeGroup")
                         .build());
-        when(groupDao.getGroupByName("SomeGroup")).thenReturn(optionalGroup);
+        when(groupDao.findByName("SomeGroup")).thenReturn(optionalGroup);
 
         var expected = optionalGroup.map(group -> modelMapper.map(group, GroupDto.class)).orElseThrow();
 
@@ -131,7 +131,7 @@ class GroupServiceImplTest {
                 .toList();
 
         // when
-        when(groupDao.getAll()).thenReturn(groups);
+        when(groupDao.findAll()).thenReturn(groups);
 
         var actual = groupService.getGroupsLessThen(3);
 

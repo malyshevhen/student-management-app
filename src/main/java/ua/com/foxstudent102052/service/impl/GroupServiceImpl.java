@@ -27,30 +27,30 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     public void addGroup(GroupDto groupDto) throws DataAccessException {
-        if (groupDao.getGroupByName(groupDto.getGroupName()).isPresent()) {
+        if (groupDao.findByName(groupDto.getGroupName()).isPresent()) {
             throw new ElementAlreadyExistException("Group is already exist!");
         } else {
-            groupDao.addGroup(modelMapper.map(groupDto, Group.class));
+            groupDao.save(modelMapper.map(groupDto, Group.class));
         }
     }
 
     @Override
     public GroupDto getGroupById(int groupId) throws DataAccessException {
-        return groupDao.getGroupById(groupId)
+        return groupDao.findById(groupId)
                 .map(group -> modelMapper.map(group, GroupDto.class))
                 .orElseThrow(() -> new NoSuchElementException(GROUP_DOES_NOT_EXIST));
     }
 
     @Override
     public GroupDto getGroupByName(String groupName) throws DataAccessException {
-        return groupDao.getGroupByName(groupName)
+        return groupDao.findByName(groupName)
                 .map(group -> modelMapper.map(group, GroupDto.class))
                 .orElseThrow(() -> new NoSuchElementException(GROUP_DOES_NOT_EXIST));
     }
 
     @Override
     public List<GroupDto> getAll() throws DataAccessException {
-        var groupDtoList = groupDao.getAll()
+        var groupDtoList = groupDao.findAll()
                 .stream()
                 .map(group -> modelMapper.map(group, GroupDto.class))
                 .toList();
@@ -64,7 +64,7 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     public List<GroupDto> getGroupsLessThen(int numberOfStudents) throws DataAccessException {
-        var groupList = groupDao.getAll()
+        var groupList = groupDao.findAll()
                 .stream()
                 .filter(g -> g.getStudents().size() <= numberOfStudents)
                 .map(group -> modelMapper.map(group, GroupDto.class))

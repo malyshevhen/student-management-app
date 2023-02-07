@@ -6,22 +6,15 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.util.ReflectionTestUtils;
 
-import jakarta.persistence.EntityManager;
 import ua.com.foxstudent102052.dao.impl.config.AbstractTestContainerIT;
 import ua.com.foxstudent102052.dao.interfaces.CourseDao;
 import ua.com.foxstudent102052.model.entity.Course;
 
-class CourseDaoImplTest extends AbstractTestContainerIT {
-
-    private final CourseDao courseDao;
+class CourseDaoTest extends AbstractTestContainerIT {
 
     @Autowired
-    public CourseDaoImplTest(EntityManager entityManager) {
-        courseDao = new CourseDaoImpl();
-        ReflectionTestUtils.setField(courseDao, "entityManager", entityManager);
-    }
+    private CourseDao courseDao;
 
     @Test
     void MethodAddCourse_ShouldAddCourseToDb() {
@@ -32,10 +25,10 @@ class CourseDaoImplTest extends AbstractTestContainerIT {
                 .build();
 
         // when
-        courseDao.addCourse(course);
+        courseDao.save(course);
 
         // then
-        var allCourses = courseDao.getAll();
+        var allCourses = courseDao.findAll();
 
         assertEquals(4, allCourses.size());
     }
@@ -43,7 +36,7 @@ class CourseDaoImplTest extends AbstractTestContainerIT {
     @Test
     void MethodGetCourses_ShouldReturnListOfAllCoursesFromDB() {
         // when
-        var allCourses = courseDao.getAll();
+        var allCourses = courseDao.findAll();
 
         // then
         assertEquals(3, allCourses.size());
@@ -59,7 +52,7 @@ class CourseDaoImplTest extends AbstractTestContainerIT {
                 .build();
 
         // when
-        var actual = courseDao.getCourseById(1).get();
+        var actual = courseDao.findById(1).get();
 
         // then
         assertEquals(expected, actual);
@@ -75,7 +68,7 @@ class CourseDaoImplTest extends AbstractTestContainerIT {
                 .build();
 
         // when
-        var actual = courseDao.getCourseByName(expected.getCourseName()).orElseThrow();
+        var actual = courseDao.findByName(expected.getCourseName()).orElseThrow();
 
         // then
         assertEquals(expected, actual);
@@ -97,7 +90,7 @@ class CourseDaoImplTest extends AbstractTestContainerIT {
                         .build());
 
         // when
-        var actual = courseDao.getCoursesByStudentId(2);
+        var actual = courseDao.findByStudentId(2);
 
         // then
         assertEquals(expected, actual);

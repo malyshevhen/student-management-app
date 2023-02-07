@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
+import ua.com.foxstudent102052.dao.interfaces.CourseDao;
 import ua.com.foxstudent102052.dao.interfaces.StudentDao;
 import ua.com.foxstudent102052.model.dto.StudentDto;
 import ua.com.foxstudent102052.model.entity.Student;
@@ -19,41 +20,54 @@ import ua.com.foxstudent102052.service.interfaces.StudentService;
 @Transactional
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class StudentServiceImpl implements StudentService {
+    private static final String STUDENT_DOES_NOT_EXIST = "Student with id %d doesn't exist";
     private final StudentDao studentDao;
+    private final CourseDao courseDao;
     private final ModelMapper modelMapper;
 
     @Override
     public void addStudent(StudentDto studentDto) throws DataAccessException {
         var student = modelMapper.map(studentDto, Student.class);
-        studentDao.addStudent(student);
+        studentDao.save(student);
     }
 
     @Override
     public void removeStudent(int studentId) throws DataAccessException {
-        if (studentDao.getStudent(studentId).isPresent()) {
-            studentDao.removeStudent(studentId);
-        } else {
-            throw new NoSuchElementException(String.format("Student with id %d doesn't exist", studentId));
-        }
+        var student = studentDao.findById(studentId).orElseThrow(
+                () -> new NoSuchElementException(String.format(STUDENT_DOES_NOT_EXIST, studentId)));
+
+        studentDao.delete(student);
     }
 
     @Override
     public void addStudentToCourse(int studentId, int courseId) throws DataAccessException {
-        if (studentDao.getStudent(studentId).isPresent()) {
-            studentDao.addStudentToCourse(studentId, courseId);
-        } else {
-            throw new NoSuchElementException(String.format("Student with id %d doesn't exist", studentId));
-        }
+        var student = studentDao.findById(studentId).orElseThrow(
+                () -> new NoSuchElementException(String.format(STUDENT_DOES_NOT_EXIST, studentId)));
+        var course = courseDao.findById(courseId).orElseThrow(
+                () -> new NoSuchElementException(String.format("Course with id %d doesn't exist", courseId)));
+
+        student.addCourse(course);
+
+        studentDao.save(student);
+        courseDao.save(course);
     }
 
     @Override
     public void removeStudentFromCourse(int studentId, int courseId) throws DataAccessException {
-        boolean studentPresentInCourse = studentDao.getStudentsByCourse(courseId)
-                .stream()
-                .anyMatch(student -> student.getStudentId() == studentId);
+        var student = studentDao.findById(studentId).orElseThrow(
+                () -> new NoSuchElementException(String.format(STUDENT_DOES_NOT_EXIST, studentId)));
+        var course = courseDao.findById(courseId).orElseThrow(
+                () -> new NoSuchElementException(String.format("Course with id %d doesn't exist", courseId)));
 
-        if (studentPresentInCourse) {
-            studentDao.removeStudentFromCourse(studentId, courseId);
+        boolean attended = student.getCourses()
+                .stream()
+                .anyMatch(c -> c.equals(course));
+
+        if (attended) {
+            student.removeCourse(course);
+
+            studentDao.save(student);
+            courseDao.save(course);
         } else {
             throw new NoSuchElementException("This student not attend this course");
         }
@@ -61,15 +75,15 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public List<StudentDto> getAll() throws DataAccessException {
-        return studentDao.getAll()
+        return studentDao.findAll()
                 .stream()
                 .map(student -> modelMapper.map(student, StudentDto.class))
                 .toList();
     }
 
     @Override
-    public List<StudentDto> getStudentsByCourse(int courseId) throws DataAccessException {
-        var studentDtoList = studentDao.getStudentsByCourse(courseId)
+    public List<StudentDto> getStudentsByCourse(int courseId) {
+        var studentDtoList = studentDao.findByCourseId(courseId)
                 .stream()
                 .map(student -> modelMapper.map(student, StudentDto.class))
                 .toList();
@@ -83,7 +97,7 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public List<StudentDto> getStudentsByGroup(int groupId) throws DataAccessException {
-        var studentDtoList = studentDao.getStudentsByGroup(groupId)
+        var studentDtoList = studentDao.findByGroupId(groupId)
                 .stream()
                 .map(student -> modelMapper.map(student, StudentDto.class))
                 .toList();
@@ -98,7 +112,7 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public List<StudentDto> getStudentsByNameAndCourse(String studentName, Integer courseId)
             throws DataAccessException {
-        var studentDtoList = studentDao.getStudentsByNameAndCourse(studentName, courseId)
+        var studentDtoList = studentDao.findByNameAndCourseId(studentName, courseId)
                 .stream()
                 .map(student -> modelMapper.map(student, StudentDto.class))
                 .toList();
