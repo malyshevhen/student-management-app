@@ -1,33 +1,33 @@
 package ua.com.foxstudent102052.service.impl;
 
-import java.util.List;
-import java.util.NoSuchElementException;
-
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import lombok.RequiredArgsConstructor;
-import ua.com.foxstudent102052.dao.interfaces.CourseDao;
+import ua.com.foxstudent102052.dao.interfaces.CourseRepository;
 import ua.com.foxstudent102052.model.dto.CourseDto;
 import ua.com.foxstudent102052.model.entity.Course;
 import ua.com.foxstudent102052.service.exceptions.ElementAlreadyExistException;
 import ua.com.foxstudent102052.service.interfaces.CourseService;
 
+import java.util.List;
+import java.util.NoSuchElementException;
+
 @Service
-@Transactional
+@Transactional(readOnly = true)
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class CourseServiceImpl implements CourseService {
-    private final CourseDao courseDao;
+    private final CourseRepository courseDao;
     private final ModelMapper modelMapper;
 
+    @Transactional(readOnly = false)
     @Override
     public void addCourse(CourseDto courseDto) throws DataAccessException {
         var courseName = courseDto.getCourseName();
 
-        if (courseDao.findByName(courseName).isEmpty()) {
+        if (courseDao.findByCourseName(courseName).isEmpty()) {
             courseDao.save(modelMapper.map(courseDto, Course.class));
         } else {
             throw new ElementAlreadyExistException(

@@ -4,22 +4,15 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.util.ReflectionTestUtils;
 
-import jakarta.persistence.EntityManager;
 import ua.com.foxstudent102052.dao.impl.config.AbstractTestContainerIT;
-import ua.com.foxstudent102052.dao.interfaces.GroupDao;
+import ua.com.foxstudent102052.dao.interfaces.GroupRepository;
 import ua.com.foxstudent102052.model.entity.Group;
 
 class GroupDaoTest extends AbstractTestContainerIT {
 
-    private final GroupDao groupDao;
-
     @Autowired
-    public GroupDaoTest(GroupDao groupDao, EntityManager entityManager) {
-        this.groupDao = groupDao;
-        ReflectionTestUtils.setField(groupDao, "entityManager", entityManager);
-    }
+    private GroupRepository groupDao;
 
     @Test
     void MethodAddGroup_ShouldAddGroupToDb() {
@@ -67,7 +60,7 @@ class GroupDaoTest extends AbstractTestContainerIT {
                 .build();
 
         // when
-        var actual = groupDao.findByName("Group 1").get();
+        var actual = groupDao.findByGroupName("Group 1").get();
 
         // then
         assertEquals(expected, actual);

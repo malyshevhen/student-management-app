@@ -13,9 +13,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import ua.com.foxstudent102052.dao.interfaces.CourseDao;
-import ua.com.foxstudent102052.dao.interfaces.GroupDao;
-import ua.com.foxstudent102052.dao.interfaces.StudentDao;
+import ua.com.foxstudent102052.dao.interfaces.CourseRepository;
+import ua.com.foxstudent102052.dao.interfaces.GroupRepository;
+import ua.com.foxstudent102052.dao.interfaces.StudentRepository;
 import ua.com.foxstudent102052.model.entity.Course;
 import ua.com.foxstudent102052.model.entity.Group;
 import ua.com.foxstudent102052.model.entity.Student;
@@ -24,13 +24,13 @@ import ua.com.foxstudent102052.utils.RandomModelCreator;
 @ExtendWith(MockitoExtension.class)
 public class TestDataRepositoryTest {
     @Mock
-    private StudentDao studentDao;
+    private StudentRepository studentDao;
 
     @Mock
-    private CourseDao courseDao;
+    private CourseRepository courseDao;
 
     @Mock
-    private GroupDao groupDao;
+    private GroupRepository groupDao;
 
     @Mock
     private RandomModelCreator randomModelCreator;

@@ -1,30 +1,32 @@
 package ua.com.foxstudent102052.service.impl;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import java.util.List;
+import java.util.Optional;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
-import ua.com.foxstudent102052.dao.interfaces.GroupDao;
+
+import ua.com.foxstudent102052.dao.interfaces.GroupRepository;
 import ua.com.foxstudent102052.model.dto.GroupDto;
 import ua.com.foxstudent102052.model.entity.Group;
 import ua.com.foxstudent102052.model.entity.Student;
 import ua.com.foxstudent102052.service.interfaces.GroupService;
-
-import java.util.List;
-import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class GroupServiceImplTest {
     private final ModelMapper modelMapper = new ModelMapper();
 
     @Mock
-    private GroupDao groupDao;
+    private GroupRepository groupDao;
 
     private GroupService groupService;
 
@@ -97,7 +99,7 @@ class GroupServiceImplTest {
                 Group.builder()
                         .groupName("SomeGroup")
                         .build());
-        when(groupDao.findByName("SomeGroup")).thenReturn(optionalGroup);
+        when(groupDao.findByGroupName("SomeGroup")).thenReturn(optionalGroup);
 
         var expected = optionalGroup.map(group -> modelMapper.map(group, GroupDto.class)).orElseThrow();
 
@@ -131,9 +133,9 @@ class GroupServiceImplTest {
                 .toList();
 
         // when
-        when(groupDao.findAll()).thenReturn(groups);
+        when(groupDao.findByStudentsCount(anyInt())).thenReturn(groups);
 
-        var actual = groupService.getGroupsLessThen(3);
+        var actual = groupService.getGroupsLessThen(4);
 
         // then
         assertEquals(expected, actual);

@@ -10,27 +10,29 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
-import ua.com.foxstudent102052.dao.interfaces.CourseDao;
-import ua.com.foxstudent102052.dao.interfaces.StudentDao;
+import ua.com.foxstudent102052.dao.interfaces.CourseRepository;
+import ua.com.foxstudent102052.dao.interfaces.StudentRepository;
 import ua.com.foxstudent102052.model.dto.StudentDto;
 import ua.com.foxstudent102052.model.entity.Student;
 import ua.com.foxstudent102052.service.interfaces.StudentService;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class StudentServiceImpl implements StudentService {
     private static final String STUDENT_DOES_NOT_EXIST = "Student with id %d doesn't exist";
-    private final StudentDao studentDao;
-    private final CourseDao courseDao;
+    private final StudentRepository studentDao;
+    private final CourseRepository courseDao;
     private final ModelMapper modelMapper;
 
+    @Transactional(readOnly = false)
     @Override
     public void addStudent(StudentDto studentDto) throws DataAccessException {
         var student = modelMapper.map(studentDto, Student.class);
         studentDao.save(student);
     }
 
+    @Transactional(readOnly = false)
     @Override
     public void removeStudent(int studentId) throws DataAccessException {
         var student = studentDao.findById(studentId).orElseThrow(
@@ -39,6 +41,7 @@ public class StudentServiceImpl implements StudentService {
         studentDao.delete(student);
     }
 
+    @Transactional(readOnly = false)
     @Override
     public void addStudentToCourse(int studentId, int courseId) throws DataAccessException {
         var student = studentDao.findById(studentId).orElseThrow(
@@ -47,11 +50,9 @@ public class StudentServiceImpl implements StudentService {
                 () -> new NoSuchElementException(String.format("Course with id %d doesn't exist", courseId)));
 
         student.addCourse(course);
-
-        studentDao.save(student);
-        courseDao.save(course);
     }
 
+    @Transactional(readOnly = false)
     @Override
     public void removeStudentFromCourse(int studentId, int courseId) throws DataAccessException {
         var student = studentDao.findById(studentId).orElseThrow(
@@ -65,9 +66,6 @@ public class StudentServiceImpl implements StudentService {
 
         if (attended) {
             student.removeCourse(course);
-
-            studentDao.save(student);
-            courseDao.save(course);
         } else {
             throw new NoSuchElementException("This student not attend this course");
         }

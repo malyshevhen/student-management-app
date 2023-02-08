@@ -10,9 +10,9 @@ import org.springframework.stereotype.Repository;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import ua.com.foxstudent102052.dao.interfaces.CourseDao;
-import ua.com.foxstudent102052.dao.interfaces.GroupDao;
-import ua.com.foxstudent102052.dao.interfaces.StudentDao;
+import ua.com.foxstudent102052.dao.interfaces.CourseRepository;
+import ua.com.foxstudent102052.dao.interfaces.GroupRepository;
+import ua.com.foxstudent102052.dao.interfaces.StudentRepository;
 import ua.com.foxstudent102052.model.entity.Course;
 import ua.com.foxstudent102052.model.entity.Group;
 import ua.com.foxstudent102052.model.entity.Student;
@@ -22,9 +22,9 @@ import ua.com.foxstudent102052.utils.RandomModelCreator;
 @Repository
 @RequiredArgsConstructor
 public class TestDataRepository {
-    private final StudentDao studentDao;
-    private final CourseDao courseDao;
-    private final GroupDao groupDao;
+    private final StudentRepository studentDao;
+    private final CourseRepository courseDao;
+    private final GroupRepository groupDao;
     private final RandomModelCreator randomModelCreator;
 
     public void postTestRecords(List<Student> students, List<Course> courses, List<Group> groups) {

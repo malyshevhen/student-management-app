@@ -6,7 +6,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
-import ua.com.foxstudent102052.dao.interfaces.CourseDao;
+import ua.com.foxstudent102052.dao.interfaces.CourseRepository;
 import ua.com.foxstudent102052.model.dto.CourseDto;
 import ua.com.foxstudent102052.model.entity.Course;
 import ua.com.foxstudent102052.service.interfaces.CourseService;
@@ -23,7 +23,7 @@ class CourseServiceImplTest {
         private final ModelMapper modelMapper = new ModelMapper();
 
         @Mock
-        private CourseDao courseDao;
+        private CourseRepository courseDao;
 
         private CourseService courseService;
 

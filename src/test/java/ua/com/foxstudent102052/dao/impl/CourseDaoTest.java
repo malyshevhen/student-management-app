@@ -8,13 +8,13 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import ua.com.foxstudent102052.dao.impl.config.AbstractTestContainerIT;
-import ua.com.foxstudent102052.dao.interfaces.CourseDao;
+import ua.com.foxstudent102052.dao.interfaces.CourseRepository;
 import ua.com.foxstudent102052.model.entity.Course;
 
 class CourseDaoTest extends AbstractTestContainerIT {
 
     @Autowired
-    private CourseDao courseDao;
+    private CourseRepository courseDao;
 
     @Test
     void MethodAddCourse_ShouldAddCourseToDb() {
@@ -68,7 +68,7 @@ class CourseDaoTest extends AbstractTestContainerIT {
                 .build();
 
         // when
-        var actual = courseDao.findByName(expected.getCourseName()).orElseThrow();
+        var actual = courseDao.findByCourseName(expected.getCourseName()).orElseThrow();
 
         // then
         assertEquals(expected, actual);

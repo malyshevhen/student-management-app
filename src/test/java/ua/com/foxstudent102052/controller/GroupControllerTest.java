@@ -33,24 +33,36 @@ class GroupControllerTest {
     void MethodGetGroups_ShouldReturnListOfAllGroups() {
         // given
         var students = List.of(
-                StudentDto.builder().studentId(1)
+                StudentDto.builder()
+                        .studentId(1)
                         .group(GroupDto.builder().groupId(1).build())
                         .firstName("Darth")
+                        .lastName("Vaider")
                         .coursesList(List.of())
                         .build(),
-                StudentDto.builder().studentId(2)
+                StudentDto.builder()
+                        .studentId(2)
                         .group(GroupDto.builder().groupId(1).build())
                         .firstName("Luke")
                         .lastName("Skywalker")
                         .coursesList(List.of()).build(),
-                StudentDto.builder().studentId(3)
+                StudentDto.builder()
+                        .studentId(3)
                         .group(GroupDto.builder().groupId(2).build())
                         .firstName("Han")
                         .lastName("Solo")
                         .coursesList(List.of()).build());
         var expected = List.of(
-                GroupDto.builder().groupId(1).groupName("Jedi").studentList(students).build(),
-                GroupDto.builder().groupId(2).groupName("Rebels").studentList(students).build());
+                GroupDto.builder()
+                        .groupId(1)
+                        .groupName("Jedi")
+                        .studentList(students)
+                        .build(),
+                GroupDto.builder()
+                        .groupId(2)
+                        .groupName("Rebels")
+                        .studentList(students)
+                        .build());
 
         // when
         when(groupService.getAll()).thenReturn(expected);
@@ -79,7 +91,9 @@ class GroupControllerTest {
                                 .groupId(1)
                                 .build())
                         .firstName("Luke")
-                        .lastName("Skywalker").coursesList(List.of()).build(),
+                        .lastName("Skywalker")
+                        .coursesList(List.of())
+                        .build(),
                 StudentDto.builder()
                         .studentId(3)
                         .group(GroupDto.builder()

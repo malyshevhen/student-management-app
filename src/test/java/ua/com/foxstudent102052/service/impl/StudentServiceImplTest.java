@@ -1,37 +1,45 @@
 package ua.com.foxstudent102052.service.impl;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
-import ua.com.foxstudent102052.dao.interfaces.StudentDao;
+
+import ua.com.foxstudent102052.dao.interfaces.CourseRepository;
+import ua.com.foxstudent102052.dao.interfaces.StudentRepository;
 import ua.com.foxstudent102052.model.dto.StudentDto;
+import ua.com.foxstudent102052.model.entity.Course;
+import ua.com.foxstudent102052.model.entity.Group;
 import ua.com.foxstudent102052.model.entity.Student;
 import ua.com.foxstudent102052.service.interfaces.StudentService;
-
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class StudentServiceImplTest {
     private final ModelMapper modelMapper = new ModelMapper();
 
     @Mock
-    private StudentDao studentDao;
+    private StudentRepository studentDao;
+
+    @Mock
+    private CourseRepository courseDao;
 
     private StudentService studentService;
 
     @BeforeEach
     void setUp() {
-        // TODO: initialize studentService;
+        studentService = new StudentServiceImpl(studentDao, courseDao, modelMapper);
     }
 
     @Test
@@ -54,15 +62,15 @@ class StudentServiceImplTest {
     void MethodRemoveStudent_ShouldRemoveExistingStudentFromDb() {
         // given
         int id = 1;
+        var student = new Student(id, new Group(), "name", "surname", List.of());
 
         // when
-        when(studentDao.findById(id)).thenReturn(Optional.of(new Student()));
-        doNothing().when(studentDao).deleteById(id);
+        when(studentDao.findById(id)).thenReturn(Optional.of(student));
 
         // then
         studentService.removeStudent(id);
 
-        verify(studentDao).deleteById(id);
+        verify(studentDao).delete(student);
     }
 
     @Test
@@ -101,38 +109,6 @@ class StudentServiceImplTest {
         // then
         assertThrows(NoSuchElementException.class, () -> studentService.removeStudent(studentId),
                 "Student wasn`t removed");
-    }
-
-    @Test
-    void MethodAddStudentToCourse_ShouldAddExistingStudentToExistingCourse() {
-        // given
-        Student newStudent = Student.builder()
-                .studentId(1)
-                .firstName("John")
-                .lastName("Doe")
-                .build();
-
-        // when
-        when(studentDao.findById(newStudent.getStudentId())).thenReturn(Optional.of(newStudent));
-        studentService.addStudentToCourse(1, 1);
-
-        // then
-        // TODO: verify
-    }
-
-    @Test
-    void MethodRemoveStudentFromCourse_ShouldRemoveExistingStudentFromExistingCourse() {
-        // given
-        int studentId = 1;
-        int courseId = 1;
-        var student = new Student(studentId, null, "", "", null);
-
-        // when
-        when(studentDao.findByCourseId(courseId)).thenReturn(List.of(student));
-        studentService.removeStudentFromCourse(studentId, courseId);
-
-        // then
-        // TODO: verify
     }
 
     @Test

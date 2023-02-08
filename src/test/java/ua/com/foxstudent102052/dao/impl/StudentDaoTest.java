@@ -6,24 +6,17 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.transaction.annotation.Transactional;
 
-import jakarta.persistence.EntityManager;
 import ua.com.foxstudent102052.dao.impl.config.AbstractTestContainerIT;
-import ua.com.foxstudent102052.dao.interfaces.StudentDao;
+import ua.com.foxstudent102052.dao.interfaces.StudentRepository;
 import ua.com.foxstudent102052.model.entity.Group;
 import ua.com.foxstudent102052.model.entity.Student;
 
 class StudentDaoTest extends AbstractTestContainerIT {
 
-    private final StudentDao studentDao;
-
     @Autowired
-    public StudentDaoTest(StudentDao studentDao, EntityManager entityManager) {
-        this.studentDao = studentDao;
-        ReflectionTestUtils.setField(studentDao, "entityManager", entityManager);
-    }
+    private StudentRepository studentDao;
 
     @Test
     @Transactional

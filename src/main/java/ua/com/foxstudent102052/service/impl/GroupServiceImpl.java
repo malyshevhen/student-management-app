@@ -10,24 +10,25 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
-import ua.com.foxstudent102052.dao.interfaces.GroupDao;
+import ua.com.foxstudent102052.dao.interfaces.GroupRepository;
 import ua.com.foxstudent102052.model.dto.GroupDto;
 import ua.com.foxstudent102052.model.entity.Group;
 import ua.com.foxstudent102052.service.exceptions.ElementAlreadyExistException;
 import ua.com.foxstudent102052.service.interfaces.GroupService;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class GroupServiceImpl implements GroupService {
     public static final String GROUP_DOES_NOT_EXIST = "This group does not exist in DB";
 
-    private final GroupDao groupDao;
+    private final GroupRepository groupDao;
     private final ModelMapper modelMapper;
 
+    @Transactional(readOnly = false)
     @Override
     public void addGroup(GroupDto groupDto) throws DataAccessException {
-        if (groupDao.findByName(groupDto.getGroupName()).isPresent()) {
+        if (groupDao.findByGroupName(groupDto.getGroupName()).isPresent()) {
             throw new ElementAlreadyExistException("Group is already exist!");
         } else {
             groupDao.save(modelMapper.map(groupDto, Group.class));
@@ -43,7 +44,7 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     public GroupDto getGroupByName(String groupName) throws DataAccessException {
-        return groupDao.findByName(groupName)
+        return groupDao.findByGroupName(groupName)
                 .map(group -> modelMapper.map(group, GroupDto.class))
                 .orElseThrow(() -> new NoSuchElementException(GROUP_DOES_NOT_EXIST));
     }
@@ -64,10 +65,9 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     public List<GroupDto> getGroupsLessThen(int numberOfStudents) throws DataAccessException {
-        var groupList = groupDao.findAll()
+        var groupList = groupDao.findByStudentsCount(numberOfStudents)
                 .stream()
-                .filter(g -> g.getStudents().size() <= numberOfStudents)
-                .map(group -> modelMapper.map(group, GroupDto.class))
+                .map(g -> modelMapper.map(g, GroupDto.class))
                 .toList();
 
         if (groupList.isEmpty()) {
