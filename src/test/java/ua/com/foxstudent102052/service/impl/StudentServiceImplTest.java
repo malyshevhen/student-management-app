@@ -20,7 +20,6 @@ import org.modelmapper.ModelMapper;
 import ua.com.foxstudent102052.dao.interfaces.CourseRepository;
 import ua.com.foxstudent102052.dao.interfaces.StudentRepository;
 import ua.com.foxstudent102052.model.dto.StudentDto;
-import ua.com.foxstudent102052.model.entity.Course;
 import ua.com.foxstudent102052.model.entity.Group;
 import ua.com.foxstudent102052.model.entity.Student;
 import ua.com.foxstudent102052.service.interfaces.StudentService;
