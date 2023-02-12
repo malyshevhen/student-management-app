@@ -17,7 +17,7 @@ import ua.com.foxstudent102052.service.exceptions.ElementAlreadyExistException;
 import ua.com.foxstudent102052.service.interfaces.GroupService;
 
 @Service
-@Transactional(readOnly = true)
+@Transactional
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class GroupServiceImpl implements GroupService {
     public static final String GROUP_DOES_NOT_EXIST = "This group does not exist in DB";
@@ -25,7 +25,6 @@ public class GroupServiceImpl implements GroupService {
     private final GroupRepository groupDao;
     private final ModelMapper modelMapper;
 
-    @Transactional(readOnly = false)
     @Override
     public void addGroup(GroupDto groupDto) throws DataAccessException {
         if (groupDao.findByGroupName(groupDto.getGroupName()).isPresent()) {
@@ -35,6 +34,7 @@ public class GroupServiceImpl implements GroupService {
         }
     }
 
+    @Transactional(readOnly = true)
     @Override
     public GroupDto getGroupById(int groupId) throws DataAccessException {
         return groupDao.findById(groupId)
@@ -42,6 +42,7 @@ public class GroupServiceImpl implements GroupService {
                 .orElseThrow(() -> new NoSuchElementException(GROUP_DOES_NOT_EXIST));
     }
 
+    @Transactional(readOnly = true)
     @Override
     public GroupDto getGroupByName(String groupName) throws DataAccessException {
         return groupDao.findByGroupName(groupName)
@@ -49,6 +50,7 @@ public class GroupServiceImpl implements GroupService {
                 .orElseThrow(() -> new NoSuchElementException(GROUP_DOES_NOT_EXIST));
     }
 
+    @Transactional(readOnly = true)
     @Override
     public List<GroupDto> getAll() throws DataAccessException {
         var groupDtoList = groupDao.findAll()
@@ -63,6 +65,7 @@ public class GroupServiceImpl implements GroupService {
         }
     }
 
+    @Transactional(readOnly = true)
     @Override
     public List<GroupDto> getGroupsLessThen(int numberOfStudents) throws DataAccessException {
         var groupList = groupDao.findByStudentsCount(numberOfStudents)

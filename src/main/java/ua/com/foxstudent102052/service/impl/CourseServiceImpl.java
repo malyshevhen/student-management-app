@@ -16,13 +16,12 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 @Service
-@Transactional(readOnly = true)
+@Transactional
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class CourseServiceImpl implements CourseService {
     private final CourseRepository courseDao;
     private final ModelMapper modelMapper;
 
-    @Transactional(readOnly = false)
     @Override
     public void addCourse(CourseDto courseDto) throws DataAccessException {
         var courseName = courseDto.getCourseName();
@@ -35,6 +34,7 @@ public class CourseServiceImpl implements CourseService {
         }
     }
 
+    @Transactional(readOnly = true)
     @Override
     public CourseDto getCourseById(int courseId) throws DataAccessException {
         var course = courseDao.findById(courseId).orElseThrow();
@@ -42,6 +42,7 @@ public class CourseServiceImpl implements CourseService {
         return modelMapper.map(course, CourseDto.class);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public List<CourseDto> getAll() throws DataAccessException {
         if (courseDao.findAll().isEmpty()) {
@@ -54,6 +55,7 @@ public class CourseServiceImpl implements CourseService {
         }
     }
 
+    @Transactional(readOnly = true)
     @Override
     public List<CourseDto> getCoursesByStudent(int studentId) throws DataAccessException {
         if (courseDao.findByStudentId(studentId).isEmpty()) {

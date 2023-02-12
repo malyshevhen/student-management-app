@@ -17,7 +17,7 @@ import ua.com.foxstudent102052.model.entity.Student;
 import ua.com.foxstudent102052.service.interfaces.StudentService;
 
 @Service
-@Transactional(readOnly = true)
+@Transactional
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class StudentServiceImpl implements StudentService {
     private static final String STUDENT_DOES_NOT_EXIST = "Student with id %d doesn't exist";
@@ -25,14 +25,12 @@ public class StudentServiceImpl implements StudentService {
     private final CourseRepository courseDao;
     private final ModelMapper modelMapper;
 
-    @Transactional(readOnly = false)
     @Override
     public void addStudent(StudentDto studentDto) throws DataAccessException {
         var student = modelMapper.map(studentDto, Student.class);
         studentDao.save(student);
     }
 
-    @Transactional(readOnly = false)
     @Override
     public void removeStudent(int studentId) throws DataAccessException {
         var student = studentDao.findById(studentId).orElseThrow(
@@ -41,7 +39,6 @@ public class StudentServiceImpl implements StudentService {
         studentDao.delete(student);
     }
 
-    @Transactional(readOnly = false)
     @Override
     public void addStudentToCourse(int studentId, int courseId) throws DataAccessException {
         var student = studentDao.findById(studentId).orElseThrow(
@@ -52,7 +49,6 @@ public class StudentServiceImpl implements StudentService {
         student.addCourse(course);
     }
 
-    @Transactional(readOnly = false)
     @Override
     public void removeStudentFromCourse(int studentId, int courseId) throws DataAccessException {
         var student = studentDao.findById(studentId).orElseThrow(
@@ -71,6 +67,7 @@ public class StudentServiceImpl implements StudentService {
         }
     }
 
+    @Transactional(readOnly = true)
     @Override
     public List<StudentDto> getAll() throws DataAccessException {
         return studentDao.findAll()
@@ -79,6 +76,7 @@ public class StudentServiceImpl implements StudentService {
                 .toList();
     }
 
+    @Transactional(readOnly = true)
     @Override
     public List<StudentDto> getStudentsByCourse(int courseId) {
         var studentDtoList = studentDao.findByCourseId(courseId)
@@ -93,6 +91,7 @@ public class StudentServiceImpl implements StudentService {
         }
     }
 
+    @Transactional(readOnly = true)
     @Override
     public List<StudentDto> getStudentsByGroup(int groupId) throws DataAccessException {
         var studentDtoList = studentDao.findByGroupId(groupId)
@@ -107,6 +106,7 @@ public class StudentServiceImpl implements StudentService {
         }
     }
 
+    @Transactional(readOnly = true)
     @Override
     public List<StudentDto> getStudentsByNameAndCourse(String studentName, Integer courseId)
             throws DataAccessException {
