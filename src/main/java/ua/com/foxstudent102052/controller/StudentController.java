@@ -31,12 +31,12 @@ public class StudentController {
         studentService.removeStudent(studentId);
     }
 
-    @PostMapping("/add-course/{studentId}{courseId}")
+    @PostMapping("/add-course/{studentId}/{courseId}")
     public void addStudentToCourse(@PathVariable Long studentId, @PathVariable Long courseId) {
         studentService.addStudentToCourse(studentId, courseId);
     }
 
-    @PostMapping("/remove-course/{studentId}{courseId}")
+    @PostMapping("/remove-course/{studentId}/{courseId}")
     public void removeStudentFromCourse(
         @PathVariable Long studentId,
         @PathVariable Long courseId
@@ -49,8 +49,8 @@ public class StudentController {
         return studentService.getAll();
     }
 
-    @GetMapping("/{name}{courseId}")
-    public List<StudentDto> getStudents(@PathVariable String studentName, @PathVariable Long courseId) {
-        return studentService.getStudentsByNameAndCourse(studentName, courseId);
+    @GetMapping("/{name}/{courseId}")
+    public List<StudentDto> getStudents(@PathVariable String name, @PathVariable Long courseId) {
+        return studentService.getStudentsByNameAndCourse(name, courseId);
     }
 }

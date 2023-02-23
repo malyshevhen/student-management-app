@@ -50,7 +50,11 @@ public final class Student {
     @Setter(value = AccessLevel.PRIVATE)
     @Builder.Default
     @ManyToMany
-    @JoinTable(name = "students_courses", joinColumns = @JoinColumn(name = "student_id"), inverseJoinColumns = @JoinColumn(name = "course_id"))
+    @JoinTable(
+        name = "students_courses",
+        joinColumns = @JoinColumn(name = "student_id"),
+        inverseJoinColumns = @JoinColumn(name = "course_id")
+    )
     private List<Course> courses = new ArrayList<>();
 
     public void setGroup(Group group) {

@@ -12,13 +12,13 @@ import ua.com.foxstudent102052.model.entity.Student;
 @Repository
 public interface StudentRepository extends JpaRepository<Student, Long> {
 
-    @Query("select s from Student s left join s.courses c where c.id = :courseId")
+    @Query("select distinct s from Student s left join s.courses c where c.id = :courseId")
     List<Student> findByCourseId(@Param("courseId") Long courseId);
 
-    @Query("select s from Student s where s.group.id = :groupId")
+    @Query("select distinct s from Student s where s.group.id = :groupId")
     List<Student> findByGroupId(@Param("groupId") Long groupId);
 
-    @Query("select s from Student s left join s.courses c where c.id = :courseId and s.firstName = :studentName")
+    @Query("select distinct s from Student s left join s.courses c where c.id = :courseId and s.firstName = :studentName")
     List<Student> findByNameAndCourseId(@Param("studentName") String studentName, @Param("courseId") Long courseId);
 
 }

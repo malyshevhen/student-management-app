@@ -91,7 +91,6 @@ class CourseServiceImplTest {
                 var expected = CourseDto.builder()
                                 .name("Java")
                                 .description("Java course")
-                                .students(List.of())
                                 .build();
                 var actual = courseService.getCourseById(1L);
 
@@ -114,7 +113,6 @@ class CourseServiceImplTest {
                                 CourseDto.builder()
                                                 .name("Java")
                                                 .description("Java course")
-                                                .students(List.of())
                                                 .build());
                 var actual = courseService.getCoursesByStudent(1L);
 
