@@ -32,10 +32,10 @@ public final class Group {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int groupId;
+    private Long id;
 
     @Column(nullable = false, unique = true)
-    private String groupName;
+    private String name;
 
     @OneToMany(mappedBy = "group", fetch = FetchType.EAGER)
     @Builder.Default

@@ -36,8 +36,8 @@ class CourseServiceImplTest {
         void MethodAddCourse_ShouldPassCourseToRepository() {
                 // given
                 Course courseFromDb = Course.builder()
-                                .courseName("Java")
-                                .courseDescription("Java course")
+                                .name("Java")
+                                .description("Java course")
                                 .students(List.of())
                                 .build();
                 CourseDto newCourse = modelMapper.map(courseFromDb, CourseDto.class);
@@ -54,16 +54,16 @@ class CourseServiceImplTest {
                 // given
                 var courses = List.of(
                                 Course.builder()
-                                                .courseName("Java")
-                                                .courseDescription("Java course")
+                                                .name("Java")
+                                                .description("Java course")
                                                 .build(),
                                 Course.builder()
-                                                .courseName("C++")
-                                                .courseDescription("C++ course")
+                                                .name("C++")
+                                                .description("C++ course")
                                                 .build(),
                                 Course.builder()
-                                                .courseName("C#")
-                                                .courseDescription("C# course")
+                                                .name("C#")
+                                                .description("C# course")
                                                 .build());
 
                 // when
@@ -80,20 +80,20 @@ class CourseServiceImplTest {
         void MethodGetCourseById_ShouldReturnCourseFromDb() {
                 // given
                 var course = Course.builder()
-                                .courseName("Java")
-                                .courseDescription("Java course")
+                                .name("Java")
+                                .description("Java course")
                                 .build();
 
                 // when
-                when(courseDao.findById(1)).thenReturn(Optional.of(course));
+                when(courseDao.findById(1L)).thenReturn(Optional.of(course));
 
                 // then
                 var expected = CourseDto.builder()
-                                .courseName("Java")
-                                .courseDescription("Java course")
-                                .studentList(List.of())
+                                .name("Java")
+                                .description("Java course")
+                                .students(List.of())
                                 .build();
-                var actual = courseService.getCourseById(1);
+                var actual = courseService.getCourseById(1L);
 
                 assertEquals(expected, actual);
         }
@@ -102,21 +102,21 @@ class CourseServiceImplTest {
         void MethodGetCoursesByStudentId_ShouldReturnCourseFromDb() {
                 // given
                 var course = Course.builder()
-                                .courseName("Java")
-                                .courseDescription("Java course")
+                                .name("Java")
+                                .description("Java course")
                                 .build();
 
                 // when
-                when(courseDao.findByStudentId(1)).thenReturn(List.of(course));
+                when(courseDao.findByStudentId(1L)).thenReturn(List.of(course));
 
                 // then
                 var expected = List.of(
                                 CourseDto.builder()
-                                                .courseName("Java")
-                                                .courseDescription("Java course")
-                                                .studentList(List.of())
+                                                .name("Java")
+                                                .description("Java course")
+                                                .students(List.of())
                                                 .build());
-                var actual = courseService.getCoursesByStudent(1);
+                var actual = courseService.getCoursesByStudent(1L);
 
                 assertEquals(expected, actual);
         }

@@ -11,10 +11,10 @@ import org.springframework.stereotype.Repository;
 import ua.com.foxstudent102052.model.entity.Course;
 
 @Repository
-public interface CourseRepository extends JpaRepository<Course, Integer> {
+public interface CourseRepository extends JpaRepository<Course, Long> {
 
-    Optional<Course> findByCourseName(String courseName);
+    Optional<Course> findByName(String courseName);
 
-    @Query("select c from Course c left join fetch c.students s where s.studentId = :studentId")
-    List<Course> findByStudentId(@Param("studentId") int studentId);
+    @Query("select c from Course c left join fetch c.students s where s.id = :studentId")
+    List<Course> findByStudentId(@Param("studentId") Long studentId);
 }

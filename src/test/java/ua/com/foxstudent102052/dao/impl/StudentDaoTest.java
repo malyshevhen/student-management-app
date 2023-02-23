@@ -51,31 +51,31 @@ class StudentDaoTest extends AbstractTestContainerIT {
     void MethodGetStudentsByCourseId_ShouldReturnStudentByGroupId() {
         var expected = List.of(
                 Student.builder()
-                        .studentId(1)
-                        .group(new Group(1, "Group 1", List.of()))
+                        .id(1L)
+                        .group(new Group(1L, "Group 1", List.of()))
                         .firstName("Leia")
                         .lastName("Organa")
                         .build(),
                 Student.builder()
-                        .studentId(2)
-                        .group(new Group(1, "Group 1", List.of()))
+                        .id(2L)
+                        .group(new Group(1L, "Group 1", List.of()))
                         .firstName("Luke")
                         .lastName("Skywalker")
                         .build(),
                 Student.builder()
-                        .studentId(3)
-                        .group(new Group(1, "Group 1", List.of()))
+                        .id(3L)
+                        .group(new Group(1L, "Group 1", List.of()))
                         .firstName("Han")
                         .lastName("Solo")
                         .build(),
                 Student.builder()
-                        .studentId(4)
-                        .group(new Group(1, "Group 1", List.of()))
+                        .id(4L)
+                        .group(new Group(1L, "Group 1", List.of()))
                         .firstName("Padme")
                         .lastName("Amidala")
                         .build());
 
-        var actual = studentDao.findByGroupId(1);
+        var actual = studentDao.findByGroupId(1L);
 
         assertEquals(expected, actual);
     }
@@ -85,43 +85,43 @@ class StudentDaoTest extends AbstractTestContainerIT {
     void MethodGetStudentsByGroup_ShouldReturnStudentByCourseId() {
         var expected = List.of(
                 Student.builder()
-                        .studentId(1)
-                        .group(new Group(1, "Group 1", List.of()))
+                        .id(1L)
+                        .group(new Group(1L, "Group 1", List.of()))
                         .firstName("Leia")
                         .lastName("Organa")
                         .build(),
                 Student.builder()
-                        .studentId(2)
-                        .group(new Group(1, "Group 1", List.of()))
+                        .id(2L)
+                        .group(new Group(1L, "Group 1", List.of()))
                         .firstName("Luke")
                         .lastName("Skywalker")
                         .build(),
                 Student.builder()
-                        .studentId(4)
-                        .group(new Group(1, "Group 1", List.of()))
+                        .id(4L)
+                        .group(new Group(1L, "Group 1", List.of()))
                         .firstName("Padme")
                         .lastName("Amidala")
                         .build(),
                 Student.builder()
-                        .studentId(5)
-                        .group(new Group(2, "Group 2", List.of()))
+                        .id(5L)
+                        .group(new Group(2L, "Group 2", List.of()))
                         .firstName("Dart")
                         .lastName("Maul")
                         .build(),
                 Student.builder()
-                        .studentId(9)
-                        .group(new Group(2, "Group 2", List.of()))
+                        .id(9L)
+                        .group(new Group(2L, "Group 2", List.of()))
                         .firstName("Dart")
                         .lastName("Vader")
                         .build(),
                 Student.builder()
-                        .studentId(10)
-                        .group(new Group(3, "Group 3", List.of()))
+                        .id(10L)
+                        .group(new Group(3L, "Group 3", List.of()))
                         .firstName("Jah Jah")
                         .lastName("Binks")
                         .build());
 
-        var actual = studentDao.findByCourseId(1);
+        var actual = studentDao.findByCourseId(1L);
 
         assertEquals(expected, actual);
     }
@@ -131,19 +131,19 @@ class StudentDaoTest extends AbstractTestContainerIT {
     void MethodGetStudentsByNameAndCourse_ShouldReturnListOfStudents_ByStudentNameAndCourseId() {
         var expected = List.of(
                 Student.builder()
-                        .studentId(5)
-                        .group(new Group(2, "Group 2", List.of()))
+                        .id(5L)
+                        .group(new Group(2L, "Group 2", List.of()))
                         .firstName("Dart")
                         .lastName("Maul")
                         .build(),
                 Student.builder()
-                        .studentId(9)
-                        .group(new Group(2, "Group 2", List.of()))
+                        .id(9L)
+                        .group(new Group(2L, "Group 2", List.of()))
                         .firstName("Dart")
                         .lastName("Vader")
                         .build());
 
-        var actual = studentDao.findByNameAndCourseId("Dart", 1);
+        var actual = studentDao.findByNameAndCourseId("Dart", 1L);
 
         assertEquals(expected, actual);
     }

@@ -1,7 +1,7 @@
 package ua.com.foxstudent102052.service.impl;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -39,9 +39,9 @@ class GroupServiceImplTest {
     void MethodAddGroup_ShouldPassGroupToRepository() {
         // given
         var group = Group.builder()
-                .groupName("SomeGroup")
-                .students(List.of())
-                .build();
+            .name("SomeGroup")
+            .students(List.of())
+            .build();
         var groupDto = modelMapper.map(group, GroupDto.class);
 
         // when
@@ -55,19 +55,20 @@ class GroupServiceImplTest {
     void MethodGetAllGroups_ShouldReturnAllGroupsFromDb() {
         // given
         var groups = List.of(
-                Group.builder()
-                        .groupName("SomeGroup1")
-                        .build(),
-                Group.builder()
-                        .groupName("SomeGroup2")
-                        .build(),
-                Group.builder()
-                        .groupName("SomeGroup3")
-                        .build());
+            Group.builder()
+                .name("SomeGroup1")
+                .build(),
+            Group.builder()
+                .name("SomeGroup2")
+                .build(),
+            Group.builder()
+                .name("SomeGroup3")
+                .build()
+        );
 
         var expected = groups.stream()
-                .map(group -> modelMapper.map(group, GroupDto.class))
-                .toList();
+            .map(group -> modelMapper.map(group, GroupDto.class))
+            .toList();
 
         // when
         when(groupDao.findAll()).thenReturn(groups);
@@ -81,14 +82,15 @@ class GroupServiceImplTest {
     @Test
     void MethodGetGroupById_ShouldReturnGroupFromDb() {
         var optionalGroup = Optional.of(
-                Group.builder()
-                        .groupName("SomeGroup")
-                        .build());
-        when(groupDao.findById(1)).thenReturn(optionalGroup);
+            Group.builder()
+                .name("SomeGroup")
+                .build()
+        );
+        when(groupDao.findById(1L)).thenReturn(optionalGroup);
 
         var expected = optionalGroup.map(group -> modelMapper.map(group, GroupDto.class)).orElseThrow();
 
-        var actual = groupService.getGroupById(1);
+        var actual = groupService.getGroupById(1L);
 
         assertEquals(expected, actual);
     }
@@ -96,10 +98,11 @@ class GroupServiceImplTest {
     @Test
     void MethodGetGroupByName_ShouldReturnGroupFromDb() {
         var optionalGroup = Optional.of(
-                Group.builder()
-                        .groupName("SomeGroup")
-                        .build());
-        when(groupDao.findByGroupName("SomeGroup")).thenReturn(optionalGroup);
+            Group.builder()
+                .name("SomeGroup")
+                .build()
+        );
+        when(groupDao.findByName("SomeGroup")).thenReturn(optionalGroup);
 
         var expected = optionalGroup.map(group -> modelMapper.map(group, GroupDto.class)).orElseThrow();
 
@@ -112,30 +115,31 @@ class GroupServiceImplTest {
     void MethodGetGroupsSmallerThen_ShouldReturnGroupsFromDb() {
         // given
         var groups = List.of(
-                Group.builder()
-                        .groupId(1)
-                        .groupName("SomeGroup1")
-                        .students(List.of(new Student(), new Student(), new Student()))
-                        .build(),
-                Group.builder()
-                        .groupId(2)
-                        .groupName("SomeGroup2")
-                        .students(List.of(new Student(), new Student(), new Student()))
-                        .build(),
-                Group.builder()
-                        .groupId(3)
-                        .groupName("SomeGroup3")
-                        .students(List.of(new Student(), new Student(), new Student()))
-                        .build());
+            Group.builder()
+                .id(1L)
+                .name("SomeGroup1")
+                .students(List.of(new Student(), new Student(), new Student()))
+                .build(),
+            Group.builder()
+                .id(2L)
+                .name("SomeGroup2")
+                .students(List.of(new Student(), new Student(), new Student()))
+                .build(),
+            Group.builder()
+                .id(3L)
+                .name("SomeGroup3")
+                .students(List.of(new Student(), new Student(), new Student()))
+                .build()
+        );
 
         var expected = groups.stream()
-                .map(group -> modelMapper.map(group, GroupDto.class))
-                .toList();
+            .map(group -> modelMapper.map(group, GroupDto.class))
+            .toList();
 
         // when
-        when(groupDao.findByStudentsCount(anyInt())).thenReturn(groups);
+        when(groupDao.findByStudentsCount(anyLong())).thenReturn(groups);
 
-        var actual = groupService.getGroupsLessThen(4);
+        var actual = groupService.getGroupsLessThen(4L);
 
         // then
         assertEquals(expected, actual);

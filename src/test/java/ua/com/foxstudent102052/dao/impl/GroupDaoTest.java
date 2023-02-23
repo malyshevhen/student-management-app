@@ -17,7 +17,9 @@ class GroupDaoTest extends AbstractTestContainerIT {
     @Test
     void MethodAddGroup_ShouldAddGroupToDb() {
         // given
-        var group = Group.builder().groupName("New Group").build();
+        var group = Group.builder()
+            .name("New Group")
+            .build();
         groupDao.save(group);
 
         // when
@@ -40,12 +42,12 @@ class GroupDaoTest extends AbstractTestContainerIT {
     void MethodGetGroup_ById_ShouldReturnGroupById() {
         // given
         var expected = Group.builder()
-                .groupId(1)
-                .groupName("Group 1")
-                .build();
+            .id(1L)
+            .name("Group 1")
+            .build();
 
         // when
-        var actual = groupDao.findById(1).get();
+        var actual = groupDao.findById(1L).get();
 
         // then
         assertEquals(expected, actual);
@@ -55,12 +57,12 @@ class GroupDaoTest extends AbstractTestContainerIT {
     void MethodGetGroup_ByName_ShouldReturnGroupByName() {
         // given
         var expected = Group.builder()
-                .groupId(1)
-                .groupName("Group 1")
-                .build();
+            .id(1L)
+            .name("Group 1")
+            .build();
 
         // when
-        var actual = groupDao.findByGroupName("Group 1").get();
+        var actual = groupDao.findByName("Group 1").get();
 
         // then
         assertEquals(expected, actual);

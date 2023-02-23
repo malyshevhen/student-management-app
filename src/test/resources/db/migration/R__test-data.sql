@@ -1,9 +1,9 @@
-insert into groups (group_name) values ('Group 1');
-insert into groups (group_name) values ('Group 2');
-insert into groups (group_name) values ('Group 3');
-insert into courses (course_name, course_description) values ('Course 1', 'Some description for course 1');
-insert into courses (course_name, course_description) values ('Course 2', 'Some description for course 2');
-insert into courses (course_name, course_description) values ('Course 3', 'Some description for course 3');
+insert into groups (name) values ('Group 1');
+insert into groups (name) values ('Group 2');
+insert into groups (name) values ('Group 3');
+insert into courses (name, description) values ('Course 1', 'Some description for course 1');
+insert into courses (name, description) values ('Course 2', 'Some description for course 2');
+insert into courses (name, description) values ('Course 3', 'Some description for course 3');
 insert into students (group_id, first_name, last_name) values (1, 'Leia', 'Organa');
 insert into students (group_id, first_name, last_name) values (1, 'Luke', 'Skywalker');
 insert into students (group_id, first_name, last_name) values (1, 'Han', 'Solo');

@@ -7,17 +7,17 @@ import ua.com.foxstudent102052.model.dto.StudentDto;
 public interface StudentService {
     void addStudent(StudentDto studentDto);
 
-    void addStudentToCourse(int studentId, int courseId);
+    void addStudentToCourse(Long studentId, Long courseId);
 
-    void removeStudent(int id);
+    void removeStudent(Long id);
 
-    void removeStudentFromCourse(int studentId, int groupId);
+    void removeStudentFromCourse(Long studentId, Long groupId);
 
     List<StudentDto> getAll();
 
-    List<StudentDto> getStudentsByCourse(int courseId);
+    List<StudentDto> getStudentsByCourse(Long courseId);
 
-    List<StudentDto> getStudentsByGroup(int groupId);
+    List<StudentDto> getStudentsByGroup(Long groupId);
 
-    List<StudentDto> getStudentsByNameAndCourse(String studentName, Integer courseId);
+    List<StudentDto> getStudentsByNameAndCourse(String studentName, Long courseId);
 }

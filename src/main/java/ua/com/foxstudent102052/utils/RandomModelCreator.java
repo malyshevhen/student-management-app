@@ -23,7 +23,7 @@ public class RandomModelCreator {
 
         for (String groupName : groupNames) {
             var group = Group.builder()
-                    .groupName(groupName)
+                    .name(groupName)
                     .build();
             groupList.add(group);
         }
@@ -36,8 +36,8 @@ public class RandomModelCreator {
 
         for (var courseString : courses) {
             var course = Course.builder()
-                    .courseName(courseString[0])
-                    .courseDescription(courseString[1])
+                    .name(courseString[0])
+                    .description(courseString[1])
                     .build();
             courseDtoArrayList.add(course);
         }
@@ -58,16 +58,16 @@ public class RandomModelCreator {
         return studentList;
     }
 
-    public Map<Integer, Set<Integer>> getStudentsCoursesRelations(int[] studentIds, int[] coursesIds,
+    public Map<Long, Set<Long>> getStudentsCoursesRelations(long[] studentsIds, long[] coursesIds,
             int maxCoursesCount) {
 
-        var studentCourseMap = new HashMap<Integer, Set<Integer>>();
+        var studentCourseMap = new HashMap<Long, Set<Long>>();
 
-        for (int studentId : studentIds) {
-            var courses = new HashSet<Integer>();
+        for (Long studentId : studentsIds) {
+            var courses = new HashSet<Long>();
 
             for (int j = 1; j <= maxCoursesCount; j++) {
-                int courseId = coursesIds[random.nextInt(maxCoursesCount)];
+                Long courseId = coursesIds[random.nextInt(maxCoursesCount)];
 
                 if (Boolean.FALSE.equals(courses.contains(courseId)) && courses.size() < 3) {
                     courses.add(courseId);

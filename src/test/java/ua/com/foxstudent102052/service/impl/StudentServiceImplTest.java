@@ -1,7 +1,7 @@
 package ua.com.foxstudent102052.service.impl;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -45,9 +45,9 @@ class StudentServiceImplTest {
     void MethodAddStudent_ShouldPassNewStudentToRepository() {
         // given
         var studentDto = StudentDto.builder()
-                .firstName("John")
-                .lastName("Doe")
-                .build();
+            .firstName("John")
+            .lastName("Doe")
+            .build();
         var student = modelMapper.map(studentDto, Student.class);
 
         // when
@@ -60,7 +60,7 @@ class StudentServiceImplTest {
     @Test
     void MethodRemoveStudent_ShouldRemoveExistingStudentFromDb() {
         // given
-        int id = 1;
+        var id = 1L;
         var student = new Student(id, new Group(), "name", "surname", List.of());
 
         // when
@@ -75,7 +75,7 @@ class StudentServiceImplTest {
     @Test
     void MethodRemoveStudent_ShouldThrowAnException_IfStudentDoesNotExist() {
         // given
-        int id = 1;
+        var id = 1L;
 
         // when
         when(studentDao.findById(id)).thenReturn(Optional.empty());
@@ -100,44 +100,46 @@ class StudentServiceImplTest {
     @Test
     void MethodRemoveStudent_ShouldThrowAnException_IfStudentWasNotRemoved() {
         // given
-        int studentId = 1;
+        var studentId = 1L;
 
         // when
         when(studentDao.findById(studentId)).thenReturn(Optional.empty());
 
         // then
-        assertThrows(NoSuchElementException.class, () -> studentService.removeStudent(studentId),
-                "Student wasn`t removed");
+        assertThrows(
+            NoSuchElementException.class, () -> studentService.removeStudent(studentId),
+            "Student wasn`t removed"
+        );
     }
 
     @Test
     void MethodGetStudentsByCourseShould_ReturnListOfStudents_ByCourseId() {
         // when
-        when(studentDao.findByCourseId(anyInt())).thenReturn(List.of(new Student()));
-        studentService.getStudentsByCourse(1);
+        when(studentDao.findByCourseId(anyLong())).thenReturn(List.of(new Student()));
+        studentService.getStudentsByCourse(1L);
 
         // then
-        verify(studentDao).findByCourseId(1);
+        verify(studentDao).findByCourseId(1L);
     }
 
     @Test
     void MethodGetStudentsByNameAndCourse_ShouldReturnListOfStudents() {
         // when
-        when(studentDao.findByNameAndCourseId(anyString(), anyInt()))
+        when(studentDao.findByNameAndCourseId(anyString(), anyLong()))
             .thenReturn(List.of(new Student()));
-        studentService.getStudentsByNameAndCourse("John", 1);
+        studentService.getStudentsByNameAndCourse("John", 1L);
 
         // then
-        verify(studentDao).findByNameAndCourseId("John", 1);
+        verify(studentDao).findByNameAndCourseId("John", 1L);
     }
 
     @Test
     void MethodGetStudentsByGropShould_ReturnListOfStudents_ByCourseId() {
         // when
-        when(studentDao.findByGroupId(anyInt())).thenReturn(List.of(new Student()));
-        studentService.getStudentsByGroup(1);
+        when(studentDao.findByGroupId(anyLong())).thenReturn(List.of(new Student()));
+        studentService.getStudentsByGroup(1L);
 
         // then
-        verify(studentDao).findByGroupId(1);
+        verify(studentDao).findByGroupId(1L);
     }
 }

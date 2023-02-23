@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>STUDENTS</title>
+    <style>
+      table {
+        border-collapse: collapse;
+        width: 100%;
+      }
+      th, td {
+        text-align: left;
+        padding: 8px;
+      }
+      th {
+        background-color: #4CAF50;
+        color: white;
+      }
+      tr:nth-child(even) {
+        background-color: #f2f2f2;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>STUDENTS</h1>
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>NAME</th>
+          <th>SURNAME</th>
+          <th>GROUP</th>
+          <th>COURSES</th>
+        </tr>
+      </thead>
+      <tbody id="students-table-body">
+      </tbody>
+    </table>
+    <script>
+      const xhr = new XMLHttpRequest();
+      xhr.open("GET", "/students");
+      xhr.onload = function() {
+        if (xhr.status === 200) {
+          const students = JSON.parse(xhr.responseText);
+          const tableBody = document.getElementById("students-table-body");
+          students.forEach(function(student) {
+            const tr = document.createElement("tr");
+            const tdId = document.createElement("td");
+            const tdFirstName = document.createElement("td");
+            const tdLastName = document.createElement("td");
+            const tdGroup = document.createElement("td");
+            const tdCourses = document.createElement("td");
+            tdId.textContent = student.id;
+            tdFirstName.textContent = student.firstName;
+            tdLastName.textContent = student.lastName;
+            tdGroup.textContent = student.group.name;
+            tdCourses.textContent = student.courses.map(course => course.name).join(", ");
+            tr.appendChild(tdId);
+            tr.appendChild(tdFirstName);
+            tr.appendChild(tdLastName);
+            tr.appendChild(tdGroup);
+            tr.appendChild(tdCourses);
+            tableBody.appendChild(tr);
+          });
+        }
+      };
+      xhr.send();
+    </script>
+  </body>
+</html>

@@ -7,11 +7,11 @@ import ua.com.foxstudent102052.model.dto.GroupDto;
 public interface GroupService {
     void addGroup(GroupDto groupDto);
 
-    GroupDto getGroupById(int groupId);
+    GroupDto getGroupById(Long groupId);
 
     List<GroupDto> getAll();
 
-    List<GroupDto> getGroupsLessThen(int numberOfStudents);
+    List<GroupDto> getGroupsLessThen(Long numberOfStudents);
 
     GroupDto getGroupByName(String groupName);
 }

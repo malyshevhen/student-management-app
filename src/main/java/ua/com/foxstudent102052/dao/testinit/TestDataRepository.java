@@ -1,9 +1,7 @@
 package ua.com.foxstudent102052.dao.testinit;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
-import java.util.Set;
 
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Repository;
@@ -40,15 +38,22 @@ public class TestDataRepository {
     }
 
     private void addStudentsToCourses() {
-        var coursesIds = courseDao.findAll().stream().mapToInt(Course::getCourseId).toArray();
-        var studentsIds = studentDao.findAll().stream().mapToInt(Student::getStudentId).toArray();
+        var coursesIds = courseDao.findAll()
+            .stream()
+            .mapToLong(Course::getId)
+            .toArray();
 
-        Map<Integer, Set<Integer>> studentsCoursesRelations = randomModelCreator
-                .getStudentsCoursesRelations(studentsIds, coursesIds, 3);
+        var studentsIds = studentDao.findAll()
+            .stream()
+            .mapToLong(Student::getId)
+            .toArray();
+
+        var studentsCoursesRelations = randomModelCreator
+            .getStudentsCoursesRelations(studentsIds, coursesIds, 3);
 
         for (var entry : studentsCoursesRelations.entrySet()) {
             for (var courseId : entry.getValue()) {
-                var student = studentDao.findById(entry.getKey()).orElseThrow();
+                var student = studentDao.findById((Long) entry.getKey()).orElseThrow();
                 var course = courseDao.findById(courseId).orElseThrow();
 
                 student.addCourse(course);
@@ -60,7 +65,7 @@ public class TestDataRepository {
     }
 
     private void addStudentsToGroups() {
-        Random random = new Random();
+        var random = new Random();
 
         var groups = groupDao.findAll();
         var students = studentDao.findAll();

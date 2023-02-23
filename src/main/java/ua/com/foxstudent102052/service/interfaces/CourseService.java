@@ -7,9 +7,9 @@ import ua.com.foxstudent102052.model.dto.CourseDto;
 public interface CourseService {
     void addCourse(CourseDto courseDto);
 
-    CourseDto getCourseById(int id);
+    CourseDto getCourseById(Long id);
 
     List<CourseDto> getAll();
 
-    List<CourseDto> getCoursesByStudent(int studentId);
+    List<CourseDto> getCoursesByStudent(Long studentId);
 }

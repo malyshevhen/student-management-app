@@ -41,13 +41,13 @@ public class StudentServiceIntegrationTest {
     void Method_AddStudentToCourse_ShouldAddExistingStudentToExistingCourse() {
         int expected = 1;
 
-        service.addStudentToCourse(1, 2);
+        service.addStudentToCourse(1L, 2L);
 
-        int actual = service.getStudentsByCourse(1)
+        var actual = service.getStudentsByCourse(1L)
                 .stream()
-                .filter(studentDto -> studentDto.getStudentId() == 1)
+                .filter(studentDto -> studentDto.getId() == 1L)
                 .findFirst()
-                .map(StudentDto::getStudentId)
+                .map(StudentDto::getId)
                 .orElseThrow();
 
         assertEquals(expected, actual);
@@ -55,12 +55,12 @@ public class StudentServiceIntegrationTest {
 
     @Test
     void Method_RemoveStudentToCourse_ShouldRemoveExistingStudentFromExistingCourse() {
-        service.removeStudentFromCourse(1, 1);
+        service.removeStudentFromCourse(1L, 1L);
 
-        boolean notRemoved = service.getStudentsByCourse(1)
+        boolean notRemoved = service.getStudentsByCourse(1L)
                 .stream()
-                .mapToInt(StudentDto::getStudentId)
-                .anyMatch(id -> id == 1);
+                .mapToLong(StudentDto::getId)
+                .anyMatch(id -> id == 1L);
 
         assertFalse(notRemoved);
     }

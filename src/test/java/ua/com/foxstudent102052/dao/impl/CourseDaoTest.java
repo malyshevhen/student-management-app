@@ -20,9 +20,9 @@ class CourseDaoTest extends AbstractTestContainerIT {
     void MethodAddCourse_ShouldAddCourseToDb() {
         // given
         var course = Course.builder()
-                .courseName("Course 4")
-                .courseDescription("Some courseDescription for course 4")
-                .build();
+            .name("Course 4")
+            .description("Some courseDescription for course 4")
+            .build();
 
         // when
         courseDao.save(course);
@@ -46,13 +46,13 @@ class CourseDaoTest extends AbstractTestContainerIT {
     void MethodGetCourse_ById_ShouldReturnCourseFromDb() {
         // given
         var expected = Course.builder()
-                .courseId(1)
-                .courseName("Course 1")
-                .courseDescription("Some description for course 1")
-                .build();
+            .id(1L)
+            .name("Course 1")
+            .description("Some description for course 1")
+            .build();
 
         // when
-        var actual = courseDao.findById(1).get();
+        var actual = courseDao.findById(1L).get();
 
         // then
         assertEquals(expected, actual);
@@ -62,13 +62,13 @@ class CourseDaoTest extends AbstractTestContainerIT {
     void MethodGetCourse_ByName_ShouldReturnCourseFromDb() {
         // given
         var expected = Course.builder()
-                .courseId(1)
-                .courseName("Course 1")
-                .courseDescription("Some description for course 1")
-                .build();
+            .id(1L)
+            .name("Course 1")
+            .description("Some description for course 1")
+            .build();
 
         // when
-        var actual = courseDao.findByCourseName(expected.getCourseName()).orElseThrow();
+        var actual = courseDao.findByName(expected.getName()).orElseThrow();
 
         // then
         assertEquals(expected, actual);
@@ -78,19 +78,20 @@ class CourseDaoTest extends AbstractTestContainerIT {
     void MethodGetCourses_ByStudentId_ShouldReturnCourseListFromDb() {
         // given
         var expected = List.of(
-                Course.builder()
-                        .courseId(1)
-                        .courseName("Course 1")
-                        .courseDescription("Some description for course 1")
-                        .build(),
-                Course.builder()
-                        .courseId(2)
-                        .courseName("Course 2")
-                        .courseDescription("Some description for course 2")
-                        .build());
+            Course.builder()
+                .id(1L)
+                .name("Course 1")
+                .description("Some description for course 1")
+                .build(),
+            Course.builder()
+                .id(2L)
+                .name("Course 2")
+                .description("Some description for course 2")
+                .build()
+        );
 
         // when
-        var actual = courseDao.findByStudentId(2);
+        var actual = courseDao.findByStudentId(2L);
 
         // then
         assertEquals(expected, actual);

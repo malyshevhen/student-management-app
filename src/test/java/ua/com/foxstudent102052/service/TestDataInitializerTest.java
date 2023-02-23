@@ -47,14 +47,14 @@ class TestDataInitializerTest {
     void Method_initTestDada_shouldCallPostTestRecordsMethodFromTestDataRepository() {
         // given
         var students = List.of(
-                new Student(0, null, "John", "Doe", null),
-                new Student(0, null, "Jane", "Doe", null));
+                new Student(0L, null, "John", "Doe", null),
+                new Student(0L, null, "Jane", "Doe", null));
         var groups = List.of(
-                new Group(0, "G1", null),
-                new Group(0, "G2", null));
+                new Group(0L, "G1", null),
+                new Group(0L, "G2", null));
         var courses = List.of(
-                new Course(0, "C1", "Some description 1", null),
-                new Course(0, "C2", "Some description 2", null));
+                new Course(0L, "C1", "Some description 1", null),
+                new Course(0L, "C2", "Some description 2", null));
 
         // when
         when(studentService.getAll()).thenReturn(List.of());

@@ -11,11 +11,11 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface GroupRepository extends JpaRepository<Group, Integer> {
+public interface GroupRepository extends JpaRepository<Group, Long> {
 
-    Optional<Group> findByGroupName(String groupName);
+    Optional<Group> findByName(String groupName);
 
     @Query("select g from Group g join fetch g.students s where size(s) <= :count")
-    List<Group> findByStudentsCount(@Param("count") int numberOfStudents);
+    List<Group> findByStudentsCount(@Param("count") Long numberOfStudents);
 
 }

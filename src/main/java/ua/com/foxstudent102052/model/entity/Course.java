@@ -32,13 +32,13 @@ public final class Course {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int courseId;
+    private Long id;
 
     @Column(nullable = false, unique = true)
-    private String courseName;
+    private String name;
 
     @Column(nullable = false)
-    private String courseDescription;
+    private String description;
 
     @Setter(value = AccessLevel.PRIVATE)
     @Builder.Default

@@ -9,14 +9,14 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 @Data
-@ToString(exclude = "studentList")
+@ToString(exclude = "students")
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class GroupDto {
-    private int groupId;
-    private String groupName;
+    private Long id;
+    private String name;
 
     @Builder.Default
-    private List<StudentDto> studentList = List.of();
+    private List<StudentDto> students = List.of();
 }

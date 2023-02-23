@@ -10,15 +10,15 @@ import org.springframework.stereotype.Repository;
 import ua.com.foxstudent102052.model.entity.Student;
 
 @Repository
-public interface StudentRepository extends JpaRepository<Student, Integer> {
+public interface StudentRepository extends JpaRepository<Student, Long> {
 
-    @Query("select s from Student s left join s.courses c where c.courseId = :courseId")
-    List<Student> findByCourseId(@Param("courseId") int courseId);
+    @Query("select s from Student s left join s.courses c where c.id = :courseId")
+    List<Student> findByCourseId(@Param("courseId") Long courseId);
 
-    @Query("select s from Student s where s.group.groupId = :groupId")
-    List<Student> findByGroupId(@Param("groupId") int groupId);
+    @Query("select s from Student s where s.group.id = :groupId")
+    List<Student> findByGroupId(@Param("groupId") Long groupId);
 
-    @Query("select s from Student s left join s.courses c where c.courseId = :courseId and s.firstName = :studentName")
-    List<Student> findByNameAndCourseId(@Param("studentName") String studentName, @Param("courseId") int courseId);
+    @Query("select s from Student s left join s.courses c where c.id = :courseId and s.firstName = :studentName")
+    List<Student> findByNameAndCourseId(@Param("studentName") String studentName, @Param("courseId") Long courseId);
 
 }

@@ -39,49 +39,49 @@ class RandomModelCreatorTest {
         studentSurnames = fileUtils.readCsvFileFromResources(STUDENT_SURNAMES_CSV).stream().map(s -> s[0]).toList();
         groups = List.of(
                 Group.builder()
-                        .groupId(1)
-                        .groupName("Group1")
+                        .id(1L)
+                        .name("Group1")
                         .build(),
                 Group.builder()
-                        .groupId(2)
-                        .groupName("Group2")
+                        .id(2L)
+                        .name("Group2")
                         .build(),
                 Group.builder()
-                        .groupId(3)
-                        .groupName("Group3")
+                        .id(3L)
+                        .name("Group3")
                         .build(),
                 Group.builder()
-                        .groupId(4)
-                        .groupName("Group4")
+                        .id(4L)
+                        .name("Group4")
                         .build());
         students = List.of(
                 Student.builder()
-                        .studentId(0)
+                        .id(0L)
                         .build(),
                 Student.builder()
-                        .studentId(1)
+                        .id(1L)
                         .build(),
                 Student.builder()
-                        .studentId(2)
+                        .id(2L)
                         .build(),
                 Student.builder()
-                        .studentId(3)
+                        .id(3L)
                         .build(),
                 Student.builder()
-                        .studentId(4)
+                        .id(4L)
                         .build(),
                 Student.builder()
-                        .studentId(5)
+                        .id(5L)
                         .build());
         courses = List.of(
                 Course.builder()
-                        .courseId(1)
+                        .id(1L)
                         .build(),
                 Course.builder()
-                        .courseId(2)
+                        .id(2L)
                         .build(),
                 Course.builder()
-                        .courseId(3)
+                        .id(3L)
                         .build());
     }
 
@@ -92,7 +92,7 @@ class RandomModelCreatorTest {
 
         // when
         var actual = groups.stream()
-                .filter(group -> group.getGroupName() == null)
+                .filter(group -> group.getName() == null)
                 .toList();
 
         // then
@@ -106,8 +106,8 @@ class RandomModelCreatorTest {
 
         // when
         var actual = courses.stream()
-                .filter(course -> course.getCourseName() == null ||
-                        course.getCourseDescription() == null)
+                .filter(course -> course.getName() == null ||
+                        course.getDescription() == null)
                 .toList();
 
         // then
@@ -133,8 +133,8 @@ class RandomModelCreatorTest {
     void Method_getStudentsCoursesRelations_shouldReturnMapOfStudentCoursesRelations() {
         // given
         int coursesCount = 2;
-        var studentIds = students.stream().mapToInt(Student::getStudentId).toArray();
-        var courseIds = courses.stream().mapToInt(Course::getCourseId).toArray();
+        var studentIds = students.stream().mapToLong(Student::getId).toArray();
+        var courseIds = courses.stream().mapToLong(Course::getId).toArray();
 
         // when
         var actual = randomModelCreator.getStudentsCoursesRelations(studentIds, courseIds, coursesCount);
@@ -147,15 +147,15 @@ class RandomModelCreatorTest {
     void Method_getStudentsCoursesRelations_shouldReturnMapOfStudentCoursesRelations_withMaxThreeValuesPerKey() {
         // given
         int coursesCount = 3;
-        var studentIds = students.stream().mapToInt(Student::getStudentId).toArray();
-        var courseIds = courses.stream().mapToInt(Course::getCourseId).toArray();
+        var studentIds = students.stream().mapToLong(Student::getId).toArray();
+        var courseIds = courses.stream().mapToLong(Course::getId).toArray();
 
         // when
         var actual = randomModelCreator.getStudentsCoursesRelations(studentIds, courseIds, coursesCount);
 
         boolean anyMatch = actual.values()
                 .stream()
-                .mapToInt(Set::size)
+                .mapToLong(Set::size)
                 .anyMatch(size -> size <= 3 || size >= 1);
 
         // then
