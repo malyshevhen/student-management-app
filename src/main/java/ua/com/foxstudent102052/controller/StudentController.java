@@ -3,7 +3,6 @@ package ua.com.foxstudent102052.controller;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,25 +17,22 @@ import ua.com.foxstudent102052.service.interfaces.StudentService;
 
 @RestController
 @RequestMapping("/api/students")
-@RequiredArgsConstructor(onConstructor = @__(@Autowired))
+@RequiredArgsConstructor
 public class StudentController {
     private final StudentService studentService;
 
     @PostMapping("/add")
-    public void addStudent(StudentDto studentDto) throws DataAccessException {
+    public void addStudent(StudentDto studentDto) {
         studentService.addStudent(studentDto);
     }
 
     @DeleteMapping("/{id}")
-    public void removeStudent(@PathVariable Long studentId) throws NoSuchElementException, DataAccessException {
+    public void removeStudent(@PathVariable Long studentId) {
         studentService.removeStudent(studentId);
     }
 
     @PostMapping("/add-course/{studentId}{courseId}")
-    public void addStudentToCourse(
-        @PathVariable Long studentId,
-        @PathVariable Long courseId
-    ) throws NoSuchElementException, DataAccessException {
+    public void addStudentToCourse(@PathVariable Long studentId, @PathVariable Long courseId) {
         studentService.addStudentToCourse(studentId, courseId);
     }
 
@@ -49,15 +45,12 @@ public class StudentController {
     }
 
     @GetMapping
-    public List<StudentDto> getAllStudents() throws NoSuchElementException, DataAccessException {
+    public List<StudentDto> getAllStudents() {
         return studentService.getAll();
     }
 
     @GetMapping("/{name}{courseId}")
-    public List<StudentDto> getStudents(
-        @PathVariable String studentName,
-        @PathVariable Long courseId
-    ) throws NoSuchElementException, DataAccessException {
+    public List<StudentDto> getStudents(@PathVariable String studentName, @PathVariable Long courseId) {
         return studentService.getStudentsByNameAndCourse(studentName, courseId);
     }
 }
