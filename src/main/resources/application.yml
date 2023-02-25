@@ -19,3 +19,10 @@ spring:
       date: yyyy-MM-dd
       date-time: yyyy-MM-dd HH:mm:ss
       time: HH:mm:ss
+#     view:
+#       prefix: classpath:/templates
+#       suffix: .html
+
+#   thymeleaf:
+#     prefix: classpath:/templates
+#     suffix: .html

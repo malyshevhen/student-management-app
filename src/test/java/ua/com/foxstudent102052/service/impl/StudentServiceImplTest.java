@@ -17,8 +17,10 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
 
+import ua.com.foxstudent102052.AppRunner;
 import ua.com.foxstudent102052.dao.interfaces.CourseRepository;
 import ua.com.foxstudent102052.dao.interfaces.StudentRepository;
+import ua.com.foxstudent102052.model.dto.GroupDto;
 import ua.com.foxstudent102052.model.dto.StudentDto;
 import ua.com.foxstudent102052.model.entity.Group;
 import ua.com.foxstudent102052.model.entity.Student;
@@ -26,7 +28,11 @@ import ua.com.foxstudent102052.service.interfaces.StudentService;
 
 @ExtendWith(MockitoExtension.class)
 class StudentServiceImplTest {
+
     private final ModelMapper modelMapper = new ModelMapper();
+
+    @Mock
+    private AppRunner appRunner;
 
     @Mock
     private StudentRepository studentDao;
@@ -47,6 +53,7 @@ class StudentServiceImplTest {
         var studentDto = StudentDto.builder()
             .firstName("John")
             .lastName("Doe")
+            .group(new GroupDto())
             .build();
         var student = modelMapper.map(studentDto, Student.class);
 

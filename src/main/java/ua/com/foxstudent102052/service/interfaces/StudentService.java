@@ -3,9 +3,10 @@ package ua.com.foxstudent102052.service.interfaces;
 import java.util.List;
 
 import ua.com.foxstudent102052.model.dto.StudentDto;
+import ua.com.foxstudent102052.model.entity.Student;
 
 public interface StudentService {
-    void addStudent(StudentDto studentDto);
+    StudentDto addStudent(StudentDto studentDto);
 
     void addStudentToCourse(Long studentId, Long courseId);
 
@@ -20,4 +21,6 @@ public interface StudentService {
     List<StudentDto> getStudentsByGroup(Long groupId);
 
     List<StudentDto> getStudentsByNameAndCourse(String studentName, Long courseId);
+
+    Student getStudent(Long id);
 }

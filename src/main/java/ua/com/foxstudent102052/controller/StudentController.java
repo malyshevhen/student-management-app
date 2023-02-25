@@ -1,19 +1,21 @@
 package ua.com.foxstudent102052.controller;
 
-import java.util.List;
-import java.util.NoSuchElementException;
-
+import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataAccessException;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import lombok.RequiredArgsConstructor;
 import ua.com.foxstudent102052.model.dto.StudentDto;
+import ua.com.foxstudent102052.model.entity.Student;
 import ua.com.foxstudent102052.service.interfaces.StudentService;
+
+import java.util.List;
+import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("/api/students")
@@ -22,13 +24,21 @@ public class StudentController {
     private final StudentService studentService;
 
     @PostMapping("/add")
-    public void addStudent(StudentDto studentDto) {
-        studentService.addStudent(studentDto);
+    public ResponseEntity<StudentDto> addStudent(@RequestBody StudentDto studentDto) {
+        var savedStudent = studentService.addStudent(studentDto);
+
+        return ResponseEntity.ok(savedStudent);
     }
 
     @DeleteMapping("/{id}")
-    public void removeStudent(@PathVariable Long studentId) {
-        studentService.removeStudent(studentId);
+    public void removeStudent(@PathVariable Long id) {
+        studentService.removeStudent(id);
+    }
+
+
+    @GetMapping("/{id}")
+    public Student getStudent(@PathVariable Long id) {
+        return studentService.getStudent(id);
     }
 
     @PostMapping("/add-course/{studentId}/{courseId}")

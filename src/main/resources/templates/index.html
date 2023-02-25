@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8" />
+        <title>Student MS</title>
+        <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+            rel="stylesheet"
+            integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+            crossorigin="anonymous"
+        />
+        <style>
+            .tabs {
+                list-style: none;
+                margin: 0;
+                padding: 0;
+            }
+
+            .tabs li {
+                display: inline-block;
+                margin-right: 10px;
+            }
+
+            .tabs li a {
+                display: flex;
+                padding: 5px 10px;
+                border: 1px solid #ccc;
+                background-color: #f2f2f2;
+                color: #333;
+                text-decoration: none;
+            }
+
+            .tabs li.active a {
+                background-color: #ccc;
+            }
+
+            .tab_container {
+                border: 1px solid #ccc;
+                padding: 10px;
+            }
+
+            .tab_content {
+                display: none;
+            }
+
+            .tab_content.active {
+                display: block;
+            }
+        </style>
+
+        <script src="/js/jquery-3.6.3.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"></script>
+        <script src="/js/main_script.js"></script>
+    </head>
+    <body>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="/">Student MS</a>
+                <ul class="tabs">
+                    <li>
+                        <a href="#students_tab">Students</a>
+                    </li>
+                    <li>
+                        <a href="#groups_tab">Groups</a>
+                    </li>
+                    <li>
+                        <a href="#courses_tab">Courses</a>
+                    </li>
+                </ul>
+                <a class="btn btn-danger" href="/logout">Logout</a>
+            </div>
+        </nav>
+        <div class="container">
+            <div class="row">
+                <br />
+                <br />
+                <div class="tab_container">
+                    <div id="students_tab" class="tab_content active">
+                        <br />
+                        <button
+                            class="btn btn-outline-secondary"
+                            data-bs-toggle="modal"
+                            data-bs-target="#modal1"
+                        >
+                            Add Student
+                        </button>
+                        <br />
+                        <div id="students"></div>
+                    </div>
+                    <div id="groups_tab" class="tab_content">
+                        <br />
+                        <button
+                            class="btn btn-outline-secondary"
+                            data-bs-toggle="modal"
+                            data-bs-target="#modal2"
+                        >
+                            Add Group
+                        </button>
+                        <br />
+                        <div id="groups"></div>
+                    </div>
+                    <div id="courses_tab" class="tab_content">
+                        <br />
+                        <button
+                            class="btn btn-outline-secondary"
+                            data-bs-toggle="modal"
+                            data-bs-target="#modal3"
+                        >
+                            Add Course
+                        </button>
+                        <br />
+                        <div id="courses"></div>
+                    </div>
+                    <div
+                        class="modal fade"
+                        id="modal1"
+                        tabindex="-1"
+                        aria-labelledby="addStudentModalLabel"
+                        aria-hidden="true"
+                    >
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="addStudentModalLabel">Modal title</h5>
+                                    <button
+                                        type="button"
+                                        class="btn-close"
+                                        data-bs-dismiss="modal"
+                                        aria-label="Close"
+                                    ></button>
+                                </div>
+                                <div class="modal-body">
+                                    <form id="add-student-form">
+                                        <label class="form-label">First name</label>
+                                        <input
+                                            type="text"
+                                            id="firstName"
+                                            name="firstName"
+                                            class="form-control"
+                                            placeholder="Enter first name"
+                                        />
+                                        <br />
+                                        <label class="form-label">Last name</label>
+                                        <input
+                                            type="text"
+                                            id="lastName"
+                                            name="lastName"
+                                            class="form-control"
+                                            placeholder="Enter last name"
+                                        />
+                                        <br />
+                                        <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">
+                                            Save changes
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div
+                        class="modal fade"
+                        id="modal2"
+                        tabindex="-1"
+                        aria-labelledby="addGroupModalLabel"
+                        aria-hidden="true"
+                    >
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="addGroupModalLabel">Add group form</h5>
+                                    <button
+                                        type="button"
+                                        class="btn-close"
+                                        data-bs-dismiss="modal"
+                                        aria-label="Close"
+                                    ></button>
+                                </div>
+                                <div class="modal-body">
+                                    <form id="add-group-form">
+                                        <label class="form-label">Group name</label>
+                                        <input
+                                            type="text"
+                                            id="groupName"
+                                            name="name"
+                                            class="form-control"
+                                            placeholder="Enter Group name"
+                                        />
+                                        <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">
+                                            Save changes
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        <div
+                            class="modal fade"
+                            id="modal3"
+                            tabindex="-1"
+                            aria-labelledby="addCourseModalLabel"
+                            aria-hidden="true"
+                        >
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="addCourseModalLabel">Add course form</h5>
+                                        <button
+                                            type="button"
+                                            class="btn-close"
+                                            data-bs-dismiss="modal"
+                                            aria-label="Close"
+                                        ></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form id="add-course-form">
+                                            <label class="form-label">Course name</label>
+                                            <input
+                                                type="text"
+                                                id="courseName"
+                                                name="name"
+                                                class="form-control"
+                                                placeholder="Enter Course name"
+                                            />
+                                            <label class="form-label">Course description</label>
+                                            <input
+                                                type="text"
+                                                id="courseDescription"
+                                                name="description"
+                                                class="form-control"
+                                                placeholder="Enter Course name"
+                                            />
+                                            <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">
+                                                Save changes
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

@@ -25,9 +25,11 @@ public class StudentServiceImpl implements StudentService {
     private final ModelMapper modelMapper;
 
     @Override
-    public void addStudent(StudentDto studentDto) throws DataAccessException {
+    public StudentDto addStudent(StudentDto studentDto) throws DataAccessException {
         var student = modelMapper.map(studentDto, Student.class);
-        studentDao.save(student);
+        var savedStudent = studentDao.save(student);
+
+        return modelMapper.map(savedStudent, StudentDto.class);
     }
 
     @Override
@@ -134,5 +136,12 @@ public class StudentServiceImpl implements StudentService {
         } else {
             return studentDtoList;
         }
+    }
+
+    @Override
+    public Student getStudent(Long id) {
+        return studentDao.findById(id).orElseThrow(
+            () -> new NoSuchElementException("Student not found")
+        );
     }
 }

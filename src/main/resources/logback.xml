@@ -14,7 +14,7 @@
 
         <encoder>
             <Pattern>
-				%d{yyyy-MM-dd HH:mm:ss} [%level] - %msg%n
+				[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n
             </Pattern>
         </encoder>
 
@@ -26,7 +26,7 @@
         </rollingPolicy>
     </appender>
 
-    <appender name = "STDOUT" class = "ch.qos.logback.core.ConsoleAppender">
+    <appender name = "Console-Appender" class = "ch.qos.logback.core.ConsoleAppender">
         <turboFilter class="ch.qos.logback.classic.turbo.MarkerFilter">
             <name>STDOUT_ACCEPT_FILTER</name>
             <Marker>STDOUT</Marker>
@@ -40,19 +40,27 @@
         </encoder>
     </appender>
 
-    <logger name = "CONSOLE" level = "INFO">
-        <appender-ref ref = "STDOUT" />
+    <logger name="org.springframework" level="DEBUG">
+        <appender-ref ref="Console-Appender"/>
     </logger>
 
-    <logger name = "ua.com.foxstudent102052" level = "ERROR">
-        <appender-ref ref = "FILE-AUDIT" />
+    <logger name="org.hibernate.SQL" level="DEBUG">
+        <appender-ref ref="Console-Appender"/>
+    </logger>
+    <logger name="org.hibernate.orm.jdbc.bind" level="TRACE">
+        <appender-ref ref="Console-Appender"/>
+    </logger>
+    <logger name="org.hibernate.stat" level="DEBUG">
+        <appender-ref ref="Console-Appender"/>
+    </logger>
+    <logger name="org.hibernate.SQL_SLOW" level="INFO">
+        <appender-ref ref="Console-Appender"/>
+    </logger>
+    <logger name="org.hibernate.cache" level="DEBUG">
+        <appender-ref ref="Console-Appender"/>
     </logger>
 
-    <logger name = "org.springframework" level = "ERROR">
-        <appender-ref ref = "FILE-AUDIT" />
-    </logger>
-
-    <logger name = "org.hibernate" level = "ERROR">
-        <appender-ref ref = "FILE-AUDIT" />
-    </logger>
+    <root level="DEBUG">
+        <appender-ref ref="FILE-AUDIT"/>
+    </root>
 </configuration>
