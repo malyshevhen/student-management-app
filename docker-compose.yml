@@ -1,6 +1,14 @@
 version: '3.8'
 
 services:
+    application:
+        image: mamyshevhen/student-ms
+        environment:
+            DATASOURCE_URL: ${DATASOURCE_URL:-jdbc:postgresql://postgres:5432/students_db}
+            DATASOURCE_USERNAME: ${DATASOURCE_USERNAME:-postgres}
+            DATASOURCE_PASSWORD: ${DATASOURCE_PASSWORD:-314159}
+        ports:
+            - '8080:8080'
     postgres:
         container_name: postgres_container
         image: postgres:15
@@ -8,8 +16,6 @@ services:
             POSTGRES_DB: students_db
             POSTGRES_USER: ${POSTGRES_USER:-postgres}
             POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-314159}
-        ports:
-            - '5433:5432'
         volumes:
             - postgres:/var/lib/postgresql/data
         restart: unless-stopped
@@ -23,7 +29,5 @@ services:
             - '5050:80'
         restart: unless-stopped
 
-
 volumes:
     postgres:
-
