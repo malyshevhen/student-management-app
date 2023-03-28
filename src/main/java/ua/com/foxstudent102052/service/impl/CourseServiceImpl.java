@@ -26,12 +26,12 @@ public class CourseServiceImpl implements CourseService {
     public void addCourse(CourseDto courseDto) throws DataAccessException {
         var courseName = courseDto.getName();
 
-        if (courseDao.findByName(courseName).isEmpty()) {
-            courseDao.save(modelMapper.map(courseDto, Course.class));
-        } else {
+        if (courseDao.findByName(courseName).isPresent()) {
             throw new ElementAlreadyExistException(
                 String.format("Course with id %d already exist", courseDto.getId())
             );
+        } else {
+            courseDao.save(modelMapper.map(courseDto, Course.class));
         }
     }
 

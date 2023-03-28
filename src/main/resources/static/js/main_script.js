@@ -30,19 +30,13 @@ $(document).ready(function () {
             result.sort(compare);
 
             let table =
-                "<table class='table table-hover'><tr><th>Id</th><th>Name</th><th>Surname</th><th>Group</th></tr></thead><tbody>";
+                "<table class='table table-hover'><thead><tr><th>Id</th><th>Name</th><th>Surname</th><th>Group</th></tr></thead><tbody>";
             for (const element of result) {
                 let row =
                     "<tr>" +
-                    "<td>" +
-                    element.id +
-                    "</td>" +
-                    "<td>" +
-                    element.firstName +
-                    "</td>" +
-                    "<td>" +
-                    element.lastName +
-                    "</td>";
+                    "<td>" + element.id + "</td>" +
+                    "<td>" + element.firstName + "</td>" +
+                    "<td>" + element.lastName + "</td>";
 
                 if (element.group == null) {
                     row += "<td> Free student </td>";
@@ -102,7 +96,7 @@ $(document).ready(function () {
     add_student_form.addEventListener("submit", (event) => {
         const formData = {
             firstName: $("#firstName").val(),
-            lastName: $("#lastName").val(),
+            lastName: $("#lastName").val()
         };
 
         const data = JSON.stringify(formData);
@@ -126,7 +120,7 @@ $(document).ready(function () {
 
     add_group_form.addEventListener("submit", (event) => {
         const formData = {
-            name: $("#groupName").val(),
+            name: $("#groupName").val()
         };
 
         const data = JSON.stringify(formData);
@@ -151,7 +145,7 @@ $(document).ready(function () {
     add_course_form.addEventListener("submit", (event) => {
         const formData = {
             name: $("#courseName").val(),
-            description: $("#courseDescription").val(),
+            description: $("#courseDescription").val()
         };
 
         const data = JSON.stringify(formData);
