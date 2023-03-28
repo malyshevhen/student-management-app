@@ -14,7 +14,7 @@
 
     <groupId>ua.com.foxstudent102052</groupId>
     <artifactId>student-management-app</artifactId>
-    <packaging>war</packaging>
+    <packaging>jar</packaging>
     <version>0.0.1-SNAPSHOT</version>
 
     <name>student-management-app</name>
