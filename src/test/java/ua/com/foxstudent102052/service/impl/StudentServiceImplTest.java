@@ -20,6 +20,7 @@ import org.modelmapper.ModelMapper;
 import ua.com.foxstudent102052.AppRunner;
 import ua.com.foxstudent102052.dao.interfaces.CourseRepository;
 import ua.com.foxstudent102052.dao.interfaces.StudentRepository;
+import ua.com.foxstudent102052.model.dto.CourseDto;
 import ua.com.foxstudent102052.model.dto.GroupDto;
 import ua.com.foxstudent102052.model.dto.StudentDto;
 import ua.com.foxstudent102052.model.entity.Group;
@@ -54,10 +55,12 @@ class StudentServiceImplTest {
             .firstName("John")
             .lastName("Doe")
             .group(new GroupDto())
+            .courses(List.of(new CourseDto()))
             .build();
         var student = modelMapper.map(studentDto, Student.class);
 
         // when
+        when(studentDao.save(student)).thenReturn(student);
         studentService.addStudent(studentDto);
 
         // then
