@@ -39,7 +39,7 @@ To deploy the application, follow these steps:
 
 1. Clone the repository to your local machine.
 2. Navigate to the project directory.
-3. Use the following command to launch the application with the database on any machine with Docker installed: 'docker compose up'
+3. Use the following command to launch the application with the database on any machine with Docker installed: `docker-compose up`
 
 This will start the application and the database container. The application will be available at `http://localhost:8080`.
 
