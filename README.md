@@ -49,9 +49,6 @@ This will start the application and the database container. The application will
 
 To use the application, navigate to the web interface or use the REST endpoints to access and manipulate data programmatically.
 
-## Contributing
-
-Please refer to the CONTRIBUTING.md file for guidelines on contributing to this project.
 
 ## License
 
